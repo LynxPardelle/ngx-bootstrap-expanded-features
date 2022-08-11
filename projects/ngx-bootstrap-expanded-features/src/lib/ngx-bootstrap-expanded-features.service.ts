@@ -58,6 +58,14 @@ export class NgxBootstrapExpandedFeaturesService {
   cssCreate() {
     try {
       let sheets = [...document.styleSheets];
+      let filetedSheet = [];
+      for (let sheet of sheets) {
+        console.log(sheet);
+        if (sheet.href?.includes('bef-styles')) {
+          filetedSheet.push(sheet);
+        }
+      }
+      sheets = filetedSheet;
       let startTimeCSSCreate = performance.now();
       let befElements = document.getElementsByClassName('bef');
       let befs: string[] = [];
@@ -743,6 +751,14 @@ export class NgxBootstrapExpandedFeaturesService {
   createCSSRules(rule: string) {
     try {
       let sheets: any[] = [...document.styleSheets];
+      let filetedSheet = [];
+      for (let sheet of sheets) {
+        console.log(sheet);
+        if (sheet.href?.includes('bef-styles')) {
+          filetedSheet.push(sheet);
+        }
+      }
+      sheets = filetedSheet;
       let sheet: any;
       if (sheets[sheets.length - 1]) {
         sheet = sheets[sheets.length - 1];
