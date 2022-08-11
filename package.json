@@ -1,6 +1,6 @@
 {
-  "name": "ngx-bef",
-  "version": "0.0.5",
+  "name": "ngx-bootstrap-expanded-features",
+  "version": "0.0.6",
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
   "scripts": {
     "ng": "ng",
