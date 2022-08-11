@@ -60,7 +60,6 @@ export class NgxBootstrapExpandedFeaturesService {
       let sheets = [...document.styleSheets];
       let filetedSheet = [];
       for (let sheet of sheets) {
-        console.log(sheet);
         if (sheet.href?.includes('bef-styles')) {
           filetedSheet.push(sheet);
         }
@@ -744,7 +743,7 @@ export class NgxBootstrapExpandedFeaturesService {
         `;
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -753,7 +752,6 @@ export class NgxBootstrapExpandedFeaturesService {
       let sheets: any[] = [...document.styleSheets];
       let filetedSheet = [];
       for (let sheet of sheets) {
-        console.log(sheet);
         if (sheet.href?.includes('bef-styles')) {
           filetedSheet.push(sheet);
         }
@@ -893,7 +891,7 @@ export class NgxBootstrapExpandedFeaturesService {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
