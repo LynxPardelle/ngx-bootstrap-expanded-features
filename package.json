@@ -1,6 +1,6 @@
 {
   "name": "ngx-bef",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
   "scripts": {
     "ng": "ng",
@@ -23,7 +23,7 @@
     "type": "git",
     "url": "https://github.com/LynxPardelle/ngx-bootstrap-expanded-features"
   },
-  "homepage": "https://github.com/LynxPardelle/ngx-bootstrap-expanded-features",
+  "homepage": "https://ngx-bootstrap-expanded-features.vercel.app/",
   "dependencies": {
     "@angular/animations": "^14.1.2",
     "@angular/common": "^14.1.2",

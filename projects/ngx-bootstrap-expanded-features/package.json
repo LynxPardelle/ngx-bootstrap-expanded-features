@@ -4,8 +4,8 @@
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
 
   "peerDependencies": {
-    "@angular/common": "^13.2.0",
-    "@angular/core": "^13.2.0"
+    "@angular/common": "^14.1.0",
+    "@angular/core": "^14.1.0"
   },
   "author": "lynx-pardelle (https://lynxpardelle.com/)",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/LynxPardelle/ngx-bootstrap-expanded-features"
   },
-  "homepage": "https://github.com/LynxPardelle/ngx-bootstrap-expanded-features",
+  "homepage": "https://ngx-bootstrap-expanded-features.vercel.app/",
   "dependencies": {
     "tslib": "^2.3.0"
   }
