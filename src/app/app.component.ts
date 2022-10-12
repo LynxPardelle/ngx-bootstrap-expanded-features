@@ -19,6 +19,7 @@ export class AppComponent implements DoCheck {
     this._befService.pushColors(this.colors);
 
     this._befService.cssCreate();
+    this._befService.changeDebugOption();
   }
 
   ngDoCheck(): void {

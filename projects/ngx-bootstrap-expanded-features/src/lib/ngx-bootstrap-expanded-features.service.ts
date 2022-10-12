@@ -4,9 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class NgxBootstrapExpandedFeaturesService {
-  public colors: any = {};
-  public colorsNames: string[] = [];
-  public colorsDefault: any = {
+  public colors: any = {
+    // colorsDefault
     primary: '#0d6efd',
     secondary: '#6c757d',
     success: '#198754',
@@ -15,8 +14,7 @@ export class NgxBootstrapExpandedFeaturesService {
     danger: '#dc3545',
     light: '#f8f9fa',
     dark: '#212529',
-  };
-  public colorsBS: any = {
+    // colorsBS
     indigo: '#6610f2',
     purple: '#6f42c1',
     pink: '#d63384',
@@ -24,8 +22,7 @@ export class NgxBootstrapExpandedFeaturesService {
     teal: '#20c997',
     white: '#fff',
     gray: '#6c757d',
-  };
-  public colorsLP: any = {
+    // colorsLP
     mystic: '#210020',
     lavender: '#D6BCFF',
     fairy: '#D680FF',
@@ -37,43 +34,40 @@ export class NgxBootstrapExpandedFeaturesService {
     beast: '#F5785D',
     abyss: '#000',
   };
+  public colorsNames: string[] = [];
   public alreadyCreatedClasses: string[] = [];
-
-  // Console Settings
-  public document: string = 'demoreel.component.ts';
-  public customConsoleCSS =
-    'background-color: rgba(190, 170, 190, 0.75); color: black; padding: 1em;';
-
+  public sheet: any;
+  public isDebug: boolean = false;
   constructor() {
-    this.pushColors(this.colorsDefault);
-    this.pushColors(this.colorsBS);
-    this.pushColors(this.colorsLP);
-  }
-
-  // Pruebas
-  pruebas() {
-    return 'Soy el servicio de bef';
-  }
-
-  cssCreate() {
-    try {
-      let sheets = [...document.styleSheets];
-      let filetedSheet = [];
-      for (let sheet of sheets) {
-        if (sheet.href?.includes('bef-styles')) {
-          filetedSheet.push(sheet);
-        }
+    let sheets: any[] = [...document.styleSheets];
+    for (let sheet of sheets) {
+      if (sheet.href?.includes('bef-styles')) {
+        this.sheet = sheet;
       }
-      sheets = filetedSheet;
-      let startTimeCSSCreate = performance.now();
-      let befElements = document.getElementsByClassName('bef');
+    }
+  }
+  cssCreate(updateBefs: string[] | null = null) {
+    try {
+      if (!this.sheet) {
+        throw new Error('There is no bef-styles style sheet!');
+      }
+      const startTimeCSSCreate = performance.now();
       let befs: string[] = [];
-      for (let befElement of befElements) {
-        befElement.classList.forEach((item: any) => {
-          if (!befs.includes(item) && item !== 'bef' && item.includes('bef')) {
-            befs.push(item);
-          }
-        });
+      if (!updateBefs) {
+        let befElements = document.getElementsByClassName('bef');
+        for (let befElement of befElements) {
+          befElement.classList.forEach((item: any) => {
+            if (
+              !befs.includes(item) &&
+              item !== 'bef' &&
+              item.includes('bef')
+            ) {
+              befs.push(item);
+            }
+          });
+        }
+      } else {
+        befs = updateBefs;
       }
       let befsStringed = '';
       let befsStringedSM = '';
@@ -82,23 +76,16 @@ export class NgxBootstrapExpandedFeaturesService {
       let befsStringedXl = '';
       let befsStringedXXL = '';
       for (let bef of befs) {
+        if (!updateBefs) {
+          if (this.alreadyCreatedClasses.includes(bef)) {
+            continue;
+          }
+          this.alreadyCreatedClasses.push(bef);
+          if ([...this.sheet.cssRules].find((i) => i.cssText.includes(bef))) {
+            continue;
+          }
+        }
         let befStringed = '.' + bef;
-        if (this.alreadyCreatedClasses.includes(befStringed)) {
-          continue;
-        }
-        this.alreadyCreatedClasses.push(befStringed);
-        if (
-          sheets
-            .map((s) =>
-              [...s.cssRules]
-                .reverse()
-                .find((i) => i.cssText.includes(befStringed))
-            )
-            .filter((i) => i)
-            .pop()
-        ) {
-          continue;
-        }
         let befSplited = bef.split('-');
         let hasBP = false;
         let value = '';
@@ -731,7 +718,14 @@ export class NgxBootstrapExpandedFeaturesService {
           `@media only screen and (min-width: 1400px) {${befsStringedXXL}}`
         );
       }
-      var endTimeCSSCreate = performance.now();
+      const endTimeCSSCreate = performance.now();
+      if (this.isDebug === true) {
+        console.info(
+          `Call to cssCreate() took ${
+            endTimeCSSCreate - startTimeCSSCreate
+          } milliseconds`
+        );
+      }
       let befTimer = document.getElementById('befTimer');
       if (befTimer) {
         befTimer.innerHTML = `
@@ -747,147 +741,84 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
-  createCSSRules(rule: string) {
+  createCSSRules(rule: string, update: boolean = false) {
     try {
-      let sheets: any[] = [...document.styleSheets];
-      let filetedSheet = [];
-      for (let sheet of sheets) {
-        if (sheet.href?.includes('bef-styles')) {
-          filetedSheet.push(sheet);
-        }
-      }
-      sheets = filetedSheet;
-      let sheet: any;
-      if (sheets[sheets.length - 1]) {
-        sheet = sheets[sheets.length - 1];
-      } else {
-        sheet = sheets.pop();
-      }
-      let ruleI;
-      ruleI = rule;
-      let selector: string = '';
-      let props: string = '';
-      let propsArr: any = [];
-      let ruleOriginal: any = '';
-      if (ruleI && !ruleI.split('{')[0].includes('@media')) {
-        selector = ruleI.split('{')[0];
-        // CSS (& HTML) reduce spaces in selector to one.
-        selector = selector.replace('\n', '').replace(/\s+/g, ' ');
-        let findRule = (s: any) =>
-          [...s.cssRules].reverse().find((i) => i.cssText.includes(selector));
-        ruleOriginal = sheets
-          .map(findRule)
-          .filter((i) => i)
-          .pop();
-
-        props = ruleI.split('{')[1].split('}')[0];
-        props = props.trim();
-        if (props.lastIndexOf(';') === props.length - 1) {
-          props = props.substring(0, props.length - 1);
-        }
-        if (props.includes('\n')) {
-          let propsN = '';
-          props.split('\n').forEach((prop) => {
-            prop = prop.trim();
-            propsN += ' ' + prop;
-          });
-          props = propsN.trim();
-        }
-        propsArr = props.split(/\s*;\s*/).map((i) => i.split(/\s*:\s*/)); // from string // from Object
-      } else {
-        let i = 0;
-        let newRule: any = {
-          rule: '',
-          prop: '',
-        };
-        for (let ruleISplit of ruleI.split('{')) {
-          if (i === 0) {
-            ruleOriginal = [];
-            i++;
-            continue;
+      if (rule && !rule.split('{')[0].includes('@media')) {
+        let index;
+        let originalRule: any = [...this.sheet.cssRules].some(
+          (cssRule: any, i) => {
+            if (
+              cssRule.cssText.includes(
+                rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
+              )
+            ) {
+              index = i;
+              return true;
+            } else {
+              return false;
+            }
           }
-          selector = ruleISplit.includes('}')
-            ? ruleISplit.split('}')[ruleISplit.split('}').length - 1]
-            : ruleISplit;
+        )
+          ? [...this.sheet.cssRules].find((i) =>
+              i.cssText.includes(
+                rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
+              )
+            )
+          : undefined;
+        if (originalRule) {
+          this.sheet.deleteRule(index);
+        }
+        this.sheet.insertRule(rule, this.sheet.cssRules.length);
+      } else {
+        let originalMediaRules: boolean = false;
+        for (let i = 0; i < rule.split('{').length; i++) {
+          let ruleSplit = rule.split('{')[i];
+          //for (let ruleSplit of rule.split('{')) {
+          let selector: string = ruleSplit.includes('}')
+            ? ruleSplit.split('}')[ruleSplit.split('}').length - 1]
+            : ruleSplit;
           // CSS (& HTML) reduce spaces in selector to one.
           if (selector !== '') {
             selector = selector.replace('\n', '').replace(/\s+/g, ' ');
-            let findRule = (s: any) =>
-              [...s.cssRules]
-                .reverse()
-                .find((i) => i.cssText.includes(selector));
-            let posibleRule = sheets
-              .map(findRule)
-              .filter((i) => i)
-              .pop();
-
-            if (posibleRule != undefined) {
-              newRule.rule = posibleRule;
+            if (selector[0] === ' ') {
+              selector = selector.replace(' ', '');
             }
-          } else {
-            props = ruleISplit.includes('}')
-              ? ruleISplit.split('}')[0]
-              : ruleISplit;
-
-            // CSS (& HTML) reduce spaces in selector to one.
-            if (props !== '') {
-              props = props.replace('\n', '').replace(/\s+/g, ' ');
-              if (props.lastIndexOf(';') === props.length - 1) {
-                props = props.substring(0, props.length - 1);
+            let posibleMediaRule = [...this.sheet.cssRules].find((i) =>
+              i.cssText.includes(selector)
+            );
+            if (posibleMediaRule && posibleMediaRule.cssRules) {
+              originalMediaRules = true;
+              let index;
+              let posibleRule = [...posibleMediaRule.cssRules].some(
+                (cssRule: any, i) => {
+                  if (cssRule.cssText.includes(selector)) {
+                    index = i;
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }
+              )
+                ? [...posibleMediaRule.cssRules].find((i) =>
+                    i.cssText.includes(selector)
+                  )
+                : undefined;
+              if (posibleRule) {
+                posibleMediaRule.deleteRule(index);
               }
-              if (props.includes('\n')) {
-                let propsN = '';
-                props.split('\n').forEach((prop) => {
-                  prop = prop.trim();
-                  propsN += ' ' + prop;
-                });
-                props = propsN.trim();
-              }
-
-              let propArr = props
-                .split(/\s*;\s*/)
-                .map((i) => i.split(/\s*:\s*/)); // from string
-              if (newRule.rule != '') {
-                newRule.prop = propArr;
-                ruleOriginal.push(newRule);
-                newRule = {
-                  rule: '',
-                  prop: '',
-                };
-              }
+              let nextSelector: string = rule.split('{')[i + 1].includes('}')
+                ? rule.split('{')[i + 1].split('}')[0]
+                : rule.split('{')[i] + 1;
+              let newRule = selector + '{' + nextSelector + '}';
+              posibleMediaRule.insertRule(
+                newRule,
+                posibleMediaRule.cssRules.length
+              );
             }
           }
         }
-      }
-      if (
-        (typeof ruleOriginal === 'string' && ruleOriginal !== '') ||
-        (typeof ruleOriginal === 'object' && ruleOriginal[0])
-      ) {
-        if (ruleOriginal[0]) {
-          for (let ruleO of ruleOriginal) {
-            for (let [prop, val] of ruleO.prop) {
-              prop = prop
-                .replace(/-(.)/g, (a: any) => {
-                  return a.toUpperCase();
-                })
-                .replace(/-/g, '');
-              ruleO.rule.cssRules[0].style[prop] =
-                val.split(/ *!(?=important)/);
-            }
-          }
-        } else {
-          for (let [prop, val] of propsArr) {
-            prop = prop
-              .replace(/-(.)/g, (a: any) => {
-                return a.toUpperCase();
-              })
-              .replace(/-/g, '');
-            ruleOriginal.style[prop] = val.split(/ *!(?=important)/);
-          }
-        }
-      } else {
-        if (sheet) {
-          sheet.insertRule(ruleI, sheet.cssRules.length);
+        if (originalMediaRules === false) {
+          this.sheet.insertRule(rule, this.sheet.cssRules.length);
         }
       }
     } catch (err) {
@@ -943,36 +874,41 @@ export class NgxBootstrapExpandedFeaturesService {
   }
 
   shadeTintColor(rgb: number[], percent: number) {
-    var R: any =
+    let R: any =
       rgb[0] === 0 && percent > 0
         ? 16
         : rgb[0] === 255 && percent < 0
         ? 239
         : rgb[0];
-    var G: any =
+    let G: any =
       rgb[1] === 0 && percent > 0
         ? 16
         : rgb[1] === 255 && percent < 0
         ? 239
         : rgb[1];
-    var B: any =
+    let B: any =
       rgb[2] === 0 && percent > 0
         ? 16
         : rgb[2] === 255 && percent < 0
         ? 239
         : rgb[2];
-    var A: any = rgb[3] ? (rgb[3] * 255).toString(16) : 'FF';
     R = parseInt(((R * (100 + percent)) / 100).toString());
     G = parseInt(((G * (100 + percent)) / 100).toString());
     B = parseInt(((B * (100 + percent)) / 100).toString());
     R = R > 255 ? 255 : R < 0 ? 0 : R;
     G = G > 255 ? 255 : G < 0 ? 0 : G;
     B = B > 255 ? 255 : B < 0 ? 0 : B;
-    var RR = R.toString(16).length == 1 ? '0' + R.toString(16) : R.toString(16);
-    var GG = G.toString(16).length == 1 ? '0' + G.toString(16) : G.toString(16);
-    var BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16);
-    var AA = A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16);
-    return '#' + RR + GG + BB + AA;
+    let RR = R.toString(16).length == 1 ? '0' + R.toString(16) : R.toString(16);
+    let GG = G.toString(16).length == 1 ? '0' + G.toString(16) : G.toString(16);
+    let BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16);
+    if (rgb[3]) {
+      let A: any = rgb[3] ? (rgb[3] * 255).toString(16) : 'FF';
+      let AA =
+        A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16);
+      return '#' + RR + GG + BB + AA;
+    } else {
+      return '#' + RR + GG + BB;
+    }
   }
 
   pushColors(newColors: any) {
@@ -989,7 +925,59 @@ export class NgxBootstrapExpandedFeaturesService {
         }
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
+  }
+
+  getColors() {
+    return this.colors;
+  }
+
+  getColorValue(color: string) {
+    return this.colors[color];
+  }
+
+  updateColor(color: string, value: string) {
+    try {
+      if (this.colorsNames.includes(color)) {
+        this.colors[color] = value.replace(
+          '!important' || '!default' || /\s+/g,
+          ''
+        );
+        let classesToUpdate: string[] = [];
+        for (let createdClass of this.alreadyCreatedClasses) {
+          if (createdClass.includes(color)) {
+            classesToUpdate.push(createdClass);
+          }
+        }
+        if (classesToUpdate.length > 0) {
+          this.cssCreate(classesToUpdate);
+        }
+      } else {
+        throw new Error(`There is no color named ${color}.`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  deleteColor(color: string) {
+    try {
+      if (this.colors.includes(color)) {
+        delete this.colors[color];
+      } else {
+        throw new Error(`There is no color named ${color}.`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  clearAllColors() {
+    this.colors = {};
+  }
+
+  changeDebugOption() {
+    this.isDebug = !this.isDebug;
   }
 }
