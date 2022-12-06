@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class NgxBootstrapExpandedFeaturesService {
   public colors: any = {
-    // colorsDefault
+    /* colorsDefault */
     primary: '#0d6efd',
     secondary: '#6c757d',
     success: '#198754',
@@ -14,17 +14,17 @@ export class NgxBootstrapExpandedFeaturesService {
     danger: '#dc3545',
     light: '#f8f9fa',
     dark: '#212529',
-    // colorsBS
-    indigo: '#6610f2',
-    purple: '#6f42c1',
-    pink: '#d63384',
-    orange: '#fd7e14',
-    teal: '#20c997',
+    /* colorsBS */
+    indigoBS: '#6610f2',
+    purpleBS: '#6f42c1',
+    pinkBS: '#d63384',
+    orangeBS: '#fd7e14',
+    tealBS: '#20c997',
     white: '#fff',
-    gray: '#6c757d',
-    // colorsLP
+    grayBS: '#6c757d',
+    /* colorsLP */
     mystic: '#210020',
-    lavender: '#D6BCFF',
+    lavenderLP: '#D6BCFF',
     fairy: '#D680FF',
     summer: '#FF9A2E',
     old: '#EEEDA0',
@@ -33,11 +33,159 @@ export class NgxBootstrapExpandedFeaturesService {
     blood: '#8A0707',
     beast: '#F5785D',
     abyss: '#000',
+    /* basicColorsCSS */ /* (\s)(#[0-9A-Fa-f]+)\s([0-9]*,?)*\n*\s*\n*\s* */ /* :$1'$2', */
+    black: '#000000',
+    silver: '#C0C0C0',
+    gray: '#808080',
+    maroon: '#800000',
+    red: '#FF0000',
+    purple: '#800080',
+    fuchsia: '#FF00FF',
+    green: '#008000',
+    lime: '#00FF00',
+    olive: '#808000',
+    yellow: '#FFFF00',
+    navy: '#000080',
+    blue: '#0000FF',
+    teal: '#008080',
+    aqua: '#00FFFF',
+    /* extendedColorsCSS */
+    aliceblue: '#f0f8ff',
+    antiquewhite: '#faebd7',
+    aquamarine: '#7fffd4',
+    azure: '#f0ffff',
+    beige: '#f5f5dc',
+    bisque: '#ffe4c4',
+    blanchedalmond: '#ffebcd',
+    blueviolet: '#8a2be2',
+    brown: '#a52a2a',
+    burlywood: '#deb887',
+    cadetblue: '#5f9ea0',
+    chartreuse: '#7fff00',
+    chocolate: '#d2691e',
+    coral: '#ff7f50',
+    cornflowerblue: '#6495ed',
+    cornsilk: '#fff8dc',
+    crimson: '#dc143c',
+    cyan: '#00ffff',
+    darkblue: '#00008b',
+    darkcyan: '#008b8b',
+    darkgoldenrod: '#b8860b',
+    darkgray: '#a9a9a9',
+    darkgreen: '#006400',
+    darkgrey: '#a9a9a9',
+    darkkhaki: '#bdb76b',
+    darkmagenta: '#8b008b',
+    darkolivegreen: '#556b2f',
+    darkorange: '#ff8c00',
+    darkorchid: '#9932cc',
+    darkred: '#8b0000',
+    darksalmon: '#e9967a',
+    darkseagreen: '#8fbc8f',
+    darkslateblue: '#483d8b',
+    darkslategray: '#2f4f4f',
+    darkslategrey: '#2f4f4f',
+    darkturquoise: '#00ced1',
+    darkviolet: '#9400d3',
+    deeppink: '#ff1493',
+    deepskyblue: '#00bfff',
+    dimgray: '#696969',
+    dimgrey: '#696969',
+    dodgerblue: '#1e90ff',
+    firebrick: '#b22222',
+    floralwhite: '#fffaf0',
+    forestgreen: '#228b22',
+    gainsboro: '#dcdcdc',
+    ghostwhite: '#f8f8ff',
+    gold: '#ffd700',
+    goldenrod: '#daa520',
+    greenyellow: '#adff2f',
+    grey: '#808080',
+    honeydew: '#f0fff0',
+    hotpink: '#ff69b4',
+    indianred: '#cd5c5c',
+    indigo: '#4b0082',
+    ivory: '#fffff0',
+    khaki: '#f0e68c',
+    lavender: '#e6e6fa',
+    lavenderblush: '#fff0f5',
+    lawngreen: '#7cfc00',
+    lemonchiffon: '#fffacd',
+    lightblue: '#add8e6',
+    lightcoral: '#f08080',
+    lightcyan: '#e0ffff',
+    lightgoldenrodyellow: '#fafad2',
+    lightgray: '#d3d3d3',
+    lightgreen: '#90ee90',
+    lightgrey: '#d3d3d3',
+    lightpink: '#ffb6c1',
+    lightsalmon: '#ffa07a',
+    lightseagreen: '#20b2aa',
+    lightskyblue: '#87cefa',
+    lightslategray: '#778899',
+    lightslategrey: '#778899',
+    lightsteelblue: '#b0c4de',
+    lightyellow: '#ffffe0',
+    limegreen: '#32cd32',
+    linen: '#faf0e6',
+    magenta: '#ff00ff',
+    mediumaquamarine: '#66cdaa',
+    mediumblue: '#0000cd',
+    mediumorchid: '#ba55d3',
+    mediumpurple: '#9370db',
+    mediumseagreen: '#3cb371',
+    mediumslateblue: '#7b68ee',
+    mediumspringgreen: '#00fa9a',
+    mediumturquoise: '#48d1cc',
+    mediumvioletred: '#c71585',
+    midnightblue: '#191970',
+    mintcream: '#f5fffa',
+    mistyrose: '#ffe4e1',
+    moccasin: '#ffe4b5',
+    navajowhite: '#ffdead',
+    oldlace: '#fdf5e6',
+    olivedrab: '#6b8e23',
+    orange: '#ffa500',
+    orangered: '#ff4500',
+    orchid: '#da70d6',
+    palegoldenrod: '#eee8aa',
+    palegreen: '#98fb98',
+    paleturquoise: '#afeeee',
+    palevioletred: '#db7093',
+    papayawhip: '#ffefd5',
+    peachpuff: '#ffdab9',
+    peru: '#cd853f',
+    pink: '#ffc0cb',
+    plum: '#dda0dd',
+    powderblue: '#b0e0e6',
+    rosybrown: '#bc8f8f',
+    royalblue: '#4169e1',
+    saddlebrown: '#8b4513',
+    salmon: '#fa8072',
+    sandybrown: '#f4a460',
+    seagreen: '#2e8b57',
+    seashell: '#fff5ee',
+    sienna: '#a0522d',
+    skyblue: '#87ceeb',
+    slateblue: '#6a5acd',
+    slategray: '#708090',
+    slategrey: '#708090',
+    snow: '#fffafa',
+    springgreen: '#00ff7f',
+    steelblue: '#4682b4',
+    tan: '#d2b48c',
+    thistle: '#d8bfd8',
+    tomato: '#ff6347',
+    turquoise: '#40e0d0',
+    violet: '#ee82ee',
+    wheat: '#f5deb3',
+    whitesmoke: '#f5f5f5',
+    yellowgreen: '#9acd32',
   };
-  public colorsNames: string[] = [];
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
   public isDebug: boolean = false;
+  public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
   constructor() {
     let sheets: any[] = [...document.styleSheets];
     for (let sheet of sheets) {
@@ -54,7 +202,7 @@ export class NgxBootstrapExpandedFeaturesService {
       const startTimeCSSCreate = performance.now();
       let befs: string[] = [];
       if (!updateBefs) {
-        let befElements = document.getElementsByClassName('bef');
+        let befElements: any = document.getElementsByClassName('bef');
         for (let befElement of befElements) {
           befElement.classList.forEach((item: any) => {
             if (
@@ -69,21 +217,26 @@ export class NgxBootstrapExpandedFeaturesService {
       } else {
         befs = updateBefs;
       }
+      if (this.isDebug === true) {
+        console.info({ befs: befs });
+      }
       let befsStringed = '';
       let befsStringedSM = '';
       let befsStringedMD = '';
       let befsStringedLG = '';
-      let befsStringedXl = '';
+      let befsStringedXL = '';
       let befsStringedXXL = '';
       for (let bef of befs) {
         if (!updateBefs) {
           if (this.alreadyCreatedClasses.includes(bef)) {
             continue;
           }
-          this.alreadyCreatedClasses.push(bef);
           if ([...this.sheet.cssRules].find((i) => i.cssText.includes(bef))) {
             continue;
           }
+        }
+        if (!this.alreadyCreatedClasses.includes(bef)) {
+          this.alreadyCreatedClasses.push(bef);
         }
         let befStringed = '.' + bef;
         let befSplited = bef.split('-');
@@ -286,17 +439,12 @@ export class NgxBootstrapExpandedFeaturesService {
             befSplited[1] === 'btnOutline' ||
             befSplited[1] === 'boxShadow' ||
             befSplited[1] === 'textShadow') &&
-          (this.colorsNames.includes(value) ||
-            (this.colorsNames.includes(value.split(' ')[0]) &&
-              this.colorsNames.includes(value.split(' ')[0])) ||
-            (this.colorsNames.includes(value.split(' ')[1]) &&
-              this.colorsNames.includes(value.split(' ')[1])) ||
-            (this.colorsNames.includes(value.split(' ')[2]) &&
-              this.colorsNames.includes(value.split(' ')[2])) ||
-            (this.colorsNames.includes(value.split(' ')[3]) &&
-              this.colorsNames.includes(value.split(' ')[3])) ||
-            (this.colorsNames.includes(value.split(' ')[4]) &&
-              this.colorsNames.includes(value.split(' ')[4])))
+          (this.colors[value.toString()] ||
+            this.colors[value.split(' ')[0]?.toString()] ||
+            this.colors[value.split(' ')[1]?.toString()] ||
+            this.colors[value.split(' ')[2]?.toString()] ||
+            this.colors[value.split(' ')[3]?.toString()] ||
+            this.colors[value.split(' ')[4]?.toString()])
         ) {
           switch (befSplited[1]) {
             case 'bg':
@@ -454,146 +602,51 @@ export class NgxBootstrapExpandedFeaturesService {
             case 'btn':
               if (value.includes(' OPA')) {
                 befStringed += `{
-                  background-color: rgba(${this.HexToRGB(
-                    this.colors[value.split(' ')[0]]
-                  ).toString()}, ${value.split(' ')[2]});
-                border-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]});}
-                /.${bef}:hover{
-                  background-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -15
-                    )
-                  ).toString()}, ${value.split(' ')[2]});
-                border-color: rgba(${this.HexToRGB(
-                  this.shadeTintColor(
-                    this.HexToRGB(this.colors[value.split(' ')[0]]),
-                    -20
-                  )
-                ).toString()}, ${value.split(' ')[2]});}
-                /.btn-check:focus + .${bef}, .${bef}:focus{
-                  background-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -15
-                    )
-                  ).toString()}, ${value.split(' ')[2]});
-                border-color: rgba(${this.HexToRGB(
-                  this.shadeTintColor(
-                    this.HexToRGB(this.colors[value.split(' ')[0]]),
-                    -20
-                  )
-                ).toString()}, ${value.split(' ')[2]});}
-                /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                  background-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -20
-                    )
-                  ).toString()}, ${value.split(' ')[2]});
-                border-color: rgba(${this.HexToRGB(
-                  this.shadeTintColor(
-                    this.HexToRGB(this.colors[value.split(' ')[0]]),
-                    -25
-                  )
-                ).toString()}, ${value.split(' ')[2]});
-                box-shadow: 0 0 0 0.25rem
-                rgba(${this.HexToRGB(
-                  this.shadeTintColor(
-                    this.HexToRGB(this.colors[value.split(' ')[0]]),
-                    3
-                  )
-                )}, ${value.split(' ')[2]})
-                ;}
-                /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
-                  box-shadow: 0 0 0 0.25rem
-                  rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      3
-                    )
-                  )}, ${value.split(' ')[2]})
-                ;}`;
-              } else {
-                befStringed += `{
-                  background-color:${this.colors[value]};
-                  border-color:${this.colors[value]};}
-                /.${bef}:hover{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -15
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};}
-                /.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -15
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};}
-                /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -25
-                )};box-shadow: 0 0 0 0.25rem
-                rgba(${this.HexToRGB(
-                  this.shadeTintColor(this.HexToRGB(this.colors[value]), 3)
-                )}, 0.5)
-                ;}
-                /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
-                  rgba(${this.HexToRGB(
-                    this.shadeTintColor(this.HexToRGB(this.colors[value]), 3)
-                  )}, 0.5)
-                ;}`;
-              }
-              break;
-            case 'btnOutline':
-              if (value.includes(' OPA')) {
-                befStringed += `{
-                  color: rgba(${this.HexToRGB(
-                    this.colors[value.split(' ')[0]]
-                  ).toString()}, ${value.split(' ')[2]});
-                  border-color: rgba(${this.HexToRGB(
-                    this.colors[value.split(' ')[0]]
-                  ).toString()}, ${value.split(' ')[2]});}
-                  /.${bef}:hover{
-                    background-color: rgba(${this.HexToRGB(
+                      background-color: rgba(${this.HexToRGB(
+                        this.colors[value.split(' ')[0]]
+                      ).toString()}, ${value.split(' ')[2]});
+                    border-color: rgba(${this.HexToRGB(
                       this.colors[value.split(' ')[0]]
+                    ).toString()}, ${value.split(' ')[2]});}
+                    /.${bef}:hover{
+                      background-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -15
+                        )
+                      ).toString()}, ${value.split(' ')[2]});
+                    border-color: rgba(${this.HexToRGB(
+                      this.shadeTintColor(
+                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                        -20
+                      )
+                    ).toString()}, ${value.split(' ')[2]});}
+                    /.btn-check:focus + .${bef}, .${bef}:focus{
+                      background-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -15
+                        )
+                      ).toString()}, ${value.split(' ')[2]});
+                    border-color: rgba(${this.HexToRGB(
+                      this.shadeTintColor(
+                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                        -20
+                      )
+                    ).toString()}, ${value.split(' ')[2]});}
+                    /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
+                      background-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -20
+                        )
+                      ).toString()}, ${value.split(' ')[2]});
+                    border-color: rgba(${this.HexToRGB(
+                      this.shadeTintColor(
+                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                        -25
+                      )
                     ).toString()}, ${value.split(' ')[2]});
-                  border-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -20
-                    )
-                  ).toString()}, ${value.split(' ')[2]});}
-                  /.btn-check:focus + .${bef}, .${bef}:focus{
-                  border-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -20
-                    )
-                  ).toString()}, ${value.split(' ')[2]});}
-                  /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                  border-color: rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      -25
-                    )
-                  ).toString()}, ${value.split(' ')[2]});
-                  box-shadow: 0 0 0 0.25rem
-                  rgba(${this.HexToRGB(
-                    this.shadeTintColor(
-                      this.HexToRGB(this.colors[value.split(' ')[0]]),
-                      3
-                    )
-                  )}, ${value.split(' ')[2]})
-                  ;}
-                  /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
                     box-shadow: 0 0 0 0.25rem
                     rgba(${this.HexToRGB(
                       this.shadeTintColor(
@@ -601,43 +654,147 @@ export class NgxBootstrapExpandedFeaturesService {
                         3
                       )
                     )}, ${value.split(' ')[2]})
-                  ;}`;
+                    ;}
+                    /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
+                      box-shadow: 0 0 0 0.25rem
+                      rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          3
+                        )
+                      )}, ${value.split(' ')[2]})
+                    ;}`;
               } else {
                 befStringed += `{
-                  color:${this.colors[value]};
-                    border-color:${this.colors[value]};}
-                  /.${bef}:hover{
-                    background-color:${this.colors[value]};
-                    border-color:${this.shadeTintColor(
-                      this.HexToRGB(this.colors[value]),
-                      -20
-                    )};}
-                  /.btn-check:focus + .${bef}, .${bef}:focus{
-                    border-color:${this.shadeTintColor(
-                      this.HexToRGB(this.colors[value]),
-                      -20
-                    )};}
-                  /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                    border-color:${this.shadeTintColor(
-                      this.HexToRGB(this.colors[value]),
-                      -25
-                    )};
-                  box-shadow: 0 0 0 0.25rem
-                  rgba(${this.HexToRGB(
-                    this.shadeTintColor(this.HexToRGB(this.colors[value]), 3)
-                  )}, 0.5)
-                  ;}
-                  /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
-                    box-shadow: 0 0 0 0.25rem
+                      background-color:${this.colors[value]};
+                      border-color:${this.colors[value]};}
+                    /.${bef}:hover{background-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -15
+                )};border-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -20
+                )};}
+                    /.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -15
+                )};border-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -20
+                )};}
+                    /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -20
+                )};border-color:${this.shadeTintColor(
+                  this.HexToRGB(this.colors[value]),
+                  -25
+                )};box-shadow: 0 0 0 0.25rem
                     rgba(${this.HexToRGB(
                       this.shadeTintColor(this.HexToRGB(this.colors[value]), 3)
                     )}, 0.5)
-                  ;}`;
+                    ;}
+                    /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
+                      rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value]),
+                          3
+                        )
+                      )}, 0.5)
+                    ;}`;
+              }
+              break;
+            case 'btnOutline':
+              if (value.includes(' OPA')) {
+                befStringed += `{
+                      color: rgba(${this.HexToRGB(
+                        this.colors[value.split(' ')[0]]
+                      ).toString()}, ${value.split(' ')[2]});
+                      border-color: rgba(${this.HexToRGB(
+                        this.colors[value.split(' ')[0]]
+                      ).toString()}, ${value.split(' ')[2]});}
+                      /.${bef}:hover{
+                        background-color: rgba(${this.HexToRGB(
+                          this.colors[value.split(' ')[0]]
+                        ).toString()}, ${value.split(' ')[2]});
+                      border-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -20
+                        )
+                      ).toString()}, ${value.split(' ')[2]});}
+                      /.btn-check:focus + .${bef}, .${bef}:focus{
+                      border-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -20
+                        )
+                      ).toString()}, ${value.split(' ')[2]});}
+                      /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
+                      border-color: rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          -25
+                        )
+                      ).toString()}, ${value.split(' ')[2]});
+                      box-shadow: 0 0 0 0.25rem
+                      rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value.split(' ')[0]]),
+                          3
+                        )
+                      )}, ${value.split(' ')[2]})
+                      ;}
+                      /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
+                        box-shadow: 0 0 0 0.25rem
+                        rgba(${this.HexToRGB(
+                          this.shadeTintColor(
+                            this.HexToRGB(this.colors[value.split(' ')[0]]),
+                            3
+                          )
+                        )}, ${value.split(' ')[2]})
+                      ;}`;
+              } else {
+                befStringed += `{
+                      color:${this.colors[value]};
+                        border-color:${this.colors[value]};}
+                      /.${bef}:hover{
+                        background-color:${this.colors[value]};
+                        border-color:${this.shadeTintColor(
+                          this.HexToRGB(this.colors[value]),
+                          -20
+                        )};}
+                      /.btn-check:focus + .${bef}, .${bef}:focus{
+                        border-color:${this.shadeTintColor(
+                          this.HexToRGB(this.colors[value]),
+                          -20
+                        )};}
+                      /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
+                        border-color:${this.shadeTintColor(
+                          this.HexToRGB(this.colors[value]),
+                          -25
+                        )};
+                      box-shadow: 0 0 0 0.25rem
+                      rgba(${this.HexToRGB(
+                        this.shadeTintColor(
+                          this.HexToRGB(this.colors[value]),
+                          3
+                        )
+                      )}, 0.5)
+                      ;}
+                      /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
+                        box-shadow: 0 0 0 0.25rem
+                        rgba(${this.HexToRGB(
+                          this.shadeTintColor(
+                            this.HexToRGB(this.colors[value]),
+                            3
+                          )
+                        )}, 0.5)
+                      ;}`;
               }
               break;
             case 'boxShadow':
               for (let splitVal of value.split(' ')) {
-                if (this.colorsNames.includes(splitVal)) {
+                if (this.colors[splitVal.toString()]) {
                   value = value.replace(splitVal, this.colors[splitVal]);
                 }
               }
@@ -645,7 +802,7 @@ export class NgxBootstrapExpandedFeaturesService {
               break;
             case 'textShadow':
               for (let splitVal of value.split(' ')) {
-                if (this.colorsNames.includes(splitVal)) {
+                if (this.colors[splitVal.toString()]) {
                   value = value.replace(splitVal, this.colors[splitVal]);
                 }
               }
@@ -675,7 +832,7 @@ export class NgxBootstrapExpandedFeaturesService {
                 befsStringedLG += befStringed;
                 break;
               case 'xl':
-                befsStringedXl += befStringed;
+                befsStringedXL += befStringed;
                 break;
               case 'xxl':
                 befsStringedXXL += befStringed;
@@ -687,6 +844,9 @@ export class NgxBootstrapExpandedFeaturesService {
         }
       }
       if (befsStringed !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringed: befsStringed });
+        }
         for (let bef of befsStringed.split('/')) {
           if (bef !== '') {
             this.createCSSRules(bef);
@@ -694,47 +854,64 @@ export class NgxBootstrapExpandedFeaturesService {
         }
       }
       if (befsStringedSM !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringedSM: befsStringedSM });
+        }
         this.createCSSRules(
           `@media only screen and (min-width: 576px) {${befsStringedSM}}`
         );
       }
       if (befsStringedMD !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringedMD: befsStringedMD });
+        }
         this.createCSSRules(
           `@media only screen and (min-width: 768px) {${befsStringedMD}}`
         );
       }
       if (befsStringedLG !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringedLG: befsStringedLG });
+        }
         this.createCSSRules(
           `@media only screen and (min-width: 992px) {${befsStringedLG}}`
         );
       }
-      if (befsStringedXl !== '') {
+      if (befsStringedXL !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringedXL: befsStringedXL });
+        }
         this.createCSSRules(
-          `@media only screen and (min-width: 1200px) {${befsStringedXl}}`
+          `@media only screen and (min-width: 1200px) {${befsStringedXL}}`
         );
       }
       if (befsStringedXXL !== '') {
+        if (this.isDebug === true) {
+          console.info({ befsStringedXXL: befsStringedXXL });
+        }
         this.createCSSRules(
           `@media only screen and (min-width: 1400px) {${befsStringedXXL}}`
         );
       }
       const endTimeCSSCreate = performance.now();
+
       if (this.isDebug === true) {
         console.info(
           `Call to cssCreate() took ${
             endTimeCSSCreate - startTimeCSSCreate
-          } milliseconds`
+          } milliseconds`,
+          'info'
         );
       }
       let befTimer = document.getElementById('befTimer');
       if (befTimer) {
         befTimer.innerHTML = `
-        <p>
-        Call to cssCreate() took ${
-          endTimeCSSCreate - startTimeCSSCreate
-        } milliseconds
-        </p>
-        `;
+            <p>
+            Call to cssCreate() took ${
+              endTimeCSSCreate - startTimeCSSCreate
+            } milliseconds
+            </p>
+            `;
       }
     } catch (err) {
       console.error(err);
@@ -743,6 +920,9 @@ export class NgxBootstrapExpandedFeaturesService {
 
   createCSSRules(rule: string, update: boolean = false) {
     try {
+      if (this.isDebug === true) {
+        console.info({ rule: rule });
+      }
       if (rule && !rule.split('{')[0].includes('@media')) {
         let index;
         let originalRule: any = [...this.sheet.cssRules].some(
@@ -769,6 +949,9 @@ export class NgxBootstrapExpandedFeaturesService {
           this.sheet.deleteRule(index);
         }
         this.sheet.insertRule(rule, this.sheet.cssRules.length);
+        if (this.isDebug === true) {
+          console.info({ sheet: this.sheet });
+        }
       } else {
         let originalMediaRules: boolean = false;
         for (let i = 0; i < rule.split('{').length; i++) {
@@ -819,6 +1002,9 @@ export class NgxBootstrapExpandedFeaturesService {
         }
         if (originalMediaRules === false) {
           this.sheet.insertRule(rule, this.sheet.cssRules.length);
+          if (this.isDebug === true) {
+            console.info({ sheet: this.sheet });
+          }
         }
       }
     } catch (err) {
@@ -826,8 +1012,8 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
-  HexToRGB(Hex: string) {
-    let rgb: number[];
+  HexToRGB(Hex: string): number[] {
+    let rgb: number[] = [];
     if (!Hex.includes('rgb') && !Hex.includes('rgba')) {
       let HexNoCat = Hex.replace('#', '');
       rgb =
@@ -919,27 +1105,36 @@ export class NgxBootstrapExpandedFeaturesService {
           ''
         );
       });
-      Object.keys(this.colors).forEach((key) => {
-        if (!this.colorsNames.includes(key)) {
-          this.colorsNames.push(key);
-        }
-      });
     } catch (err) {
       console.error(err);
     }
   }
 
-  getColors() {
+  getColors(): any {
+    if (this.isDebug === true) {
+      console.info({ colors: this.colors });
+    }
     return this.colors;
   }
 
+  getColorsNames(): string[] {
+    const colorsNames: string[] = [];
+    Object.keys(this.colors).forEach((key) => {
+      colorsNames.push(key);
+    });
+    return colorsNames;
+  }
+
   getColorValue(color: string) {
+    if (this.isDebug === true) {
+      console.info({ color: color, colorValue: this.colors[color] });
+    }
     return this.colors[color];
   }
 
   updateColor(color: string, value: string) {
     try {
-      if (this.colorsNames.includes(color)) {
+      if (this.colors[color.toString()]) {
         this.colors[color] = value.replace(
           '!important' || '!default' || /\s+/g,
           ''
@@ -975,6 +1170,31 @@ export class NgxBootstrapExpandedFeaturesService {
 
   clearAllColors() {
     this.colors = {};
+    if (this.isDebug === true) {
+      console.info({ colors: this.colors });
+    }
+  }
+
+  getAlreadyCreatedClasses(): string[] {
+    if (this.isDebug === true) {
+      console.info({ alreadyCreatedClasses: this.alreadyCreatedClasses });
+    }
+    return this.alreadyCreatedClasses;
+  }
+
+  updateClasses(classesToUpdate: string[]) {
+    this.cssCreate(classesToUpdate);
+  }
+
+  getSheet(): any {
+    if (this.sheet) {
+      if (this.isDebug === true) {
+        console.info({ sheet: this.sheet });
+      }
+      return this.sheet;
+    } else {
+      return '';
+    }
   }
 
   changeDebugOption() {

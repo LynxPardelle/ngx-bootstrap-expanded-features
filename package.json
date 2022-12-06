@@ -1,6 +1,6 @@
 {
   "name": "ngx-bootstrap-expanded-features",
-  "version": "0.0.8",
+  "version": "0.3.0",
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:ngxbeflib": "npm run build ngx-bootstrap-expanded-features"
+    "build:ngxbeflib": "npm run build ngx-bootstrap-expanded-features",
+    "test-library": "npm run build ngx-bootstrap-expanded-features --watch"
   },
   "author": "lynx-pardelle (https://lynxpardelle.com/)",
   "license": "MIT",
@@ -33,7 +34,6 @@
     "@angular/platform-browser": "^14.1.2",
     "@angular/platform-browser-dynamic": "^14.1.2",
     "@angular/router": "^14.1.2",
-    "ngx-bootstrap-expanded-features": "^0.0.8",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

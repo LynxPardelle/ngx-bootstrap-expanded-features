@@ -11,8 +11,8 @@ export class AppComponent implements DoCheck {
 
   // BEF
   public colors: any = {
-    monster: "#00AA00",
-    futurePop: "#9700FF",
+    monster: '#00AA00',
+    futurePop: '#9700FF',
   };
   constructor(private _befService: BefService) {
     //BEF
@@ -20,6 +20,7 @@ export class AppComponent implements DoCheck {
 
     this._befService.cssCreate();
     this._befService.changeDebugOption();
+    console.log(this._befService.getSheet());
   }
 
   ngDoCheck(): void {
