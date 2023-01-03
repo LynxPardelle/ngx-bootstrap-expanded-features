@@ -8,13 +8,22 @@ import { HeaderComponent } from './components/header/header.component';
 import { AsideComponent } from './components/aside/aside.component';
 import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
-
-import { NgxBootstrapExpandedFeaturesService } from 'ngx-bootstrap-expanded-features';
+// import { NgxBootstrapExpandedFeaturesService } from './services/ngx-bootstrap-expanded-features.service';
+import { TestingLibraryComponent } from './core/components/testing-library/testing-library.component';
+import { HomeComponent } from './core/components/home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, AsideComponent, MainComponent, FooterComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    AsideComponent,
+    MainComponent,
+    FooterComponent,
+    TestingLibraryComponent,
+    HomeComponent,
+  ],
   imports: [BrowserModule, AppRoutingModule],
-  providers: [NgxBootstrapExpandedFeaturesService],
+  // providers: [NgxBootstrapExpandedFeaturesService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

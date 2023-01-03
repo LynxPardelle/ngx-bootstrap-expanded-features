@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  selector: 'app-testing-library',
+  templateUrl: './testing-library.component.html',
+  styleUrls: ['./testing-library.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class TestingLibraryComponent implements OnInit {
   constructor(private _befService: BefService) {}
 
   ngOnInit(): void {
