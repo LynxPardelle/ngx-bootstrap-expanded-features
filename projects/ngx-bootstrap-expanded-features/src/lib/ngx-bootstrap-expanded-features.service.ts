@@ -28,34 +28,6 @@ export class NgxBootstrapExpandedFeaturesService {
       }
     }
   }
-
-  /* cssCreate(
-    updateBefs: string[] | null = null,
-    primordial: boolean = false
-  ): void {
-    const currentCSSCreate = new Date().getTime();
-    if (
-      this.timesCSSCreated === 0 ||
-      currentCSSCreate - this.lastCSSCreate > this.timeBetweenReCreate ||
-      primordial === true
-    ) {
-      this.timer = null;
-      this.timesCSSCreated++;
-      this.doCssCreate(updateBefs);
-      this.lastCSSCreate = new Date().getTime();
-      clearInterval(this.timer);
-    } else if (this.timer === null) {
-      this.startTimer();
-    }
-  }
-
-  startTimer(): void {
-    clearInterval(this.timer);
-    this.timer = null;
-    this.timer = setTimeout(() => {
-      this.cssCreate();
-    }, 100);
-  } */
   cssCreate(
     updateBefs: string[] | null = null,
     primordial: boolean = false
@@ -64,7 +36,6 @@ export class NgxBootstrapExpandedFeaturesService {
     let currentCSSTimeCreation: number = this.timesCSSNeedsToCreate;
     let timer = setInterval(() => {
       const currentTime = Date.now();
-      /* FIXME: que funcione bien .-. si retrasa los automáticos, pero los manuales a veces no y el if parece que está de adorno. */
       if (
         currentTime - this.lastCSSCreate >= this.timeBetweenReCreate ||
         primordial === true ||
@@ -72,13 +43,6 @@ export class NgxBootstrapExpandedFeaturesService {
       ) {
         this.timesCSSCreated++;
         this.doCssCreate(updateBefs);
-        /* if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            'DoCssCreate in operation',
-            this.styleConsole
-          );
-        } */
         this.lastCSSCreate = currentTime;
         clearInterval(timer);
       }
@@ -87,25 +51,6 @@ export class NgxBootstrapExpandedFeaturesService {
       if (this.timer !== timer) {
         clearInterval(timer);
       }
-      /* if (this.isDebug === true) {
-        this.consoleParser(
-          'info',
-          {
-            shouldCreate:
-              currentTime - this.lastCSSCreate >= this.timeBetweenReCreate,
-            cTMinlCC: currentTime - this.lastCSSCreate,
-            timeBetweenReCreate: this.timeBetweenReCreate,
-            timesCSSNeedsToCreate: this.timesCSSNeedsToCreate,
-            currentCSSTimeCreation: currentCSSTimeCreation,
-            timesCSSCreated: this.timesCSSCreated,
-            lastCSSCreate: this.lastCSSCreate,
-            currentTime: currentTime,
-            timer: timer,
-            lastTimer: this.timer,
-          },
-          this.styleConsole
-        );
-      } */
     }, 10);
     this.timer = timer;
   }
@@ -173,69 +118,56 @@ export class NgxBootstrapExpandedFeaturesService {
           value = befSplited[2];
           secondValue = !!befSplited[3] ? befSplited[3] : '';
         }
-        value = value.replace(/per/g, '%');
-        value = value.replace(/COM/g, ' , ');
-        value = value.replace(/MIN/g, '-');
-        value = value.replace(/SD/g, '(');
-        value = value.replace(/ED/g, ')');
-        value = value.replace(/HASH/g, '#');
-        value = value.replace(/__/g, ' ');
-        value = value.replace(/_/g, '.');
+        /* befSplited[1] = befSplited[1]
+          .replace(/COM/g, ' , ')
+          .replace(/__/g, ' ')
+          .replace(/_/g, '.'); */
+        value = value
+          .replace(/per/g, '%')
+          .replace(/COM/g, ' , ')
+          .replace(/MIN/g, '-')
+          .replace(/PLUS/g, '+')
+          .replace(/SD/g, '(')
+          .replace(/ED/g, ')')
+          .replace(/HASH/g, '#')
+          .replace(/__/g, ' ')
+          .replace(/_/g, '.');
         this.consoleParser('info', { value: value }, this.styleConsole);
-        for (let i = 0; i < value.split(' ').length; i++) {
-          let sv: string = value.split(' ')[i];
-          let hasOPA: boolean = value.split(' ')[i + 1] === 'OPA';
-          let OPA: string = value.split(' ')[i + 2];
-          value =
-            !!hasOPA && !!OPA
-              ? value
-                  .replace(
-                    sv,
-                    `rgba(${this.HexToRGB(
-                      this.colors[sv.toString()]
-                    ).toString()}, ${OPA})`
-                  )
-                  .split(` OPA ${OPA}`)[0]
-              : value.includes(' OPA')
-              ? value
-                  .replace(
-                    sv,
-                    `rgba(${this.HexToRGB(
-                      this.colors[sv.toString()]
-                    ).toString()}, ${value.split('OPA ')[1]})`
-                  )
-                  .split(' OPA')[0]
-              : this.colors[sv.toString()]
-              ? value.replace(sv, this.colors[sv.toString()])
-              : value;
+        let values: any = {
+          value: value,
+          secondValue: secondValue,
+        };
+        for (let v in values) {
+          for (let i = 0; i < values[v].split(' ').length; i++) {
+            let sv: string = values[v].split(' ')[i];
+            let hasOPA: boolean = values[v].split(' ')[i + 1] === 'OPA';
+            let OPA: string = values[v].split(' ')[i + 2];
+            values[v] =
+              !!hasOPA && !!OPA
+                ? values[v]
+                    .replace(
+                      sv,
+                      `rgba(${this.HexToRGB(
+                        this.colors[sv.toString()]
+                      ).toString()}, ${OPA})`
+                    )
+                    .split(` OPA ${OPA}`)[0]
+                : values[v].includes(' OPA')
+                ? values[v]
+                    .replace(
+                      sv,
+                      `rgba(${this.HexToRGB(
+                        this.colors[sv.toString()]
+                      ).toString()}, ${values[v].split('OPA ')[1]})`
+                    )
+                    .split(' OPA')[0]
+                : this.colors[sv.toString()]
+                ? values[v].replace(sv, this.colors[sv.toString()])
+                : values[v];
+          }
         }
-        for (let i = 0; i < secondValue.split(' ').length; i++) {
-          let sv: string = secondValue.split(' ')[i];
-          let hasOPA: boolean = secondValue.split(' ')[i + 1] === 'OPA';
-          let OPA: string = secondValue.split(' ')[i + 2];
-          secondValue =
-            !!hasOPA && !!OPA
-              ? secondValue
-                  .replace(
-                    sv,
-                    `rgba(${this.HexToRGB(
-                      this.colors[sv.toString()]
-                    ).toString()}, ${OPA})`
-                  )
-                  .split(` OPA ${OPA}`)[0]
-              : secondValue.includes(' OPA')
-              ? secondValue
-                  .replace(
-                    sv,
-                    `rgba(${this.HexToRGB(
-                      this.colors[sv.toString()]
-                    ).toString()}, ${secondValue.split('OPA ')[1]})`
-                  )
-                  .split(' OPA')[0]
-              : this.colors[sv.toString()]
-              ? secondValue.replace(sv, this.colors[sv.toString()])
-              : secondValue;
-        }
+        value = values.value;
+        secondValue = values.secondValue;
         if (this.isDebug === true) {
           this.consoleParser('info', { value: value }, this.styleConsole);
           this.consoleParser(
@@ -246,13 +178,26 @@ export class NgxBootstrapExpandedFeaturesService {
         }
         switch (true) {
           case !!this.cssNamesParsed[
-            befSplited[1].replace('Hover', '').replace('Active', '').toString()
+            befSplited[1]
+              .replace('Hover', '')
+              .replace('Active', '')
+              .replace('Focus', '')
+              .replace('Visited', '')
+              .replace('Target', '')
+              .replace('FocusWithin', '')
+              .replace('FocusVisible', '')
+              .toString()
           ]:
             if (
               typeof this.cssNamesParsed[
                 befSplited[1]
                   .replace('Hover', '')
                   .replace('Active', '')
+                  .replace('Focus', '')
+                  .replace('Visited', '')
+                  .replace('Target', '')
+                  .replace('FocusWithin', '')
+                  .replace('FocusVisible', '')
                   .toString()
               ] === 'string'
             ) {
@@ -261,12 +206,27 @@ export class NgxBootstrapExpandedFeaturesService {
                   ? ':hover'
                   : befSplited[1].includes('Active')
                   ? ':active'
+                  : befSplited[1].includes('Focus')
+                  ? ':focus'
+                  : befSplited[1].includes('Visited')
+                  ? ':visited'
+                  : befSplited[1].includes('Target')
+                  ? ':target'
+                  : befSplited[1].includes('FocusWithin')
+                  ? ':focus-within'
+                  : befSplited[1].includes('FocusVisible')
+                  ? ':focusVisible'
                   : ''
               }{${
                 this.cssNamesParsed[
                   befSplited[1]
                     .replace('Hover', '')
                     .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
                     .toString()
                 ]
               }:${value};}`;
@@ -276,12 +236,27 @@ export class NgxBootstrapExpandedFeaturesService {
                   ? ':hover'
                   : befSplited[1].includes('Active')
                   ? ':active'
+                  : befSplited[1].includes('Focus')
+                  ? ':focus'
+                  : befSplited[1].includes('Visited')
+                  ? ':visited'
+                  : befSplited[1].includes('Target')
+                  ? ':target'
+                  : befSplited[1].includes('FocusWithin')
+                  ? ':focus-within'
+                  : befSplited[1].includes('FocusVisible')
+                  ? ':focusVisible'
                   : ''
               }{${
                 this.cssNamesParsed[
                   befSplited[1]
                     .replace('Hover', '')
                     .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
                     .toString()
                 ][0]
               }:${value};${
@@ -289,19 +264,34 @@ export class NgxBootstrapExpandedFeaturesService {
                   befSplited[1]
                     .replace('Hover', '')
                     .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
                     .toString()
                 ][1]
               }:${value};}`;
             }
             break;
-          case befSplited[1] === 'link':
-            befStringed = `.${bef} a{color:${value} !important;}`;
-            break;
-          case befSplited[1] === 'linkHover':
-            befStringed = `.${bef} a:hover{color:${value} !important;}`;
-            break;
-          case befSplited[1] === 'linkActive':
-            befStringed = `.${bef} a:active{color:${value} !important;}`;
+          case befSplited[1].startsWith('link'):
+            befStringed += `a${
+              befSplited[1].includes('Hover')
+                ? ':hover'
+                : befSplited[1].includes('Active')
+                ? ':active'
+                : befSplited[1].includes('Focus')
+                ? ':focus'
+                : befSplited[1].includes('Visited')
+                ? ':visited'
+                : befSplited[1].includes('Target')
+                ? ':target'
+                : befSplited[1].includes('FocusWithin')
+                ? ':focus-within'
+                : befSplited[1].includes('FocusVisible')
+                ? ':focusVisible'
+                : ''
+            }{color:${value} !important;}`;
             break;
           case befSplited[1] === 'btn':
             befStringed += `{

@@ -15,6 +15,10 @@ export const cssNamesParsed = {
   re: ['border-top-right-radius', 'border-bottom-right-radius'],
   rt: ['border-top-left-radius', 'border-top-right-radius'],
   rb: ['border-bottom-left-radius', 'border-bottom-right-radius'],
+  rst: 'border-top-left-radius',
+  ret: 'border-top-right-radius',
+  rsb: 'border-bottom-left-radius',
+  reb: 'border-bottom-right-radius',
   z: 'z-index',
   o: 'opacity',
   pos: 'position',
@@ -78,4 +82,7 @@ export const cssNamesParsed = {
   text: 'color',
   bsh: 'box-shadow',
   tsh: 'text-shadow',
+  ov: 'overflow',
+  ovx: 'overflow-x',
+  ovy: 'overflow-y',
 };

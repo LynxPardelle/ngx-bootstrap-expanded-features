@@ -1,51 +1,58 @@
-
-  <header>
-    <nav
-      class="navbar navbar-expand-md navbar-dark bg-dark align-items-center bef bef-boxShadow-0px__2px__4px__lavender bef-z-5 position-fixed top-0 bef-w-100vw"
-    >
-      <div class="container-fluid">
-        <a
-          class="navbar-brand bef bef-text-futurePop fw-bolder bef-textShadow-0px__0px__8px__futurePop text-wrap"
-          href="#"
-          >Bootstrap<wbr /> Expanded<wbr /> Features</a
-        >
+<header>
+  <nav
+    class="navbar navbar-expand-md navbar-dark bg-dark align-items-center bef bef-boxShadow-0px__2px__4px__lavender bef-z-5 position-fixed top-0 bef-w-100vw"
+  >
+    <div class="container-fluid">
+      <a
+        class="navbar-brand bef bef-text-futurePop fw-bolder bef-textShadow-0px__0px__8px__futurePop text-wrap"
+        href="#"
+        >Bootstrap<wbr /> Expanded<wbr /> Features</a
+      >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link bef bef-text-lavender" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link bef bef-text-lavender" href="#getting_started"
+              >Getting Started</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link bef bef-text-lavender" href="#howToUse"
+              >How To Use</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link bef bef-text-lavender"
+              href="/testing"
+              [routerLink]="'/testing'"
+              >Testing</a
+            >
+          </li>
+        </ul>
         <button
-          class="navbar-toggler"
+          class="btn bef-btn-futurePop text-light bef"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offCanvasGlosary"
+          aria-controls="offCanvasGlosary"
         >
-          <span class="navbar-toggler-icon"></span>
+          Glosary
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link bef bef-text-lavender" href="#about">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link bef bef-text-lavender" href="#getting_started"
-                >Getting Started</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link bef bef-text-lavender" href="#howToUse"
-                >How To Use</a
-              >
-            </li>
-          </ul>
-          <button
-            class="btn bef-btn-futurePop text-light bef"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offCanvasGlosary"
-            aria-controls="offCanvasGlosary"
-          >
-            Glosary
-          </button>
-          <!-- <form class="d-flex">
+        <!-- <form class="d-flex">
             <input
               id="searchInput"
               class="form-control me-2"
@@ -55,7 +62,7 @@
             />
             <button class="btn bef bef-btnOutline-lavender">Search</button>
           </form> -->
-        </div>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
+</header>
