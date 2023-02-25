@@ -3,6 +3,20 @@ import { Injectable } from '@angular/core';
 import { allColors } from './colors';
 import { cssNamesParsed } from './cssNamesParsed';
 
+export interface IBPS {
+  bp: string;
+  value: string;
+  bef: string;
+}
+
+export interface IConsoleParser {
+  type?: 'log' | 'info' | 'trace' | 'error';
+  thing: any;
+  style?: string;
+  line?: string | null;
+  stoper?: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,6 +26,34 @@ export class NgxBootstrapExpandedFeaturesService {
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
   public isDebug: boolean = false;
+  public bps: IBPS[] = [
+    {
+      bp: 'sm',
+      value: '576px',
+      bef: '',
+    },
+    {
+      bp: 'md',
+      value: '768px',
+      bef: '',
+    },
+    {
+      bp: 'lg',
+      value: '992px',
+      bef: '',
+    },
+    {
+      bp: 'xl',
+      value: '1200px',
+      bef: '',
+    },
+    {
+      bp: 'xxl',
+      value: '1400px',
+      bef: '',
+    },
+  ];
+
   /* Console */
   public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
   /* Time Management*/
@@ -58,7 +100,15 @@ export class NgxBootstrapExpandedFeaturesService {
   doCssCreate(updateBefs: string[] | null = null): void {
     try {
       if (!this.sheet) {
-        throw new Error('There is no bef-styles style sheet!');
+        let sheets: any[] = [...document.styleSheets];
+        for (let sheet of sheets) {
+          if (sheet.href?.includes('bef-styles')) {
+            this.sheet = sheet;
+          }
+        }
+        if (!this.sheet) {
+          throw new Error('There is no bef-styles style sheet!');
+        }
       }
       const startTimeCSSCreate = performance.now();
       let befs: string[] = [];
@@ -79,14 +129,10 @@ export class NgxBootstrapExpandedFeaturesService {
         befs = updateBefs;
       }
       if (this.isDebug === true) {
-        this.consoleParser('info', { befs: befs }, this.styleConsole);
+        this.consoleLog('info', { befs: befs }, this.styleConsole);
       }
       let befsStringed = '';
-      let befsStringedSM = '';
-      let befsStringedMD = '';
-      let befsStringedLG = '';
-      let befsStringedXL = '';
-      let befsStringedXXL = '';
+      let bpsStringed: IBPS[] = this.bps.map((b) => b);
       for (let bef of befs) {
         if (!updateBefs) {
           if (this.alreadyCreatedClasses.includes(bef)) {
@@ -104,13 +150,7 @@ export class NgxBootstrapExpandedFeaturesService {
         let hasBP = false;
         let value = '';
         let secondValue = '';
-        if (
-          befSplited[2] === 'sm' ||
-          befSplited[2] === 'md' ||
-          befSplited[2] === 'lg' ||
-          befSplited[2] === 'xl' ||
-          befSplited[2] === 'xxl'
-        ) {
+        if (this.bps.find((b) => befSplited[2] === b.bp)) {
           hasBP = true;
           value = befSplited[3];
           secondValue = !!befSplited[4] ? befSplited[4] : '';
@@ -132,7 +172,7 @@ export class NgxBootstrapExpandedFeaturesService {
           .replace(/HASH/g, '#')
           .replace(/__/g, ' ')
           .replace(/_/g, '.');
-        this.consoleParser('info', { value: value }, this.styleConsole);
+        this.consoleLog('info', { value: value }, this.styleConsole);
         let values: any = {
           value: value,
           secondValue: secondValue,
@@ -169,8 +209,8 @@ export class NgxBootstrapExpandedFeaturesService {
         value = values.value;
         secondValue = values.secondValue;
         if (this.isDebug === true) {
-          this.consoleParser('info', { value: value }, this.styleConsole);
-          this.consoleParser(
+          this.consoleLog('info', { value: value }, this.styleConsole);
+          this.consoleLog(
             'info',
             { secondValue: secondValue },
             this.styleConsole
@@ -371,23 +411,12 @@ export class NgxBootstrapExpandedFeaturesService {
         if (befStringed.includes('{') && befStringed.includes('}')) {
           if (hasBP === true) {
             befStringed = befStringed.replace(/\//g, '');
-            switch (befSplited[2]) {
-              case 'sm':
-                befsStringedSM += befStringed;
-                break;
-              case 'md':
-                befsStringedMD += befStringed;
-                break;
-              case 'lg':
-                befsStringedLG += befStringed;
-                break;
-              case 'xl':
-                befsStringedXL += befStringed;
-                break;
-              case 'xxl':
-                befsStringedXXL += befStringed;
-                break;
-            }
+            bpsStringed = bpsStringed.map((b) => {
+              if (befSplited[2] === b.bp) {
+                b.bef += befStringed;
+              }
+              return b;
+            });
           } else {
             befsStringed += befStringed + '/';
           }
@@ -395,7 +424,7 @@ export class NgxBootstrapExpandedFeaturesService {
       }
       if (befsStringed !== '') {
         if (this.isDebug === true) {
-          this.consoleParser(
+          this.consoleLog(
             'info',
             { befsStringed: befsStringed },
             this.styleConsole
@@ -407,69 +436,24 @@ export class NgxBootstrapExpandedFeaturesService {
           }
         }
       }
-      if (befsStringedSM !== '') {
-        if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            { befsStringedSM: befsStringedSM },
-            this.styleConsole
+      bpsStringed.forEach((b) => {
+        if (b.bef !== '') {
+          if (this.isDebug === true) {
+            this.consoleLog(
+              'info',
+              { bp: b.bp, value: b.value, bef: b.bef },
+              this.styleConsole
+            );
+          }
+          this.createCSSRules(
+            `@media only screen and (min-width: ${b.value}) {${b.bef}}`
           );
+          b.bef = '';
         }
-        this.createCSSRules(
-          `@media only screen and (min-width: 576px) {${befsStringedSM}}`
-        );
-      }
-      if (befsStringedMD !== '') {
-        if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            { befsStringedMD: befsStringedMD },
-            this.styleConsole
-          );
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 768px) {${befsStringedMD}}`
-        );
-      }
-      if (befsStringedLG !== '') {
-        if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            { befsStringedLG: befsStringedLG },
-            this.styleConsole
-          );
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 992px) {${befsStringedLG}}`
-        );
-      }
-      if (befsStringedXL !== '') {
-        if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            { befsStringedXL: befsStringedXL },
-            this.styleConsole
-          );
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 1200px) {${befsStringedXL}}`
-        );
-      }
-      if (befsStringedXXL !== '') {
-        if (this.isDebug === true) {
-          this.consoleParser(
-            'info',
-            { befsStringedXXL: befsStringedXXL },
-            this.styleConsole
-          );
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 1400px) {${befsStringedXXL}}`
-        );
-      }
+      });
       const endTimeCSSCreate = performance.now();
       if (this.isDebug === true) {
-        this.consoleParser(
+        this.consoleLog(
           'info',
           `Call to cssCreate() took ${
             endTimeCSSCreate - startTimeCSSCreate
@@ -488,19 +472,19 @@ export class NgxBootstrapExpandedFeaturesService {
             `;
       }
     } catch (err) {
-      this.consoleParser('error', { err: err }, this.styleConsole);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
   createCSSRules(rule: string, update: boolean = false): void {
     try {
       if (this.isDebug === true) {
-        this.consoleParser('info', { rule: rule }, this.styleConsole);
+        this.consoleLog('info', { rule: rule }, this.styleConsole);
       }
       if (rule && !rule.split('{')[0].includes('@media')) {
         let index;
         let originalRule: any = [...this.sheet.cssRules].some(
-          (cssRule: any, i) => {
+          (cssRule: any, i: number) => {
             if (
               cssRule.cssText.includes(
                 rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
@@ -523,70 +507,62 @@ export class NgxBootstrapExpandedFeaturesService {
           this.sheet.deleteRule(index);
         }
         this.sheet.insertRule(rule, this.sheet.cssRules.length);
-        if (this.isDebug === true) {
-          this.consoleParser('info', { sheet: this.sheet }, this.styleConsole);
-        }
       } else {
         let originalMediaRules: boolean = false;
-        for (let i = 0; i < rule.split('{').length; i++) {
-          let ruleSplit = rule.split('{')[i];
-          //for (let ruleSplit of rule.split('{')) {
-          let selector: string = ruleSplit.includes('}')
-            ? ruleSplit.split('}')[ruleSplit.split('}').length - 1]
-            : ruleSplit;
-          // CSS (& HTML) reduce spaces in selector to one.
-          if (selector !== '') {
-            selector = selector.replace('\n', '').replace(/\s+/g, ' ');
-            if (selector[0] === ' ') {
-              selector = selector.replace(' ', '');
-            }
-            let posibleMediaRule = [...this.sheet.cssRules].find((i) =>
-              i.cssText.includes(selector)
-            );
-            if (posibleMediaRule && posibleMediaRule.cssRules) {
-              originalMediaRules = true;
-              let index;
-              let posibleRule = [...posibleMediaRule.cssRules].some(
-                (cssRule: any, i) => {
-                  if (cssRule.cssText.includes(selector)) {
-                    index = i;
-                    return true;
-                  } else {
-                    return false;
-                  }
-                }
-              )
-                ? [...posibleMediaRule.cssRules].find((i) =>
-                    i.cssText.includes(selector)
-                  )
-                : undefined;
-              if (posibleRule) {
-                posibleMediaRule.deleteRule(index);
-              }
-              let nextSelector: string = rule.split('{')[i + 1].includes('}')
-                ? rule.split('{')[i + 1].split('}')[0]
-                : rule.split('{')[i] + 1;
-              let newRule = selector + '{' + nextSelector + '}';
-              posibleMediaRule.insertRule(
-                newRule,
-                posibleMediaRule.cssRules.length
-              );
-            }
+        let rulesParsed: string[] = rule
+          .replace(/{/g, '/')
+          .replace(/}/g, '/')
+          .split('/')
+          .filter((r) => r !== '')
+          .map((r) => {
+            return r.replace(/\n/g, '').replace(/\s{2}/g, '');
+          });
+        let mediaRule: string = rulesParsed[0].includes('media')
+          ? rulesParsed[0]
+          : '';
+        if (mediaRule !== '') {
+          if (mediaRule.endsWith(' ')) {
+            mediaRule = mediaRule.slice(0, -1);
           }
+          rulesParsed.shift();
+          [...this.sheet.cssRules].forEach((css) => {
+            if (css.cssText.includes(mediaRule) && css.cssRules) {
+              originalMediaRules = true;
+              let i = 0;
+              while (i <= rulesParsed.length) {
+                let index: number = 0;
+                let posibleRule: any = [...css.cssRules].some(
+                  (cssRule: any, ix: number) => {
+                    if (cssRule.cssText.includes(rulesParsed[i])) {
+                      index = ix;
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }
+                )
+                  ? [...css.cssRules].find((i) =>
+                      i.cssText.includes(rulesParsed[i])
+                    )
+                  : undefined;
+                if (!!posibleRule) {
+                  css.deleteRule(index);
+                }
+                let newRule: string = `${rulesParsed[i]}{${
+                  rulesParsed[i + 1]
+                }}`;
+                css.insertRule(newRule, css.cssRules.length);
+                i = i + 2;
+              }
+            }
+          });
         }
         if (originalMediaRules === false) {
           this.sheet.insertRule(rule, this.sheet.cssRules.length);
-          if (this.isDebug === true) {
-            this.consoleParser(
-              'info',
-              { sheet: this.sheet },
-              this.styleConsole
-            );
-          }
         }
       }
-    } catch (err) {
-      this.consoleParser('error', { err: err }, this.styleConsole);
+    } catch (err: any) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
@@ -689,6 +665,22 @@ export class NgxBootstrapExpandedFeaturesService {
       .toLowerCase();
   }
 
+  pushBPS(bps: IBPS[]): void {
+    try {
+      for (let nb of bps) {
+        let bp = this.bps.find((b) => b.bp === nb.bp);
+        if (bp) {
+          bp.value = nb.value;
+          bp.bef = '';
+        } else {
+          this.bps.push({ bp: nb.bp, value: nb.value, bef: '' });
+        }
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
   pushColors(newColors: any): void {
     try {
       Object.keys(newColors).forEach((key) => {
@@ -698,13 +690,13 @@ export class NgxBootstrapExpandedFeaturesService {
         );
       });
     } catch (err) {
-      this.consoleParser('error', { err: err }, this.styleConsole);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
   getColors(): any {
     if (this.isDebug === true) {
-      this.consoleParser('info', { colors: this.colors }, this.styleConsole);
+      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     }
     return this.colors;
   }
@@ -719,7 +711,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   getColorValue(color: string): any {
     if (this.isDebug === true) {
-      this.consoleParser(
+      this.consoleLog(
         'info',
         { color: color, colorValue: this.colors[color] },
         this.styleConsole
@@ -748,7 +740,7 @@ export class NgxBootstrapExpandedFeaturesService {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      this.consoleParser('error', { err: err }, this.styleConsole);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
@@ -760,20 +752,20 @@ export class NgxBootstrapExpandedFeaturesService {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      this.consoleParser('error', { err: err }, this.styleConsole);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
   clearAllColors(): void {
     this.colors = {};
     if (this.isDebug === true) {
-      this.consoleParser('info', { colors: this.colors }, this.styleConsole);
+      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     }
   }
 
   getAlreadyCreatedClasses(): string[] {
     if (this.isDebug === true) {
-      this.consoleParser(
+      this.consoleLog(
         'info',
         { alreadyCreatedClasses: this.alreadyCreatedClasses },
         this.styleConsole
@@ -789,7 +781,7 @@ export class NgxBootstrapExpandedFeaturesService {
   getSheet(): any {
     if (this.sheet) {
       if (this.isDebug === true) {
-        this.consoleParser('info', { sheet: this.sheet }, this.styleConsole);
+        this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
       }
       return this.sheet;
     } else {
@@ -818,50 +810,69 @@ export class NgxBootstrapExpandedFeaturesService {
     return stack.splice(stack[0] == 'Error' ? 2 : 1);
   }
 
-  consoleParser(
+  consoleLog(
     type: 'log' | 'info' | 'trace' | 'error' = 'log',
     thing: any,
-    style: string = 'padding: 1em;',
+    style: string = this.styleConsole,
     line: string | null = null,
     stoper: boolean = false
   ): void {
-    if (stoper === false) {
-      if (line) {
-        console.info('%cline: ' + line + ' = ', style);
+    this.consoleParser({
+      type: type,
+      thing: thing,
+      style: style,
+      line: line,
+      stoper: false,
+    });
+  }
+
+  consoleParser(config: IConsoleParser): void {
+    config.type = config.type ? config.type : 'log';
+    config.style = config.style ? config.style : this.styleConsole;
+    config.stoper = config.stoper ? config.stoper : false;
+    if (config.stoper === false) {
+      if (config.line) {
+        console.info('%cline: ' + config.line + ' = ', config.style);
       }
-      console.info('%c' + this.getStackTrace()[1], style);
+      console.info('%c' + this.getStackTrace()[1], config.style);
       console.groupCollapsed('Trace');
       console.trace();
       console.groupEnd();
       {
-        switch (type) {
+        switch (config.type) {
           case 'log':
             console.log(
               '%c' +
-                (typeof thing === 'object' ? JSON.stringify(thing) : thing),
-              style
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
             );
             break;
           case 'info':
             console.info(
               '%c' +
-                (typeof thing === 'object' ? JSON.stringify(thing) : thing),
-              style
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
             );
             break;
           case 'error':
             console.error(
               '%c' +
-                (typeof thing === 'object' ? JSON.stringify(thing) : thing),
-              style
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
             );
             break;
           default:
             break;
         }
       }
-      if (typeof thing === 'object') {
-        console.dir(thing);
+      if (typeof config.thing === 'object') {
+        console.dir(config.thing);
       }
     }
   }

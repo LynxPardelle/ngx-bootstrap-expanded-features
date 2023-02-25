@@ -8,6 +8,8 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
 })
 export class TestingLibraryComponent implements OnInit {
   public classes2explore: string[] = [
+    'bef-w-75per bef-bg-sm-success bef-text-sm-info',
+    'bef-w-75per bef-bg-md-warning bef-text-md-danger',
     'bef-w-75per bef-bg-mystic bef-text-lavender',
     'bef-w-75per bef-bg-beast bef-text-blood bef-p-2_5rem',
     'bef-w-75per bef-bg-tree bef-text-old bef-p-45px bef-my-3_5rem',
@@ -27,7 +29,7 @@ export class TestingLibraryComponent implements OnInit {
     'bef-w-75per bef-bg-beast bef-text-blood bef-p-2_5rem position-fixed bef-t-150px bef-s-150px',
     'bef-w-75per bef-bg-abyss__OPA__0_75 bef-text-fairy bef-textShadow-8px__4px__2px__tree bef-boxShadow-0px__8px__8px__blood',
     'bef-overflow-hidden',
-    'bef-overflowX-scroll bef-w-30px bef-asd-as bef-noclass-muchotextosiosiosiosisoisosiso',
+    'bef-overflowX-scroll bef-w-200px bef-asd-as bef-noclass-muchotextosiosiosiosisoisosiso',
   ];
   public examples: any[] = [];
   constructor(private _befService: BefService) {}
