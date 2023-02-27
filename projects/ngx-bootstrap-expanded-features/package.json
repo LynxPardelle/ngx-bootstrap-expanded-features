@@ -1,6 +1,6 @@
 {
   "name": "ngx-bootstrap-expanded-features",
-  "version": "0.3.0",
+  "version": "0.9.0",
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
 
   "peerDependencies": {

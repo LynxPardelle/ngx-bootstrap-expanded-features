@@ -9,6 +9,9 @@
 - [More Information](#more_info)
 - [Authors](#authors)
 
+## 🧐 IMPORTANT: BREAKING CHANGES, READ BEFORE UPDATE:</a>
+The border changed to borderWidth and bw, please change that in your code to have border well written.
+
 ## 🧐 About <a name = “about”></a>
 
 Too many new features for bootstrap made with javascript for better performance and more options without a large css file.

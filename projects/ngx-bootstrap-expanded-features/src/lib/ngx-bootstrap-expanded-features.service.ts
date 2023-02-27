@@ -1,191 +1,67 @@
 import { Injectable } from '@angular/core';
+/* Colors */
+import { allColors } from './colors';
+import { cssNamesParsed } from './cssNamesParsed';
+
+export interface IBPS {
+  bp: string;
+  value: string;
+  bef: string;
+}
+
+export interface IConsoleParser {
+  type?: 'log' | 'info' | 'trace' | 'error';
+  thing: any;
+  style?: string;
+  line?: string | null;
+  stoper?: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class NgxBootstrapExpandedFeaturesService {
-  public colors: any = {
-    /* colorsDefault */
-    primary: '#0d6efd',
-    secondary: '#6c757d',
-    success: '#198754',
-    info: '#0dcaf0',
-    warning: '#ffc107',
-    danger: '#dc3545',
-    light: '#f8f9fa',
-    dark: '#212529',
-    /* colorsBS */
-    indigoBS: '#6610f2',
-    purpleBS: '#6f42c1',
-    pinkBS: '#d63384',
-    orangeBS: '#fd7e14',
-    tealBS: '#20c997',
-    white: '#fff',
-    grayBS: '#6c757d',
-    /* colorsLP */
-    mystic: '#210020',
-    lavenderLP: '#D6BCFF',
-    fairy: '#D680FF',
-    summer: '#FF9A2E',
-    old: '#EEEDA0',
-    friend: '#3BBBB2',
-    tree: '#5A311D',
-    blood: '#8A0707',
-    beast: '#F5785D',
-    abyss: '#000',
-    /* basicColorsCSS */ /* (\s)(#[0-9A-Fa-f]+)\s([0-9]*,?)*\n*\s*\n*\s* */ /* :$1'$2', */
-    black: '#000000',
-    silver: '#C0C0C0',
-    gray: '#808080',
-    maroon: '#800000',
-    red: '#FF0000',
-    purple: '#800080',
-    fuchsia: '#FF00FF',
-    green: '#008000',
-    lime: '#00FF00',
-    olive: '#808000',
-    yellow: '#FFFF00',
-    navy: '#000080',
-    blue: '#0000FF',
-    teal: '#008080',
-    aqua: '#00FFFF',
-    /* extendedColorsCSS */
-    aliceblue: '#f0f8ff',
-    antiquewhite: '#faebd7',
-    aquamarine: '#7fffd4',
-    azure: '#f0ffff',
-    beige: '#f5f5dc',
-    bisque: '#ffe4c4',
-    blanchedalmond: '#ffebcd',
-    blueviolet: '#8a2be2',
-    brown: '#a52a2a',
-    burlywood: '#deb887',
-    cadetblue: '#5f9ea0',
-    chartreuse: '#7fff00',
-    chocolate: '#d2691e',
-    coral: '#ff7f50',
-    cornflowerblue: '#6495ed',
-    cornsilk: '#fff8dc',
-    crimson: '#dc143c',
-    cyan: '#00ffff',
-    darkblue: '#00008b',
-    darkcyan: '#008b8b',
-    darkgoldenrod: '#b8860b',
-    darkgray: '#a9a9a9',
-    darkgreen: '#006400',
-    darkgrey: '#a9a9a9',
-    darkkhaki: '#bdb76b',
-    darkmagenta: '#8b008b',
-    darkolivegreen: '#556b2f',
-    darkorange: '#ff8c00',
-    darkorchid: '#9932cc',
-    darkred: '#8b0000',
-    darksalmon: '#e9967a',
-    darkseagreen: '#8fbc8f',
-    darkslateblue: '#483d8b',
-    darkslategray: '#2f4f4f',
-    darkslategrey: '#2f4f4f',
-    darkturquoise: '#00ced1',
-    darkviolet: '#9400d3',
-    deeppink: '#ff1493',
-    deepskyblue: '#00bfff',
-    dimgray: '#696969',
-    dimgrey: '#696969',
-    dodgerblue: '#1e90ff',
-    firebrick: '#b22222',
-    floralwhite: '#fffaf0',
-    forestgreen: '#228b22',
-    gainsboro: '#dcdcdc',
-    ghostwhite: '#f8f8ff',
-    gold: '#ffd700',
-    goldenrod: '#daa520',
-    greenyellow: '#adff2f',
-    grey: '#808080',
-    honeydew: '#f0fff0',
-    hotpink: '#ff69b4',
-    indianred: '#cd5c5c',
-    indigo: '#4b0082',
-    ivory: '#fffff0',
-    khaki: '#f0e68c',
-    lavender: '#e6e6fa',
-    lavenderblush: '#fff0f5',
-    lawngreen: '#7cfc00',
-    lemonchiffon: '#fffacd',
-    lightblue: '#add8e6',
-    lightcoral: '#f08080',
-    lightcyan: '#e0ffff',
-    lightgoldenrodyellow: '#fafad2',
-    lightgray: '#d3d3d3',
-    lightgreen: '#90ee90',
-    lightgrey: '#d3d3d3',
-    lightpink: '#ffb6c1',
-    lightsalmon: '#ffa07a',
-    lightseagreen: '#20b2aa',
-    lightskyblue: '#87cefa',
-    lightslategray: '#778899',
-    lightslategrey: '#778899',
-    lightsteelblue: '#b0c4de',
-    lightyellow: '#ffffe0',
-    limegreen: '#32cd32',
-    linen: '#faf0e6',
-    magenta: '#ff00ff',
-    mediumaquamarine: '#66cdaa',
-    mediumblue: '#0000cd',
-    mediumorchid: '#ba55d3',
-    mediumpurple: '#9370db',
-    mediumseagreen: '#3cb371',
-    mediumslateblue: '#7b68ee',
-    mediumspringgreen: '#00fa9a',
-    mediumturquoise: '#48d1cc',
-    mediumvioletred: '#c71585',
-    midnightblue: '#191970',
-    mintcream: '#f5fffa',
-    mistyrose: '#ffe4e1',
-    moccasin: '#ffe4b5',
-    navajowhite: '#ffdead',
-    oldlace: '#fdf5e6',
-    olivedrab: '#6b8e23',
-    orange: '#ffa500',
-    orangered: '#ff4500',
-    orchid: '#da70d6',
-    palegoldenrod: '#eee8aa',
-    palegreen: '#98fb98',
-    paleturquoise: '#afeeee',
-    palevioletred: '#db7093',
-    papayawhip: '#ffefd5',
-    peachpuff: '#ffdab9',
-    peru: '#cd853f',
-    pink: '#ffc0cb',
-    plum: '#dda0dd',
-    powderblue: '#b0e0e6',
-    rosybrown: '#bc8f8f',
-    royalblue: '#4169e1',
-    saddlebrown: '#8b4513',
-    salmon: '#fa8072',
-    sandybrown: '#f4a460',
-    seagreen: '#2e8b57',
-    seashell: '#fff5ee',
-    sienna: '#a0522d',
-    skyblue: '#87ceeb',
-    slateblue: '#6a5acd',
-    slategray: '#708090',
-    slategrey: '#708090',
-    snow: '#fffafa',
-    springgreen: '#00ff7f',
-    steelblue: '#4682b4',
-    tan: '#d2b48c',
-    thistle: '#d8bfd8',
-    tomato: '#ff6347',
-    turquoise: '#40e0d0',
-    violet: '#ee82ee',
-    wheat: '#f5deb3',
-    whitesmoke: '#f5f5f5',
-    yellowgreen: '#9acd32',
-  };
+  public colors: any = allColors;
+  public cssNamesParsed: any = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
   public isDebug: boolean = false;
+  public bps: IBPS[] = [
+    {
+      bp: 'sm',
+      value: '576px',
+      bef: '',
+    },
+    {
+      bp: 'md',
+      value: '768px',
+      bef: '',
+    },
+    {
+      bp: 'lg',
+      value: '992px',
+      bef: '',
+    },
+    {
+      bp: 'xl',
+      value: '1200px',
+      bef: '',
+    },
+    {
+      bp: 'xxl',
+      value: '1400px',
+      bef: '',
+    },
+  ];
+
+  /* Console */
   public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
+  /* Time Management*/
+  public lastCSSCreate: number = new Date().getTime();
+  public timer: any = null;
+  public timesCSSCreated: number = 0;
+  public timesCSSNeedsToCreate: number = 0;
+  public timeBetweenReCreate: number = 300;
   constructor() {
     let sheets: any[] = [...document.styleSheets];
     for (let sheet of sheets) {
@@ -194,10 +70,45 @@ export class NgxBootstrapExpandedFeaturesService {
       }
     }
   }
-  cssCreate(updateBefs: string[] | null = null) {
+  cssCreate(
+    updateBefs: string[] | null = null,
+    primordial: boolean = false
+  ): void {
+    this.timesCSSNeedsToCreate++;
+    let currentCSSTimeCreation: number = this.timesCSSNeedsToCreate;
+    let timer = setInterval(() => {
+      const currentTime = Date.now();
+      if (
+        currentTime - this.lastCSSCreate >= this.timeBetweenReCreate ||
+        primordial === true ||
+        this.timesCSSCreated === 0
+      ) {
+        this.timesCSSCreated++;
+        this.doCssCreate(updateBefs);
+        this.lastCSSCreate = currentTime;
+        clearInterval(timer);
+      }
+      /* if (currentCSSTimeCreation <= this.timesCSSCreated) {
+      } */
+      if (this.timer !== timer) {
+        clearInterval(timer);
+      }
+    }, 10);
+    this.timer = timer;
+  }
+
+  doCssCreate(updateBefs: string[] | null = null): void {
     try {
       if (!this.sheet) {
-        throw new Error('There is no bef-styles style sheet!');
+        let sheets: any[] = [...document.styleSheets];
+        for (let sheet of sheets) {
+          if (sheet.href?.includes('bef-styles')) {
+            this.sheet = sheet;
+          }
+        }
+        if (!this.sheet) {
+          throw new Error('There is no bef-styles style sheet!');
+        }
       }
       const startTimeCSSCreate = performance.now();
       let befs: string[] = [];
@@ -218,14 +129,10 @@ export class NgxBootstrapExpandedFeaturesService {
         befs = updateBefs;
       }
       if (this.isDebug === true) {
-        console.info({ befs: befs });
+        this.consoleLog('info', { befs: befs }, this.styleConsole);
       }
       let befsStringed = '';
-      let befsStringedSM = '';
-      let befsStringedMD = '';
-      let befsStringedLG = '';
-      let befsStringedXL = '';
-      let befsStringedXXL = '';
+      let bpsStringed: IBPS[] = this.bps.map((b) => b);
       for (let bef of befs) {
         if (!updateBefs) {
           if (this.alreadyCreatedClasses.includes(bef)) {
@@ -242,573 +149,256 @@ export class NgxBootstrapExpandedFeaturesService {
         let befSplited = bef.split('-');
         let hasBP = false;
         let value = '';
-        if (
-          befSplited[2] === 'sm' ||
-          befSplited[2] === 'md' ||
-          befSplited[2] === 'lg' ||
-          befSplited[2] === 'xl' ||
-          befSplited[2] === 'xxl'
-        ) {
+        let secondValue = '';
+        if (this.bps.find((b) => befSplited[2] === b.bp)) {
           hasBP = true;
           value = befSplited[3];
+          secondValue = !!befSplited[4] ? befSplited[4] : '';
         } else if (befSplited[2]) {
           value = befSplited[2];
+          secondValue = !!befSplited[3] ? befSplited[3] : '';
         }
-        value = value.replace(/per/g, '%');
-        value = value.replace(/COM/g, ' , ');
-        value = value.replace(/MIN/g, '-');
-        value = value.replace(/SD/g, '(');
-        value = value.replace(/ED/g, ')');
-        value = value.replace(/HASH/g, '#');
-        value = value.replace(/__/g, ' ');
-        value = value.replace(/_/g, '.');
-        switch (befSplited[1]) {
-          case 'w':
-            befStringed += `{width:${value};}`;
-            break;
-          case 'h':
-            befStringed += `{height:${value};}`;
-            break;
-          case 'wmn':
-            befStringed += `{min-width:${value};}`;
-            break;
-          case 'hmn':
-            befStringed += `{min-height:${value};}`;
-            break;
-          case 'wmx':
-            befStringed += `{max-width:${value};}`;
-            break;
-          case 'hmx':
-            befStringed += `{max-height:${value};}`;
-            break;
-          case 'rounded':
-            befStringed += `{border-radius:${value};}`;
-            break;
-          case 'z':
-            befStringed += `{z-index:${value};}`;
-            break;
-          case 'opacity':
-            befStringed += `{opacity:${value};}`;
-            break;
-          case 'position':
-            let positionOptions = [
-              'static',
-              'absolute',
-              'fixed',
-              'relative',
-              'sticky',
-              'initial',
-              'inherit',
-            ];
-            if (positionOptions.includes(value)) {
-              befStringed += `{position:${value};}`;
+        /* befSplited[1] = befSplited[1]
+          .replace(/COM/g, ' , ')
+          .replace(/__/g, ' ')
+          .replace(/_/g, '.'); */
+        value = value
+          .replace(/per/g, '%')
+          .replace(/COM/g, ' , ')
+          .replace(/MIN/g, '-')
+          .replace(/PLUS/g, '+')
+          .replace(/SD/g, '(')
+          .replace(/ED/g, ')')
+          .replace(/HASH/g, '#')
+          .replace(/__/g, ' ')
+          .replace(/_/g, '.');
+        this.consoleLog('info', { value: value }, this.styleConsole);
+        let values: any = {
+          value: value,
+          secondValue: secondValue,
+        };
+        for (let v in values) {
+          for (let i = 0; i < values[v].split(' ').length; i++) {
+            let sv: string = values[v].split(' ')[i];
+            let hasOPA: boolean = values[v].split(' ')[i + 1] === 'OPA';
+            let OPA: string = values[v].split(' ')[i + 2];
+            values[v] =
+              !!hasOPA && !!OPA
+                ? values[v]
+                    .replace(
+                      sv,
+                      `rgba(${this.HexToRGB(
+                        this.colors[sv.toString()]
+                      ).toString()}, ${OPA})`
+                    )
+                    .split(` OPA ${OPA}`)[0]
+                : values[v].includes(' OPA')
+                ? values[v]
+                    .replace(
+                      sv,
+                      `rgba(${this.HexToRGB(
+                        this.colors[sv.toString()]
+                      ).toString()}, ${values[v].split('OPA ')[1]})`
+                    )
+                    .split(' OPA')[0]
+                : this.colors[sv.toString()]
+                ? values[v].replace(sv, this.colors[sv.toString()])
+                : values[v];
+          }
+        }
+        value = values.value;
+        secondValue = values.secondValue;
+        if (this.isDebug === true) {
+          this.consoleLog('info', { value: value }, this.styleConsole);
+          this.consoleLog(
+            'info',
+            { secondValue: secondValue },
+            this.styleConsole
+          );
+        }
+        switch (true) {
+          case !!this.cssNamesParsed[
+            befSplited[1]
+              .replace('Hover', '')
+              .replace('Active', '')
+              .replace('Focus', '')
+              .replace('Visited', '')
+              .replace('Target', '')
+              .replace('FocusWithin', '')
+              .replace('FocusVisible', '')
+              .toString()
+          ]:
+            if (
+              typeof this.cssNamesParsed[
+                befSplited[1]
+                  .replace('Hover', '')
+                  .replace('Active', '')
+                  .replace('Focus', '')
+                  .replace('Visited', '')
+                  .replace('Target', '')
+                  .replace('FocusWithin', '')
+                  .replace('FocusVisible', '')
+                  .toString()
+              ] === 'string'
+            ) {
+              befStringed += `${
+                befSplited[1].includes('Hover')
+                  ? ':hover'
+                  : befSplited[1].includes('Active')
+                  ? ':active'
+                  : befSplited[1].includes('Focus')
+                  ? ':focus'
+                  : befSplited[1].includes('Visited')
+                  ? ':visited'
+                  : befSplited[1].includes('Target')
+                  ? ':target'
+                  : befSplited[1].includes('FocusWithin')
+                  ? ':focus-within'
+                  : befSplited[1].includes('FocusVisible')
+                  ? ':focusVisible'
+                  : ''
+              }{${
+                this.cssNamesParsed[
+                  befSplited[1]
+                    .replace('Hover', '')
+                    .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
+                    .toString()
+                ]
+              }:${value};}`;
             } else {
-              befStringed += `{position:static;}`;
+              befStringed += `${
+                befSplited[1].includes('Hover')
+                  ? ':hover'
+                  : befSplited[1].includes('Active')
+                  ? ':active'
+                  : befSplited[1].includes('Focus')
+                  ? ':focus'
+                  : befSplited[1].includes('Visited')
+                  ? ':visited'
+                  : befSplited[1].includes('Target')
+                  ? ':target'
+                  : befSplited[1].includes('FocusWithin')
+                  ? ':focus-within'
+                  : befSplited[1].includes('FocusVisible')
+                  ? ':focusVisible'
+                  : ''
+              }{${
+                this.cssNamesParsed[
+                  befSplited[1]
+                    .replace('Hover', '')
+                    .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
+                    .toString()
+                ][0]
+              }:${value};${
+                this.cssNamesParsed[
+                  befSplited[1]
+                    .replace('Hover', '')
+                    .replace('Active', '')
+                    .replace('Focus', '')
+                    .replace('Visited', '')
+                    .replace('Target', '')
+                    .replace('FocusWithin', '')
+                    .replace('FocusVisible', '')
+                    .toString()
+                ][1]
+              }:${value};}`;
             }
             break;
-          case 'top':
-            befStringed += `{top:${value};}`;
+          case befSplited[1].startsWith('link'):
+            befStringed += ` a${
+              befSplited[1].includes('Hover')
+                ? ':hover'
+                : befSplited[1].includes('Active')
+                ? ':active'
+                : befSplited[1].includes('Focus')
+                ? ':focus'
+                : befSplited[1].includes('Visited')
+                ? ':visited'
+                : befSplited[1].includes('Target')
+                ? ':target'
+                : befSplited[1].includes('FocusWithin')
+                ? ':focus-within'
+                : befSplited[1].includes('FocusVisible')
+                ? ':focusVisible'
+                : ''
+            }{color:${value} !important;}`;
             break;
-          case 'bot':
-            befStringed += `{bottom:${value};}`;
+          case befSplited[1] === 'btn':
+            befStringed += `{
+                    background-color:${value};
+                    border-color:${value};}
+                  /.${bef}:hover{background-color:${this.shadeTintColor(
+              this.HexToRGB(value),
+              -15
+            )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
+                  /.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
+              this.HexToRGB(value),
+              -15
+            )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
+                  /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
+              this.HexToRGB(value),
+              -20
+            )};border-color:${this.shadeTintColor(
+              this.HexToRGB(value),
+              -25
+            )};box-shadow: 0 0 0 0.25rem
+                  rgba(${this.HexToRGB(
+                    this.shadeTintColor(this.HexToRGB(value), 3)
+                  )}, 0.5)
+                  ;}
+                  /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
+                    rgba(${this.HexToRGB(
+                      this.shadeTintColor(this.HexToRGB(value), 3)
+                    )}, 0.5)
+                  ;}`;
             break;
-          case 'end':
-            befStringed += `{right:${value};}`;
-            break;
-          case 'start':
-            befStringed += `{left:${value};}`;
-            break;
-          case 'fs':
-            befStringed += `{font-size:${value};}`;
-            break;
-          case 'lh':
-            befStringed += `{line-height:${value};}`;
-            break;
-          case 'gap':
-            befStringed += `{gap:${value};}`;
-            break;
-          case 'rowGap':
-            befStringed += `{row-gap:${value};}`;
-            break;
-          case 'columnGap':
-            befStringed += `{column-gap:${value};}`;
-            break;
-          case 'p':
-            befStringed += `{padding:${value};}`;
-            break;
-          case 'pt':
-            befStringed += `{padding-top:${value};}`;
-            break;
-          case 'pb':
-            befStringed += `{padding-bottom:${value};}`;
-            break;
-          case 'ps':
-            befStringed += `{padding-left:${value};}`;
-            break;
-          case 'pe':
-            befStringed += `{padding-right:${value};}`;
-            break;
-          case 'px':
-            befStringed += `{padding-left:${value};padding-right:${value};}`;
-            break;
-          case 'py':
-            befStringed += `{padding-top:${value};padding-bottom:${value};}`;
-            break;
-          case 'm':
-            befStringed += `{margin:${value};}`;
-            break;
-          case 'mt':
-            befStringed += `{margin-top:${value};}`;
-            break;
-          case 'mb':
-            befStringed += `{margin-bottom:${value};}`;
-            break;
-          case 'ms':
-            befStringed += `{margin-left:${value};}`;
-            break;
-          case 'me':
-            befStringed += `{margin-right:${value};}`;
-            break;
-          case 'mx':
-            befStringed += `{margin-left:${value};margin-right:${value};}`;
-            break;
-          case 'my':
-            befStringed += `{margin-top:${value};margin-bottom:${value};}`;
-            break;
-          case 'border':
-            befStringed += `{border-width:${value};}`;
-            break;
-          case 'bordert':
-            befStringed += `{border-top-width:${value};}`;
-            break;
-          case 'borderb':
-            befStringed += `{border-bottom-width:${value};}`;
-            break;
-          case 'borders':
-            befStringed += `{border-left-width:${value};}`;
-            break;
-          case 'bordere':
-            befStringed += `{border-right-width:${value};}`;
-            break;
-          case 'borderx':
-            befStringed += `{border-right-width:${value};border-left-width:${value};}`;
-            break;
-          case 'bordery':
-            befStringed += `{border-top-width:${value};border-bottom-width:${value};}`;
-            break;
-          case 'borderStyle':
-            befStringed += `{border-style:${value};}`;
-            break;
-          case 'borderStylet':
-            befStringed += `{border-top-style:${value};}`;
-            break;
-          case 'borderStyleb':
-            befStringed += `{border-bottom-style:${value};}`;
-            break;
-          case 'borderStyles':
-            befStringed += `{border-left-style:${value};}`;
-            break;
-          case 'borderStylee':
-            befStringed += `{border-right-style:${value};}`;
-            break;
-          case 'borderStylex':
-            befStringed += `{border-right-style:${value};border-left-style:${value};}`;
-            break;
-          case 'borderStyley':
-            befStringed += `{border-top-style:${value};border-bottom-style:${value};}`;
-            break;
-        }
-        if (
-          (befSplited[1] === 'bg' ||
-            befSplited[1] === 'bgHover' ||
-            befSplited[1] === 'bgActive' ||
-            befSplited[1] === 'text' ||
-            befSplited[1] === 'textHover' ||
-            befSplited[1] === 'textActive' ||
-            befSplited[1] === 'link' ||
-            befSplited[1] === 'linkHover' ||
-            befSplited[1] === 'linkActive' ||
-            befSplited[1] === 'borderColor' ||
-            befSplited[1] === 'borderColort' ||
-            befSplited[1] === 'borderColorb' ||
-            befSplited[1] === 'borderColors' ||
-            befSplited[1] === 'borderColore' ||
-            befSplited[1] === 'borderColorx' ||
-            befSplited[1] === 'borderColory' ||
-            befSplited[1] === 'btn' ||
-            befSplited[1] === 'btnOutline' ||
-            befSplited[1] === 'boxShadow' ||
-            befSplited[1] === 'textShadow') &&
-          (this.colors[value.toString()] ||
-            this.colors[value.split(' ')[0]?.toString()] ||
-            this.colors[value.split(' ')[1]?.toString()] ||
-            this.colors[value.split(' ')[2]?.toString()] ||
-            this.colors[value.split(' ')[3]?.toString()] ||
-            this.colors[value.split(' ')[4]?.toString()])
-        ) {
-          switch (befSplited[1]) {
-            case 'bg':
-              if (value.includes(' OPA')) {
-                befStringed += `{background-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{background-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'bgHover':
-              if (value.includes(' OPA')) {
-                befStringed += `:hover{background-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `:hover{background-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'bgActive':
-              if (value.includes(' OPA')) {
-                befStringed += `:active{background-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `:active{background-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'text':
-              if (value.includes(' OPA')) {
-                befStringed += `{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'textHover':
-              if (value.includes(' OPA')) {
-                befStringed += `:hover{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `:hover{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'textActive':
-              if (value.includes(' OPA')) {
-                befStringed += `:active{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `:active{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'link':
-              if (value.includes(' OPA')) {
-                befStringed = `.${bef} a{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed = `.${bef} a{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'linkHover':
-              if (value.includes(' OPA')) {
-                befStringed = `.${bef} a:hover{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed = `.${bef} a:hover{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'linkActive':
-              if (value.includes(' OPA')) {
-                befStringed = `.${bef} a:active{color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed = `.${bef} a:active{color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColor':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColort':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-top-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-top-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColorb':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-bottom-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-bottom-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColors':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-right-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-right-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColore':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-left-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-left-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColorx':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-right-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${
-                  value.split(' ')[2]
-                }) !important;border-left-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-right-color:${this.colors[value]} !important;border-left-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'borderColory':
-              if (value.includes(' OPA')) {
-                befStringed += `{border-top-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${
-                  value.split(' ')[2]
-                }) !important;border-bottom-color: rgba(${this.HexToRGB(
-                  this.colors[value.split(' ')[0]]
-                ).toString()}, ${value.split(' ')[2]}) !important;}`;
-              } else {
-                befStringed += `{border-top-color:${this.colors[value]} !important;border-bottom-color:${this.colors[value]} !important;}`;
-              }
-              break;
-            case 'btn':
-              if (value.includes(' OPA')) {
-                befStringed += `{
-                      background-color: rgba(${this.HexToRGB(
-                        this.colors[value.split(' ')[0]]
-                      ).toString()}, ${value.split(' ')[2]});
-                    border-color: rgba(${this.HexToRGB(
-                      this.colors[value.split(' ')[0]]
-                    ).toString()}, ${value.split(' ')[2]});}
+          case befSplited[1] === 'btnOutline':
+            befStringed += `{
+                    color:${value};
+                    background-color:${secondValue ? secondValue : 'default'};
+                      border-color:${value};}
                     /.${bef}:hover{
-                      background-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -15
-                        )
-                      ).toString()}, ${value.split(' ')[2]});
-                    border-color: rgba(${this.HexToRGB(
-                      this.shadeTintColor(
-                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                      background-color:${value};
+                      color:${secondValue ? secondValue : 'default'};
+                      border-color:${this.shadeTintColor(
+                        this.HexToRGB(value),
                         -20
-                      )
-                    ).toString()}, ${value.split(' ')[2]});}
+                      )};}
                     /.btn-check:focus + .${bef}, .${bef}:focus{
-                      background-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -15
-                        )
-                      ).toString()}, ${value.split(' ')[2]});
-                    border-color: rgba(${this.HexToRGB(
-                      this.shadeTintColor(
-                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                      border-color:${this.shadeTintColor(
+                        this.HexToRGB(value),
                         -20
-                      )
-                    ).toString()}, ${value.split(' ')[2]});}
+                      )};}
                     /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                      background-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -20
-                        )
-                      ).toString()}, ${value.split(' ')[2]});
-                    border-color: rgba(${this.HexToRGB(
-                      this.shadeTintColor(
-                        this.HexToRGB(this.colors[value.split(' ')[0]]),
+                      border-color:${this.shadeTintColor(
+                        this.HexToRGB(value),
                         -25
-                      )
-                    ).toString()}, ${value.split(' ')[2]});
+                      )};
                     box-shadow: 0 0 0 0.25rem
                     rgba(${this.HexToRGB(
-                      this.shadeTintColor(
-                        this.HexToRGB(this.colors[value.split(' ')[0]]),
-                        3
-                      )
-                    )}, ${value.split(' ')[2]})
+                      this.shadeTintColor(this.HexToRGB(value), 3)
+                    )}, 0.5)
                     ;}
                     /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
                       box-shadow: 0 0 0 0.25rem
                       rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          3
-                        )
-                      )}, ${value.split(' ')[2]})
-                    ;}`;
-              } else {
-                befStringed += `{
-                      background-color:${this.colors[value]};
-                      border-color:${this.colors[value]};}
-                    /.${bef}:hover{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -15
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};}
-                    /.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -15
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};}
-                    /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -20
-                )};border-color:${this.shadeTintColor(
-                  this.HexToRGB(this.colors[value]),
-                  -25
-                )};box-shadow: 0 0 0 0.25rem
-                    rgba(${this.HexToRGB(
-                      this.shadeTintColor(this.HexToRGB(this.colors[value]), 3)
-                    )}, 0.5)
-                    ;}
-                    /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
-                      rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value]),
-                          3
-                        )
+                        this.shadeTintColor(this.HexToRGB(value), 3)
                       )}, 0.5)
                     ;}`;
-              }
-              break;
-            case 'btnOutline':
-              if (value.includes(' OPA')) {
-                befStringed += `{
-                      color: rgba(${this.HexToRGB(
-                        this.colors[value.split(' ')[0]]
-                      ).toString()}, ${value.split(' ')[2]});
-                      border-color: rgba(${this.HexToRGB(
-                        this.colors[value.split(' ')[0]]
-                      ).toString()}, ${value.split(' ')[2]});}
-                      /.${bef}:hover{
-                        background-color: rgba(${this.HexToRGB(
-                          this.colors[value.split(' ')[0]]
-                        ).toString()}, ${value.split(' ')[2]});
-                      border-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -20
-                        )
-                      ).toString()}, ${value.split(' ')[2]});}
-                      /.btn-check:focus + .${bef}, .${bef}:focus{
-                      border-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -20
-                        )
-                      ).toString()}, ${value.split(' ')[2]});}
-                      /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                      border-color: rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          -25
-                        )
-                      ).toString()}, ${value.split(' ')[2]});
-                      box-shadow: 0 0 0 0.25rem
-                      rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value.split(' ')[0]]),
-                          3
-                        )
-                      )}, ${value.split(' ')[2]})
-                      ;}
-                      /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
-                        box-shadow: 0 0 0 0.25rem
-                        rgba(${this.HexToRGB(
-                          this.shadeTintColor(
-                            this.HexToRGB(this.colors[value.split(' ')[0]]),
-                            3
-                          )
-                        )}, ${value.split(' ')[2]})
-                      ;}`;
-              } else {
-                befStringed += `{
-                      color:${this.colors[value]};
-                        border-color:${this.colors[value]};}
-                      /.${bef}:hover{
-                        background-color:${this.colors[value]};
-                        border-color:${this.shadeTintColor(
-                          this.HexToRGB(this.colors[value]),
-                          -20
-                        )};}
-                      /.btn-check:focus + .${bef}, .${bef}:focus{
-                        border-color:${this.shadeTintColor(
-                          this.HexToRGB(this.colors[value]),
-                          -20
-                        )};}
-                      /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                        border-color:${this.shadeTintColor(
-                          this.HexToRGB(this.colors[value]),
-                          -25
-                        )};
-                      box-shadow: 0 0 0 0.25rem
-                      rgba(${this.HexToRGB(
-                        this.shadeTintColor(
-                          this.HexToRGB(this.colors[value]),
-                          3
-                        )
-                      )}, 0.5)
-                      ;}
-                      /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
-                        box-shadow: 0 0 0 0.25rem
-                        rgba(${this.HexToRGB(
-                          this.shadeTintColor(
-                            this.HexToRGB(this.colors[value]),
-                            3
-                          )
-                        )}, 0.5)
-                      ;}`;
-              }
-              break;
-            case 'boxShadow':
-              for (let splitVal of value.split(' ')) {
-                if (this.colors[splitVal.toString()]) {
-                  value = value.replace(splitVal, this.colors[splitVal]);
-                }
-              }
-              befStringed += `{box-shadow:${value} !important;}`;
-              break;
-            case 'textShadow':
-              for (let splitVal of value.split(' ')) {
-                if (this.colors[splitVal.toString()]) {
-                  value = value.replace(splitVal, this.colors[splitVal]);
-                }
-              }
-              befStringed += `{text-shadow:${value} !important;}`;
-              break;
-          }
+            break;
+          default:
+            befStringed += `{${this.camelToCSSValid(befSplited[1])}:${value};}`;
+            break;
         }
         for (let cssProperty of befStringed.split(';')) {
           if (!cssProperty.includes('!important') && cssProperty.length > 5) {
@@ -821,23 +411,12 @@ export class NgxBootstrapExpandedFeaturesService {
         if (befStringed.includes('{') && befStringed.includes('}')) {
           if (hasBP === true) {
             befStringed = befStringed.replace(/\//g, '');
-            switch (befSplited[2]) {
-              case 'sm':
-                befsStringedSM += befStringed;
-                break;
-              case 'md':
-                befsStringedMD += befStringed;
-                break;
-              case 'lg':
-                befsStringedLG += befStringed;
-                break;
-              case 'xl':
-                befsStringedXL += befStringed;
-                break;
-              case 'xxl':
-                befsStringedXXL += befStringed;
-                break;
-            }
+            bpsStringed = bpsStringed.map((b) => {
+              if (befSplited[2] === b.bp) {
+                b.bef += befStringed;
+              }
+              return b;
+            });
           } else {
             befsStringed += befStringed + '/';
           }
@@ -845,7 +424,11 @@ export class NgxBootstrapExpandedFeaturesService {
       }
       if (befsStringed !== '') {
         if (this.isDebug === true) {
-          console.info({ befsStringed: befsStringed });
+          this.consoleLog(
+            'info',
+            { befsStringed: befsStringed },
+            this.styleConsole
+          );
         }
         for (let bef of befsStringed.split('/')) {
           if (bef !== '') {
@@ -853,54 +436,29 @@ export class NgxBootstrapExpandedFeaturesService {
           }
         }
       }
-      if (befsStringedSM !== '') {
-        if (this.isDebug === true) {
-          console.info({ befsStringedSM: befsStringedSM });
+      bpsStringed.forEach((b) => {
+        if (b.bef !== '') {
+          if (this.isDebug === true) {
+            this.consoleLog(
+              'info',
+              { bp: b.bp, value: b.value, bef: b.bef },
+              this.styleConsole
+            );
+          }
+          this.createCSSRules(
+            `@media only screen and (min-width: ${b.value}) {${b.bef}}`
+          );
+          b.bef = '';
         }
-        this.createCSSRules(
-          `@media only screen and (min-width: 576px) {${befsStringedSM}}`
-        );
-      }
-      if (befsStringedMD !== '') {
-        if (this.isDebug === true) {
-          console.info({ befsStringedMD: befsStringedMD });
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 768px) {${befsStringedMD}}`
-        );
-      }
-      if (befsStringedLG !== '') {
-        if (this.isDebug === true) {
-          console.info({ befsStringedLG: befsStringedLG });
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 992px) {${befsStringedLG}}`
-        );
-      }
-      if (befsStringedXL !== '') {
-        if (this.isDebug === true) {
-          console.info({ befsStringedXL: befsStringedXL });
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 1200px) {${befsStringedXL}}`
-        );
-      }
-      if (befsStringedXXL !== '') {
-        if (this.isDebug === true) {
-          console.info({ befsStringedXXL: befsStringedXXL });
-        }
-        this.createCSSRules(
-          `@media only screen and (min-width: 1400px) {${befsStringedXXL}}`
-        );
-      }
+      });
       const endTimeCSSCreate = performance.now();
-
       if (this.isDebug === true) {
-        console.info(
+        this.consoleLog(
+          'info',
           `Call to cssCreate() took ${
             endTimeCSSCreate - startTimeCSSCreate
           } milliseconds`,
-          'info'
+          this.styleConsole
         );
       }
       let befTimer = document.getElementById('befTimer');
@@ -914,19 +472,19 @@ export class NgxBootstrapExpandedFeaturesService {
             `;
       }
     } catch (err) {
-      console.error(err);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
-  createCSSRules(rule: string, update: boolean = false) {
+  createCSSRules(rule: string, update: boolean = false): void {
     try {
       if (this.isDebug === true) {
-        console.info({ rule: rule });
+        this.consoleLog('info', { rule: rule }, this.styleConsole);
       }
       if (rule && !rule.split('{')[0].includes('@media')) {
         let index;
         let originalRule: any = [...this.sheet.cssRules].some(
-          (cssRule: any, i) => {
+          (cssRule: any, i: number) => {
             if (
               cssRule.cssText.includes(
                 rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
@@ -949,66 +507,62 @@ export class NgxBootstrapExpandedFeaturesService {
           this.sheet.deleteRule(index);
         }
         this.sheet.insertRule(rule, this.sheet.cssRules.length);
-        if (this.isDebug === true) {
-          console.info({ sheet: this.sheet });
-        }
       } else {
         let originalMediaRules: boolean = false;
-        for (let i = 0; i < rule.split('{').length; i++) {
-          let ruleSplit = rule.split('{')[i];
-          //for (let ruleSplit of rule.split('{')) {
-          let selector: string = ruleSplit.includes('}')
-            ? ruleSplit.split('}')[ruleSplit.split('}').length - 1]
-            : ruleSplit;
-          // CSS (& HTML) reduce spaces in selector to one.
-          if (selector !== '') {
-            selector = selector.replace('\n', '').replace(/\s+/g, ' ');
-            if (selector[0] === ' ') {
-              selector = selector.replace(' ', '');
-            }
-            let posibleMediaRule = [...this.sheet.cssRules].find((i) =>
-              i.cssText.includes(selector)
-            );
-            if (posibleMediaRule && posibleMediaRule.cssRules) {
-              originalMediaRules = true;
-              let index;
-              let posibleRule = [...posibleMediaRule.cssRules].some(
-                (cssRule: any, i) => {
-                  if (cssRule.cssText.includes(selector)) {
-                    index = i;
-                    return true;
-                  } else {
-                    return false;
-                  }
-                }
-              )
-                ? [...posibleMediaRule.cssRules].find((i) =>
-                    i.cssText.includes(selector)
-                  )
-                : undefined;
-              if (posibleRule) {
-                posibleMediaRule.deleteRule(index);
-              }
-              let nextSelector: string = rule.split('{')[i + 1].includes('}')
-                ? rule.split('{')[i + 1].split('}')[0]
-                : rule.split('{')[i] + 1;
-              let newRule = selector + '{' + nextSelector + '}';
-              posibleMediaRule.insertRule(
-                newRule,
-                posibleMediaRule.cssRules.length
-              );
-            }
+        let rulesParsed: string[] = rule
+          .replace(/{/g, '/')
+          .replace(/}/g, '/')
+          .split('/')
+          .filter((r) => r !== '')
+          .map((r) => {
+            return r.replace(/\n/g, '').replace(/\s{2}/g, '');
+          });
+        let mediaRule: string = rulesParsed[0].includes('media')
+          ? rulesParsed[0]
+          : '';
+        if (mediaRule !== '') {
+          if (mediaRule.endsWith(' ')) {
+            mediaRule = mediaRule.slice(0, -1);
           }
+          rulesParsed.shift();
+          [...this.sheet.cssRules].forEach((css) => {
+            if (css.cssText.includes(mediaRule) && css.cssRules) {
+              originalMediaRules = true;
+              let i = 0;
+              while (i <= rulesParsed.length) {
+                let index: number = 0;
+                let posibleRule: any = [...css.cssRules].some(
+                  (cssRule: any, ix: number) => {
+                    if (cssRule.cssText.includes(rulesParsed[i])) {
+                      index = ix;
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }
+                )
+                  ? [...css.cssRules].find((i) =>
+                      i.cssText.includes(rulesParsed[i])
+                    )
+                  : undefined;
+                if (!!posibleRule) {
+                  css.deleteRule(index);
+                }
+                let newRule: string = `${rulesParsed[i]}{${
+                  rulesParsed[i + 1]
+                }}`;
+                css.insertRule(newRule, css.cssRules.length);
+                i = i + 2;
+              }
+            }
+          });
         }
         if (originalMediaRules === false) {
           this.sheet.insertRule(rule, this.sheet.cssRules.length);
-          if (this.isDebug === true) {
-            console.info({ sheet: this.sheet });
-          }
         }
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
@@ -1059,7 +613,7 @@ export class NgxBootstrapExpandedFeaturesService {
     return rgb;
   }
 
-  shadeTintColor(rgb: number[], percent: number) {
+  shadeTintColor(rgb: number[], percent: number): string {
     let R: any =
       rgb[0] === 0 && percent > 0
         ? 16
@@ -1097,7 +651,37 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
-  pushColors(newColors: any) {
+  cssValidToCamel(st: string): string {
+    return st.replace(/([-_][a-z])/gi, ($1) => {
+      return $1.toUpperCase().replace('-', '').replace('_', '');
+    });
+  }
+
+  camelToCSSValid(st: string): string {
+    return st
+      .replace(/[\w]([A-Z])/g, (m) => {
+        return m[0] + '-' + m[1];
+      })
+      .toLowerCase();
+  }
+
+  pushBPS(bps: IBPS[]): void {
+    try {
+      for (let nb of bps) {
+        let bp = this.bps.find((b) => b.bp === nb.bp);
+        if (bp) {
+          bp.value = nb.value;
+          bp.bef = '';
+        } else {
+          this.bps.push({ bp: nb.bp, value: nb.value, bef: '' });
+        }
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  pushColors(newColors: any): void {
     try {
       Object.keys(newColors).forEach((key) => {
         this.colors[key] = newColors[key].replace(
@@ -1106,13 +690,13 @@ export class NgxBootstrapExpandedFeaturesService {
         );
       });
     } catch (err) {
-      console.error(err);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
   getColors(): any {
     if (this.isDebug === true) {
-      console.info({ colors: this.colors });
+      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     }
     return this.colors;
   }
@@ -1125,14 +709,18 @@ export class NgxBootstrapExpandedFeaturesService {
     return colorsNames;
   }
 
-  getColorValue(color: string) {
+  getColorValue(color: string): any {
     if (this.isDebug === true) {
-      console.info({ color: color, colorValue: this.colors[color] });
+      this.consoleLog(
+        'info',
+        { color: color, colorValue: this.colors[color] },
+        this.styleConsole
+      );
     }
     return this.colors[color];
   }
 
-  updateColor(color: string, value: string) {
+  updateColor(color: string, value: string): void {
     try {
       if (this.colors[color.toString()]) {
         this.colors[color] = value.replace(
@@ -1146,17 +734,17 @@ export class NgxBootstrapExpandedFeaturesService {
           }
         }
         if (classesToUpdate.length > 0) {
-          this.cssCreate(classesToUpdate);
+          this.doCssCreate(classesToUpdate);
         }
       } else {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console.error(err);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
-  deleteColor(color: string) {
+  deleteColor(color: string): void {
     try {
       if (this.colors.includes(color)) {
         delete this.colors[color];
@@ -1164,32 +752,36 @@ export class NgxBootstrapExpandedFeaturesService {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console.error(err);
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
 
-  clearAllColors() {
+  clearAllColors(): void {
     this.colors = {};
     if (this.isDebug === true) {
-      console.info({ colors: this.colors });
+      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     }
   }
 
   getAlreadyCreatedClasses(): string[] {
     if (this.isDebug === true) {
-      console.info({ alreadyCreatedClasses: this.alreadyCreatedClasses });
+      this.consoleLog(
+        'info',
+        { alreadyCreatedClasses: this.alreadyCreatedClasses },
+        this.styleConsole
+      );
     }
     return this.alreadyCreatedClasses;
   }
 
-  updateClasses(classesToUpdate: string[]) {
-    this.cssCreate(classesToUpdate);
+  updateClasses(classesToUpdate: string[]): void {
+    this.doCssCreate(classesToUpdate);
   }
 
   getSheet(): any {
     if (this.sheet) {
       if (this.isDebug === true) {
-        console.info({ sheet: this.sheet });
+        this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
       }
       return this.sheet;
     } else {
@@ -1197,7 +789,91 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
-  changeDebugOption() {
+  changeDebugOption(): void {
     this.isDebug = !this.isDebug;
+  }
+
+  setTimeBetweenReCreate(time: number): void {
+    this.timeBetweenReCreate = time;
+  }
+
+  getStackTrace(): string {
+    let stack;
+    try {
+      throw new Error('');
+    } catch (error: any) {
+      stack = error.stack || '';
+    }
+    stack = stack.split('\n').map((line: any) => {
+      return line.trim();
+    });
+    return stack.splice(stack[0] == 'Error' ? 2 : 1);
+  }
+
+  consoleLog(
+    type: 'log' | 'info' | 'trace' | 'error' = 'log',
+    thing: any,
+    style: string = this.styleConsole,
+    line: string | null = null,
+    stoper: boolean = false
+  ): void {
+    this.consoleParser({
+      type: type,
+      thing: thing,
+      style: style,
+      line: line,
+      stoper: false,
+    });
+  }
+
+  consoleParser(config: IConsoleParser): void {
+    config.type = config.type ? config.type : 'log';
+    config.style = config.style ? config.style : this.styleConsole;
+    config.stoper = config.stoper ? config.stoper : false;
+    if (config.stoper === false) {
+      if (config.line) {
+        console.info('%cline: ' + config.line + ' = ', config.style);
+      }
+      console.info('%c' + this.getStackTrace()[1], config.style);
+      console.groupCollapsed('Trace');
+      console.trace();
+      console.groupEnd();
+      {
+        switch (config.type) {
+          case 'log':
+            console.log(
+              '%c' +
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
+            );
+            break;
+          case 'info':
+            console.info(
+              '%c' +
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
+            );
+            break;
+          case 'error':
+            console.error(
+              '%c' +
+                (typeof config.thing === 'object'
+                  ? JSON.stringify(config.thing)
+                  : config.thing),
+              config.style
+            );
+            break;
+          default:
+            break;
+        }
+      }
+      if (typeof config.thing === 'object') {
+        console.dir(config.thing);
+      }
+    }
   }
 }

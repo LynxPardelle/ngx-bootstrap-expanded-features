@@ -1,0 +1,9 @@
+<button class="btn btn-warning mx-auto d-block" (click)="createNewExample()">
+  Create Testing example
+</button>
+<div *ngFor="let item of examples" class="bef mx-auto d-block text-center {{ item }}">
+  {{ item }}
+  <span *ngIf="item.includes('span')">
+    Prueba
+  </span>
+</div>
