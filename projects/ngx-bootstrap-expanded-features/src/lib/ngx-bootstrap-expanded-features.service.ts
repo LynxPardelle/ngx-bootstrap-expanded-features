@@ -88,8 +88,8 @@ export class NgxBootstrapExpandedFeaturesService {
         this.lastCSSCreate = currentTime;
         clearInterval(timer);
       }
-      if (currentCSSTimeCreation <= this.timesCSSCreated) {
-      }
+      /* if (currentCSSTimeCreation <= this.timesCSSCreated) {
+      } */
       if (this.timer !== timer) {
         clearInterval(timer);
       }
@@ -315,7 +315,7 @@ export class NgxBootstrapExpandedFeaturesService {
             }
             break;
           case befSplited[1].startsWith('link'):
-            befStringed += `a${
+            befStringed += ` a${
               befSplited[1].includes('Hover')
                 ? ':hover'
                 : befSplited[1].includes('Active')
