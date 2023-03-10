@@ -8,6 +8,8 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
 })
 export class TestingLibraryComponent implements OnInit {
   public classes2explore: string[] = [
+    'bef-w-85per bef-bg-success bef-text-info bef-p-3rem bef-bgLastChild-lavender bef-pNthChildSD2ED-2rem span-span',
+    'bef-w-75per bef-bg-warning bef-text-danger bef-contentBefore-CSPcomillas__simplesCSP bef-bgBefore-success',
     'bef-w-75per bef-bg-sm-success bef-text-sm-info',
     'bef-w-75per bef-bg-md-warning bef-text-md-danger',
     'bef-w-75per bef-bg-mystic bef-text-lavender',
@@ -39,17 +41,6 @@ export class TestingLibraryComponent implements OnInit {
   }
 
   createNewExample() {
-    /* this.examples.push(
-      !!this.classes2explore[this.examples.length]
-        ? this.classes2explore[this.examples.length]
-        : this.classes2explore[
-            this.examples.length - this.classes2explore.length
-          ]
-        ? this.classes2explore[
-            this.examples.length - this.classes2explore.length
-          ]
-        : ''
-    ); */
     let minus: number = 0;
     let class2Explore: string;
     do {

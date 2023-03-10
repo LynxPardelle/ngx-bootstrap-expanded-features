@@ -17,6 +17,11 @@ export interface IConsoleParser {
   stoper?: boolean;
 }
 
+export interface IPseudo {
+  mask: string;
+  real: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -62,6 +67,40 @@ export class NgxBootstrapExpandedFeaturesService {
   public timesCSSCreated: number = 0;
   public timesCSSNeedsToCreate: number = 0;
   public timeBetweenReCreate: number = 300;
+  public pseudoClasses: string[] =
+    'Active/Checked/Default/Dir/Disabled/Empty/Enabled/First/FirstChild/FirstOfType/Fullscreen/Focus/Hover/Indeterminate/InRange/Invalid/Lang/LastChild/LastOfType/Left/Link/Not/NthChild/NthLastChild/NthLastOfType/NthOfType/OnlyChild/OnlyOfType/Optional/OutOfRange/ReadOnly/ReadWrite/Required/Right/Root/Scope/Target/Valid/Visited'.split(
+      '/'
+    );
+  public pseudoElements: string[] =
+    'After/Before/FirstLetter/FirstLine/Selection/Backdrop/Placeholder/Marker/SpellingError/GrammarError'.split(
+      '/'
+    );
+  public pseudos: IPseudo[] = this.pseudoClasses
+    .sort((e1: number | string, e2: number | string) => {
+      e1 = e1.toString().length;
+      e2 = e2.toString().length;
+      return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
+    })
+    .map((pse: string) => {
+      return {
+        mask: pse,
+        real: `/:${this.camelToCSSValid(pse)}`,
+      };
+    })
+    .concat(
+      this.pseudoElements
+        .sort((e1: number | string, e2: number | string) => {
+          e1 = e1.toString().length;
+          e2 = e2.toString().length;
+          return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
+        })
+        .map((pse: string) => {
+          return {
+            mask: pse,
+            real: `/::${this.camelToCSSValid(pse)}`,
+          };
+        })
+    );
   constructor() {
     let sheets: any[] = [...document.styleSheets];
     for (let sheet of sheets) {
@@ -128,9 +167,7 @@ export class NgxBootstrapExpandedFeaturesService {
       } else {
         befs = updateBefs;
       }
-      if (this.isDebug === true) {
-        this.consoleLog('info', { befs: befs }, this.styleConsole);
-      }
+      this.consoleLog('info', { befs: befs }, this.styleConsole);
       let befsStringed = '';
       let bpsStringed: IBPS[] = this.bps.map((b) => b);
       for (let bef of befs) {
@@ -165,11 +202,14 @@ export class NgxBootstrapExpandedFeaturesService {
         value = value
           .replace(/per/g, '%')
           .replace(/COM/g, ' , ')
+          .replace(/CSP/g, `'`)
+          .replace(/CDB/g, `"`)
           .replace(/MIN/g, '-')
           .replace(/PLUS/g, '+')
           .replace(/SD/g, '(')
           .replace(/ED/g, ')')
           .replace(/HASH/g, '#')
+          .replace(/SLASH/g, '/')
           .replace(/__/g, ' ')
           .replace(/_/g, '.');
         this.consoleLog('info', { value: value }, this.styleConsole);
@@ -208,128 +248,49 @@ export class NgxBootstrapExpandedFeaturesService {
         }
         value = values.value;
         secondValue = values.secondValue;
-        if (this.isDebug === true) {
-          this.consoleLog('info', { value: value }, this.styleConsole);
-          this.consoleLog(
-            'info',
-            { secondValue: secondValue },
-            this.styleConsole
-          );
-        }
+        this.consoleLog(
+          'info',
+          { value: value, secondValue: secondValue },
+          this.styleConsole
+        );
         switch (true) {
           case !!this.cssNamesParsed[
-            befSplited[1]
-              .replace('Hover', '')
-              .replace('Active', '')
-              .replace('Focus', '')
-              .replace('Visited', '')
-              .replace('Target', '')
-              .replace('FocusWithin', '')
-              .replace('FocusVisible', '')
-              .toString()
+            this.removePseudos(befSplited[1]).split('/')[0].toString()
           ]:
             if (
               typeof this.cssNamesParsed[
-                befSplited[1]
-                  .replace('Hover', '')
-                  .replace('Active', '')
-                  .replace('Focus', '')
-                  .replace('Visited', '')
-                  .replace('Target', '')
-                  .replace('FocusWithin', '')
-                  .replace('FocusVisible', '')
-                  .toString()
+                this.removePseudos(befSplited[1]).split('/')[0].toString()
               ] === 'string'
             ) {
               befStringed += `${
-                befSplited[1].includes('Hover')
-                  ? ':hover'
-                  : befSplited[1].includes('Active')
-                  ? ':active'
-                  : befSplited[1].includes('Focus')
-                  ? ':focus'
-                  : befSplited[1].includes('Visited')
-                  ? ':visited'
-                  : befSplited[1].includes('Target')
-                  ? ':target'
-                  : befSplited[1].includes('FocusWithin')
-                  ? ':focus-within'
-                  : befSplited[1].includes('FocusVisible')
-                  ? ':focusVisible'
+                !!this.removePseudos(befSplited[1]).split('/')[1]
+                  ? this.removePseudos(befSplited[1]).split('/')[1]
                   : ''
               }{${
                 this.cssNamesParsed[
-                  befSplited[1]
-                    .replace('Hover', '')
-                    .replace('Active', '')
-                    .replace('Focus', '')
-                    .replace('Visited', '')
-                    .replace('Target', '')
-                    .replace('FocusWithin', '')
-                    .replace('FocusVisible', '')
-                    .toString()
+                  this.removePseudos(befSplited[1]).split('/')[0].toString()
                 ]
               }:${value};}`;
             } else {
               befStringed += `${
-                befSplited[1].includes('Hover')
-                  ? ':hover'
-                  : befSplited[1].includes('Active')
-                  ? ':active'
-                  : befSplited[1].includes('Focus')
-                  ? ':focus'
-                  : befSplited[1].includes('Visited')
-                  ? ':visited'
-                  : befSplited[1].includes('Target')
-                  ? ':target'
-                  : befSplited[1].includes('FocusWithin')
-                  ? ':focus-within'
-                  : befSplited[1].includes('FocusVisible')
-                  ? ':focusVisible'
+                !!this.removePseudos(befSplited[1]).split('/')[1]
+                  ? this.removePseudos(befSplited[1]).split('/')[1]
                   : ''
               }{${
                 this.cssNamesParsed[
-                  befSplited[1]
-                    .replace('Hover', '')
-                    .replace('Active', '')
-                    .replace('Focus', '')
-                    .replace('Visited', '')
-                    .replace('Target', '')
-                    .replace('FocusWithin', '')
-                    .replace('FocusVisible', '')
-                    .toString()
+                  this.removePseudos(befSplited[1]).split('/')[0].toString()
                 ][0]
               }:${value};${
                 this.cssNamesParsed[
-                  befSplited[1]
-                    .replace('Hover', '')
-                    .replace('Active', '')
-                    .replace('Focus', '')
-                    .replace('Visited', '')
-                    .replace('Target', '')
-                    .replace('FocusWithin', '')
-                    .replace('FocusVisible', '')
-                    .toString()
+                  this.removePseudos(befSplited[1]).split('/')[0].toString()
                 ][1]
               }:${value};}`;
             }
             break;
           case befSplited[1].startsWith('link'):
             befStringed += ` a${
-              befSplited[1].includes('Hover')
-                ? ':hover'
-                : befSplited[1].includes('Active')
-                ? ':active'
-                : befSplited[1].includes('Focus')
-                ? ':focus'
-                : befSplited[1].includes('Visited')
-                ? ':visited'
-                : befSplited[1].includes('Target')
-                ? ':target'
-                : befSplited[1].includes('FocusWithin')
-                ? ':focus-within'
-                : befSplited[1].includes('FocusVisible')
-                ? ':focusVisible'
+              !!this.removePseudos(befSplited[1]).split('/')[1]
+                ? this.removePseudos(befSplited[1]).split('/')[1]
                 : ''
             }{color:${value} !important;}`;
             break;
@@ -397,7 +358,13 @@ export class NgxBootstrapExpandedFeaturesService {
                     ;}`;
             break;
           default:
-            befStringed += `{${this.camelToCSSValid(befSplited[1])}:${value};}`;
+            befStringed += `${
+              !!this.removePseudos(befSplited[1]).split('/')[1]
+                ? this.removePseudos(befSplited[1]).split('/')[1]
+                : ''
+            }{${this.camelToCSSValid(
+              this.removePseudos(befSplited[1]).split('/')[0]
+            )}:${value};}`;
             break;
         }
         for (let cssProperty of befStringed.split(';')) {
@@ -423,13 +390,11 @@ export class NgxBootstrapExpandedFeaturesService {
         }
       }
       if (befsStringed !== '') {
-        if (this.isDebug === true) {
-          this.consoleLog(
-            'info',
-            { befsStringed: befsStringed },
-            this.styleConsole
-          );
-        }
+        this.consoleLog(
+          'info',
+          { befsStringed: befsStringed },
+          this.styleConsole
+        );
         for (let bef of befsStringed.split('/')) {
           if (bef !== '') {
             this.createCSSRules(bef);
@@ -438,29 +403,25 @@ export class NgxBootstrapExpandedFeaturesService {
       }
       bpsStringed.forEach((b) => {
         if (b.bef !== '') {
-          if (this.isDebug === true) {
-            this.consoleLog(
-              'info',
-              { bp: b.bp, value: b.value, bef: b.bef },
-              this.styleConsole
-            );
-          }
+          this.consoleLog(
+            'info',
+            { bp: b.bp, value: b.value, bef: b.bef },
+            this.styleConsole
+          );
           this.createCSSRules(
-            `@media only screen and (min-width: ${b.value}) {${b.bef}}`
+            `@media only screen and (min-width: ${b.value}) {html ${b.bef}}`
           );
           b.bef = '';
         }
       });
       const endTimeCSSCreate = performance.now();
-      if (this.isDebug === true) {
-        this.consoleLog(
-          'info',
-          `Call to cssCreate() took ${
-            endTimeCSSCreate - startTimeCSSCreate
-          } milliseconds`,
-          this.styleConsole
-        );
-      }
+      this.consoleLog(
+        'info',
+        `Call to cssCreate() took ${
+          endTimeCSSCreate - startTimeCSSCreate
+        } milliseconds`,
+        this.styleConsole
+      );
       let befTimer = document.getElementById('befTimer');
       if (befTimer) {
         befTimer.innerHTML = `
@@ -478,9 +439,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   createCSSRules(rule: string, update: boolean = false): void {
     try {
-      if (this.isDebug === true) {
-        this.consoleLog('info', { rule: rule }, this.styleConsole);
-      }
+      this.consoleLog('info', { rule: rule }, this.styleConsole);
       if (rule && !rule.split('{')[0].includes('@media')) {
         let index;
         let originalRule: any = [...this.sheet.cssRules].some(
@@ -651,6 +610,24 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
+  removePseudos(thing: string, remove: boolean = false): string {
+    let pseudoFiltereds: IPseudo[] = this.pseudos.filter((pseudo: IPseudo) => {
+      return thing.includes(pseudo.mask);
+    });
+    let pseudoFinded: IPseudo | undefined;
+    pseudoFiltereds.forEach((pse) => {
+      if (!pseudoFinded || pse.mask.length > pseudoFinded.mask.length) {
+        pseudoFinded = pse;
+      }
+    });
+    return !!pseudoFinded
+      ? thing
+          .replace('SD', '(')
+          .replace('ED', ')')
+          .replace(pseudoFinded.mask, !remove ? pseudoFinded.real : '')
+      : thing;
+  }
+
   cssValidToCamel(st: string): string {
     return st.replace(/([-_][a-z])/gi, ($1) => {
       return $1.toUpperCase().replace('-', '').replace('_', '');
@@ -695,9 +672,7 @@ export class NgxBootstrapExpandedFeaturesService {
   }
 
   getColors(): any {
-    if (this.isDebug === true) {
-      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
-    }
+    this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     return this.colors;
   }
 
@@ -710,13 +685,11 @@ export class NgxBootstrapExpandedFeaturesService {
   }
 
   getColorValue(color: string): any {
-    if (this.isDebug === true) {
-      this.consoleLog(
-        'info',
-        { color: color, colorValue: this.colors[color] },
-        this.styleConsole
-      );
-    }
+    this.consoleLog(
+      'info',
+      { color: color, colorValue: this.colors[color] },
+      this.styleConsole
+    );
     return this.colors[color];
   }
 
@@ -758,19 +731,15 @@ export class NgxBootstrapExpandedFeaturesService {
 
   clearAllColors(): void {
     this.colors = {};
-    if (this.isDebug === true) {
-      this.consoleLog('info', { colors: this.colors }, this.styleConsole);
-    }
+    this.consoleLog('info', { colors: this.colors }, this.styleConsole);
   }
 
   getAlreadyCreatedClasses(): string[] {
-    if (this.isDebug === true) {
-      this.consoleLog(
-        'info',
-        { alreadyCreatedClasses: this.alreadyCreatedClasses },
-        this.styleConsole
-      );
-    }
+    this.consoleLog(
+      'info',
+      { alreadyCreatedClasses: this.alreadyCreatedClasses },
+      this.styleConsole
+    );
     return this.alreadyCreatedClasses;
   }
 
@@ -780,9 +749,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   getSheet(): any {
     if (this.sheet) {
-      if (this.isDebug === true) {
-        this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
-      }
+      this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
       return this.sheet;
     } else {
       return '';
@@ -815,21 +782,21 @@ export class NgxBootstrapExpandedFeaturesService {
     thing: any,
     style: string = this.styleConsole,
     line: string | null = null,
-    stoper: boolean = false
+    stoper: boolean = !this.isDebug
   ): void {
     this.consoleParser({
       type: type,
       thing: thing,
       style: style,
       line: line,
-      stoper: false,
+      stoper: stoper,
     });
   }
 
   consoleParser(config: IConsoleParser): void {
     config.type = config.type ? config.type : 'log';
     config.style = config.style ? config.style : this.styleConsole;
-    config.stoper = config.stoper ? config.stoper : false;
+    config.stoper = config.stoper ? config.stoper : !this.isDebug;
     if (config.stoper === false) {
       if (config.line) {
         console.info('%cline: ' + config.line + ' = ', config.style);

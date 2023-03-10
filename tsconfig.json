@@ -9,6 +9,7 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    //"noImplicitThis": false,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "paths": {
@@ -24,13 +25,7 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom",
-      "dom.iterable",
-      "es5",
-      "es6"
-    ]
+    "lib": ["es2020", "dom", "dom.iterable", "es5", "es6"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
