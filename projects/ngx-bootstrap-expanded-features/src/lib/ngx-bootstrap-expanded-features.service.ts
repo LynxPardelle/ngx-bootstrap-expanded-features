@@ -623,11 +623,6 @@ export class NgxBootstrapExpandedFeaturesService {
     let pseudoFiltereds: IPseudo[] = this.pseudos.filter((pseudo: IPseudo) => {
       return thing.includes(pseudo.mask);
     });
-    pseudoFiltereds = pseudoFiltereds.sort((e1: any, e2: any) => {
-      e1 = e1.toString().length;
-      e2 = e2.toString().length;
-      return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
-    });
     pseudoFiltereds.forEach((pse) => {
       let regMask = new RegExp(':*' + pse.mask, 'gi');
       thing = thing
@@ -635,7 +630,6 @@ export class NgxBootstrapExpandedFeaturesService {
         .replace('ED', ')')
         .replace(regMask, !remove ? pse.real : '');
     });
-    this.consoleParser({ thing: thing });
     return thing;
   }
 
