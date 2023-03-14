@@ -8,6 +8,7 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
 })
 export class TestingLibraryComponent implements OnInit {
   public classes2explore: string[] = [
+    'bef-w-85per bef-bg-success bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon span bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark bef-textSEL__spanCOM_btnMINwarning-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
     'bef-w-85per bef-bg-success bef-text-info bef-p-3rem bef-bgLastChild-lavender bef-pNthChildSD2ED-2rem span-span',
     'bef-w-75per bef-bg-warning bef-text-danger bef-contentBefore-CSPcomillas__simplesCSP bef-bgBefore-success',
     'bef-w-75per bef-bg-sm-success bef-text-sm-info',

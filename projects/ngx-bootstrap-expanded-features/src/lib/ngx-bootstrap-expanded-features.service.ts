@@ -184,6 +184,43 @@ export class NgxBootstrapExpandedFeaturesService {
         }
         let befStringed = '.' + bef;
         let befSplited = bef.split('-');
+        /* if (befSplited[1].includes('SLASH')) {
+          debugger;
+        } */
+        let befSRP = this.removePseudos(befSplited[1])
+          .replace(/SEL/g, '/')
+          .split('/');
+        let selector = befSRP[0];
+        let specify = befSRP
+          .map((bs, i) => {
+            if (i !== 0) {
+              return bs;
+            } else {
+              return '';
+            }
+          })
+          .join('')
+          .replace(/per/g, '%')
+          .replace(/COM/g, ' , ')
+          .replace(/CSP/g, `'`)
+          .replace(/CDB/g, `"`)
+          .replace(/MIN/g, '-')
+          .replace(/PLUS/g, '+')
+          .replace(/SD/g, '(')
+          .replace(/ED/g, ')')
+          .replace(/SE/g, '[')
+          .replace(/EE/g, ']')
+          .replace(/HASH/g, '#')
+          .replace(/SLASH/g, '/')
+          .replace(/__/g, ' ')
+          .replace(/_/g, '.')
+          .replace(/CHILD/g, ' > ')
+          .replace(/ADJ/g, ' + ')
+          .replace(/SIBL/g, ' ~ ')
+          .replace(/ALL/g, '*')
+          .replace(/EQ/g, '=')
+          .replace(/ST/g, '^')
+          .replace(/INC/g, '$');
         let hasBP = false;
         let value = '';
         let secondValue = '';
@@ -254,45 +291,21 @@ export class NgxBootstrapExpandedFeaturesService {
           this.styleConsole
         );
         switch (true) {
-          case !!this.cssNamesParsed[
-            this.removePseudos(befSplited[1]).split('/')[0].toString()
-          ]:
-            if (
-              typeof this.cssNamesParsed[
-                this.removePseudos(befSplited[1]).split('/')[0].toString()
-              ] === 'string'
-            ) {
-              befStringed += `${
-                !!this.removePseudos(befSplited[1]).split('/')[1]
-                  ? this.removePseudos(befSplited[1]).split('/')[1]
-                  : ''
-              }{${
-                this.cssNamesParsed[
-                  this.removePseudos(befSplited[1]).split('/')[0].toString()
-                ]
+          case !!this.cssNamesParsed[selector.toString()]:
+            if (typeof this.cssNamesParsed[selector.toString()] === 'string') {
+              befStringed += `${specify}{${
+                this.cssNamesParsed[selector.toString()]
               }:${value};}`;
             } else {
-              befStringed += `${
-                !!this.removePseudos(befSplited[1]).split('/')[1]
-                  ? this.removePseudos(befSplited[1]).split('/')[1]
-                  : ''
-              }{${
-                this.cssNamesParsed[
-                  this.removePseudos(befSplited[1]).split('/')[0].toString()
-                ][0]
+              befStringed += `${specify}{${
+                this.cssNamesParsed[selector.toString()][0]
               }:${value};${
-                this.cssNamesParsed[
-                  this.removePseudos(befSplited[1]).split('/')[0].toString()
-                ][1]
+                this.cssNamesParsed[selector.toString()][1]
               }:${value};}`;
             }
             break;
           case befSplited[1].startsWith('link'):
-            befStringed += ` a${
-              !!this.removePseudos(befSplited[1]).split('/')[1]
-                ? this.removePseudos(befSplited[1]).split('/')[1]
-                : ''
-            }{color:${value} !important;}`;
+            befStringed += ` a${specify}{color:${value} !important;}`;
             break;
           case befSplited[1] === 'btn':
             befStringed += `{
@@ -358,12 +371,8 @@ export class NgxBootstrapExpandedFeaturesService {
                     ;}`;
             break;
           default:
-            befStringed += `${
-              !!this.removePseudos(befSplited[1]).split('/')[1]
-                ? this.removePseudos(befSplited[1]).split('/')[1]
-                : ''
-            }{${this.camelToCSSValid(
-              this.removePseudos(befSplited[1]).split('/')[0]
+            befStringed += `${specify}{${this.camelToCSSValid(
+              selector
             )}:${value};}`;
             break;
         }
@@ -614,18 +623,20 @@ export class NgxBootstrapExpandedFeaturesService {
     let pseudoFiltereds: IPseudo[] = this.pseudos.filter((pseudo: IPseudo) => {
       return thing.includes(pseudo.mask);
     });
-    let pseudoFinded: IPseudo | undefined;
-    pseudoFiltereds.forEach((pse) => {
-      if (!pseudoFinded || pse.mask.length > pseudoFinded.mask.length) {
-        pseudoFinded = pse;
-      }
+    pseudoFiltereds = pseudoFiltereds.sort((e1: any, e2: any) => {
+      e1 = e1.toString().length;
+      e2 = e2.toString().length;
+      return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
     });
-    return !!pseudoFinded
-      ? thing
-          .replace('SD', '(')
-          .replace('ED', ')')
-          .replace(pseudoFinded.mask, !remove ? pseudoFinded.real : '')
-      : thing;
+    pseudoFiltereds.forEach((pse) => {
+      let regMask = new RegExp(':*' + pse.mask, 'gi');
+      thing = thing
+        .replace('SD', '(')
+        .replace('ED', ')')
+        .replace(regMask, !remove ? pse.real : '');
+    });
+    this.consoleParser({ thing: thing });
+    return thing;
   }
 
   cssValidToCamel(st: string): string {
