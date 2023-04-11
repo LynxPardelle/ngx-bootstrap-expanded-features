@@ -23,6 +23,7 @@ export const cssNamesParsed = {
   o: 'opacity',
   pos: 'position',
   t: 'top',
+  bot: 'bottom',
   b: 'bottom',
   start: 'left',
   s: 'left',

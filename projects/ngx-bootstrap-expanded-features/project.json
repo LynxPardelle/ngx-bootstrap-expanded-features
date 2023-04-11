@@ -1,0 +1,35 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ngx-bootstrap-expanded-features",
+  "projectType": "library",
+  "sourceRoot": "projects/ngx-bootstrap-expanded-features/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "project": "projects/ngx-bootstrap-expanded-features/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/ngx-bootstrap-expanded-features/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "projects/ngx-bootstrap-expanded-features/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production",
+      "outputs": [
+        "{workspaceRoot}/dist/ngx-bootstrap-expanded-features"
+      ]
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "main": "projects/ngx-bootstrap-expanded-features/src/test.ts",
+        "tsConfig": "projects/ngx-bootstrap-expanded-features/tsconfig.spec.json",
+        "karmaConfig": "projects/ngx-bootstrap-expanded-features/karma.conf.js"
+      }
+    }
+  }
+}

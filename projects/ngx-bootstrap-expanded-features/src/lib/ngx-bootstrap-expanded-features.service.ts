@@ -59,22 +59,70 @@ export class NgxBootstrapExpandedFeaturesService {
     },
   ];
 
+  public separator: string = 'þµÞ';
   /* Console */
   public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
   /* Time Management*/
-  public lastCSSCreate: number = new Date().getTime();
+  public lastCSSCreate: number = Date.now();
+  public lastTimeAsked2Create: number = new Date().getTime();
   public timer: any = null;
   public timesCSSCreated: number = 0;
-  public timesCSSNeedsToCreate: number = 0;
-  public timeBetweenReCreate: number = 300;
-  public pseudoClasses: string[] =
-    'Active/Checked/Default/Dir/Disabled/Empty/Enabled/First/FirstChild/FirstOfType/Fullscreen/Focus/Hover/Indeterminate/InRange/Invalid/Lang/LastChild/LastOfType/Left/Link/Not/NthChild/NthLastChild/NthLastOfType/NthOfType/OnlyChild/OnlyOfType/Optional/OutOfRange/ReadOnly/ReadWrite/Required/Right/Root/Scope/Target/Valid/Visited'.split(
-      '/'
-    );
-  public pseudoElements: string[] =
-    'After/Before/FirstLetter/FirstLine/Selection/Backdrop/Placeholder/Marker/SpellingError/GrammarError'.split(
-      '/'
-    );
+  public timeBetweenReCreate: number = 400;
+  public pseudoClasses: string[] = [
+    'Active',
+    'Checked',
+    'Default',
+    'Dir',
+    'Disabled',
+    'Empty',
+    'Enabled',
+    'FirstChild',
+    'FirstOfType',
+    'First',
+    'Fullscreen',
+    'FocusVisible',
+    'FocusWithin',
+    'Focus',
+    'Hover',
+    'Indeterminate',
+    'InRange',
+    'Invalid',
+    'Lang',
+    'LastChild',
+    'LastOfType',
+    'Left',
+    'Link',
+    'Not',
+    'NthChild',
+    'NthLastChild',
+    'NthLastOfType',
+    'NthOfType',
+    'OnlyChild',
+    'OnlyOfType',
+    'Optional',
+    'OutOfRange',
+    'ReadOnly',
+    'ReadWrite',
+    'Required',
+    'Right',
+    'Root',
+    'Scope',
+    'Target',
+    'Valid',
+    'Visited',
+  ];
+  public pseudoElements: string[] = [
+    'After',
+    'Before',
+    'FirstLetter',
+    'FirstLine',
+    'Selection',
+    'Backdrop',
+    'Placeholder',
+    'Marker',
+    'SpellingError',
+    'GrammarError',
+  ];
   public pseudos: IPseudo[] = this.pseudoClasses
     .sort((e1: number | string, e2: number | string) => {
       e1 = e1.toString().length;
@@ -84,7 +132,7 @@ export class NgxBootstrapExpandedFeaturesService {
     .map((pse: string) => {
       return {
         mask: pse,
-        real: `/:${this.camelToCSSValid(pse)}`,
+        real: `${this.separator}:${this.camelToCSSValid(pse)}`,
       };
     })
     .concat(
@@ -97,7 +145,7 @@ export class NgxBootstrapExpandedFeaturesService {
         .map((pse: string) => {
           return {
             mask: pse,
-            real: `/::${this.camelToCSSValid(pse)}`,
+            real: `${this.separator}::${this.camelToCSSValid(pse)}`,
           };
         })
     );
@@ -113,22 +161,21 @@ export class NgxBootstrapExpandedFeaturesService {
     updateBefs: string[] | null = null,
     primordial: boolean = false
   ): void {
-    this.timesCSSNeedsToCreate++;
-    let currentCSSTimeCreation: number = this.timesCSSNeedsToCreate;
+    this.lastTimeAsked2Create = Date.now() + 500;
     let timer = setInterval(() => {
       const currentTime = Date.now();
       if (
-        currentTime - this.lastCSSCreate >= this.timeBetweenReCreate ||
-        primordial === true ||
-        this.timesCSSCreated === 0
+        (currentTime - this.lastCSSCreate >= this.timeBetweenReCreate ||
+          primordial === true ||
+          this.timesCSSCreated === 0) &&
+        currentTime <= this.lastTimeAsked2Create
       ) {
         this.timesCSSCreated++;
         this.doCssCreate(updateBefs);
         this.lastCSSCreate = currentTime;
+        this.consoleParser({ thing: this.timesCSSCreated });
         clearInterval(timer);
       }
-      /* if (currentCSSTimeCreation <= this.timesCSSCreated) {
-      } */
       if (this.timer !== timer) {
         clearInterval(timer);
       }
@@ -188,39 +235,20 @@ export class NgxBootstrapExpandedFeaturesService {
           debugger;
         } */
         let befSRP = this.removePseudos(befSplited[1])
-          .replace(/SEL/g, '/')
-          .split('/');
+          .replace(/SEL/g, this.separator)
+          .split(`${this.separator}`);
         let selector = befSRP[0];
-        let specify = befSRP
-          .map((bs, i) => {
-            if (i !== 0) {
-              return bs;
-            } else {
-              return '';
-            }
-          })
-          .join('')
-          .replace(/per/g, '%')
-          .replace(/COM/g, ' , ')
-          .replace(/CSP/g, `'`)
-          .replace(/CDB/g, `"`)
-          .replace(/MIN/g, '-')
-          .replace(/PLUS/g, '+')
-          .replace(/SD/g, '(')
-          .replace(/ED/g, ')')
-          .replace(/SE/g, '[')
-          .replace(/EE/g, ']')
-          .replace(/HASH/g, '#')
-          .replace(/SLASH/g, '/')
-          .replace(/__/g, ' ')
-          .replace(/_/g, '.')
-          .replace(/CHILD/g, ' > ')
-          .replace(/ADJ/g, ' + ')
-          .replace(/SIBL/g, ' ~ ')
-          .replace(/ALL/g, '*')
-          .replace(/EQ/g, '=')
-          .replace(/ST/g, '^')
-          .replace(/INC/g, '$');
+        let specify = this.unbefysize(
+          befSRP
+            .map((bs, i) => {
+              if (i !== 0) {
+                return bs;
+              } else {
+                return '';
+              }
+            })
+            .join('')
+        );
         let hasBP = false;
         let value = '';
         let secondValue = '';
@@ -236,19 +264,7 @@ export class NgxBootstrapExpandedFeaturesService {
           .replace(/COM/g, ' , ')
           .replace(/__/g, ' ')
           .replace(/_/g, '.'); */
-        value = value
-          .replace(/per/g, '%')
-          .replace(/COM/g, ' , ')
-          .replace(/CSP/g, `'`)
-          .replace(/CDB/g, `"`)
-          .replace(/MIN/g, '-')
-          .replace(/PLUS/g, '+')
-          .replace(/SD/g, '(')
-          .replace(/ED/g, ')')
-          .replace(/HASH/g, '#')
-          .replace(/SLASH/g, '/')
-          .replace(/__/g, ' ')
-          .replace(/_/g, '.');
+        value = this.unbefysize(value);
         this.consoleLog('info', { value: value }, this.styleConsole);
         let values: any = {
           value: value,
@@ -311,15 +327,21 @@ export class NgxBootstrapExpandedFeaturesService {
             befStringed += `{
                     background-color:${value};
                     border-color:${value};}
-                  /.${bef}:hover{background-color:${this.shadeTintColor(
+                  ${
+                    this.separator
+                  }.${bef}:hover{background-color:${this.shadeTintColor(
               this.HexToRGB(value),
               -15
             )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
-                  /.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
+                  ${
+                    this.separator
+                  }.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
               this.HexToRGB(value),
               -15
             )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
-                  /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
+                  ${
+                    this.separator
+                  }.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
               this.HexToRGB(value),
               -20
             )};border-color:${this.shadeTintColor(
@@ -330,7 +352,9 @@ export class NgxBootstrapExpandedFeaturesService {
                     this.shadeTintColor(this.HexToRGB(value), 3)
                   )}, 0.5)
                   ;}
-                  /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
+                  ${
+                    this.separator
+                  }.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
                     rgba(${this.HexToRGB(
                       this.shadeTintColor(this.HexToRGB(value), 3)
                     )}, 0.5)
@@ -341,19 +365,21 @@ export class NgxBootstrapExpandedFeaturesService {
                     color:${value};
                     background-color:${secondValue ? secondValue : 'default'};
                       border-color:${value};}
-                    /.${bef}:hover{
+                    ${this.separator}.${bef}:hover{
                       background-color:${value};
                       color:${secondValue ? secondValue : 'default'};
                       border-color:${this.shadeTintColor(
                         this.HexToRGB(value),
                         -20
                       )};}
-                    /.btn-check:focus + .${bef}, .${bef}:focus{
+                    ${this.separator}.btn-check:focus + .${bef}, .${bef}:focus{
                       border-color:${this.shadeTintColor(
                         this.HexToRGB(value),
                         -20
                       )};}
-                    /.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
+                    ${
+                      this.separator
+                    }.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
                       border-color:${this.shadeTintColor(
                         this.HexToRGB(value),
                         -25
@@ -363,7 +389,9 @@ export class NgxBootstrapExpandedFeaturesService {
                       this.shadeTintColor(this.HexToRGB(value), 3)
                     )}, 0.5)
                     ;}
-                    /.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
+                    ${
+                      this.separator
+                    }.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
                       box-shadow: 0 0 0 0.25rem
                       rgba(${this.HexToRGB(
                         this.shadeTintColor(this.HexToRGB(value), 3)
@@ -386,7 +414,10 @@ export class NgxBootstrapExpandedFeaturesService {
         }
         if (befStringed.includes('{') && befStringed.includes('}')) {
           if (hasBP === true) {
-            befStringed = befStringed.replace(/\//g, '');
+            befStringed = befStringed.replace(
+              new RegExp(this.separator, 'g'),
+              ''
+            );
             bpsStringed = bpsStringed.map((b) => {
               if (befSplited[2] === b.bp) {
                 b.bef += befStringed;
@@ -394,7 +425,7 @@ export class NgxBootstrapExpandedFeaturesService {
               return b;
             });
           } else {
-            befsStringed += befStringed + '/';
+            befsStringed += befStringed + this.separator;
           }
         }
       }
@@ -404,7 +435,7 @@ export class NgxBootstrapExpandedFeaturesService {
           { befsStringed: befsStringed },
           this.styleConsole
         );
-        for (let bef of befsStringed.split('/')) {
+        for (let bef of befsStringed.split(this.separator)) {
           if (bef !== '') {
             this.createCSSRules(bef);
           }
@@ -478,9 +509,9 @@ export class NgxBootstrapExpandedFeaturesService {
       } else {
         let originalMediaRules: boolean = false;
         let rulesParsed: string[] = rule
-          .replace(/{/g, '/')
-          .replace(/}/g, '/')
-          .split('/')
+          .replace(/{/g, this.separator)
+          .replace(/}/g, this.separator)
+          .split(this.separator)
           .filter((r) => r !== '')
           .map((r) => {
             return r.replace(/\n/g, '').replace(/\s{2}/g, '');
@@ -769,6 +800,62 @@ export class NgxBootstrapExpandedFeaturesService {
     this.timeBetweenReCreate = time;
   }
 
+  unbefysize(value: string): string {
+    return value
+      .replace(/per/g, '%')
+      .replace(/COM/g, ' , ')
+      .replace(/CSP/g, `'`)
+      .replace(/CDB/g, `"`)
+      .replace(/MIN/g, '-')
+      .replace(/PLUS/g, '+')
+      .replace(/SD/g, '(')
+      .replace(/ED/g, ')')
+      .replace(/SE/g, '[')
+      .replace(/EE/g, ']')
+      .replace(/HASH/g, '#')
+      .replace(/SLASH/g, '/')
+      .replace(/__/g, ' ')
+      .replace(/_/g, '.')
+      .replace(/CHILD/g, ' > ')
+      .replace(/ADJ/g, ' + ')
+      .replace(/SIBL/g, ' ~ ')
+      .replace(/ALL/g, '*')
+      .replace(/EQ/g, '=')
+      .replace(/ST/g, '^')
+      .replace(/INC/g, '$')
+      .replace(/DPS/g, ':')
+      .replace(/PNC/g, ';')
+      .replace(/UND/g, '_');
+  }
+
+  befysize(value: string): string {
+    return value
+      .replace(/%/g, 'per')
+      .replace(/\s+,\s+/g, 'COM')
+      .replace(/'/g, `CSP`)
+      .replace(/"/g, `CDB`)
+      .replace(/-/g, 'MIN')
+      .replace(/\+/g, 'PLUS')
+      .replace(/\(/g, 'SD')
+      .replace(/\)/g, 'ED')
+      .replace(/\[/g, 'SE')
+      .replace(/\]/g, 'EE')
+      .replace(/#/g, 'HASH')
+      .replace(/\//g, 'SLASH')
+      .replace(/\s/g, '__')
+      .replace(/\./g, '_')
+      .replace(/\s+>\s+/g, 'CHILD')
+      .replace(/\s+\+\s+/g, 'ADJ')
+      .replace(/\s~\s/g, 'SIBL')
+      .replace(/\*/g, 'ALL')
+      .replace(/=/g, 'EQ')
+      .replace(/\^/g, 'ST')
+      .replace(/\$/g, 'INC')
+      .replace(/:/g, 'DPS')
+      .replace(/;/g, 'PNC')
+      .replace(/_/g, 'UND');
+  }
+
   getStackTrace(): string {
     let stack;
     try {
@@ -801,7 +888,7 @@ export class NgxBootstrapExpandedFeaturesService {
   consoleParser(config: IConsoleParser): void {
     config.type = config.type ? config.type : 'log';
     config.style = config.style ? config.style : this.styleConsole;
-    config.stoper = config.stoper ? config.stoper : !this.isDebug;
+    config.stoper = config.stoper !== undefined ? config.stoper : !this.isDebug;
     if (config.stoper === false) {
       if (config.line) {
         console.info('%cline: ' + config.line + ' = ', config.style);

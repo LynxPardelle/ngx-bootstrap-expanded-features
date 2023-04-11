@@ -39,6 +39,12 @@ export class TestingLibraryComponent implements OnInit {
 
   ngOnInit(): void {
     this.cssCreate();
+    let interval = setInterval(() => {
+      this.createNewExample();
+    }, 100);
+    setTimeout(() => {
+      clearInterval(interval);
+    }, 10000);
   }
 
   createNewExample() {
