@@ -7,10 +7,14 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
   styleUrls: ['./basic.component.scss'],
 })
 export class BasicComponent implements OnInit {
+  public colors: string[] = [];
   constructor(private _befService: BefService) {}
 
   ngOnInit(): void {
     this.cssCreate();
+    this._befService.getColorsNames().forEach((colorName) => {
+      this.colors.push(colorName);
+    });
   }
 
   cssCreate() {

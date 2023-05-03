@@ -26,7 +26,7 @@ export interface IPseudo {
   providedIn: 'root',
 })
 export class NgxBootstrapExpandedFeaturesService {
-  public colors: any = allColors;
+  public colors: { [key: string]: string } = allColors;
   public cssNamesParsed: any = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
@@ -61,7 +61,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   public separator: string = 'þµÞ';
   /* Console */
-  public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
+  public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors['mystic']}; color: ${this.colors['friend']};`;
   /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
@@ -147,10 +147,8 @@ export class NgxBootstrapExpandedFeaturesService {
   /* Time Management*/
   public lastCSSCreate: number = Date.now();
   public lastTimeAsked2Create: number = new Date().getTime();
-  public timer: any = null;
   public timesCSSCreated: number = 0;
   public timeBetweenReCreate: number = 400;
-  public timeLastTimeAskedPlus: number = 300;
   public useTimer: boolean = true;
   constructor() {
     let sheets: any[] = [...document.styleSheets];
@@ -159,6 +157,8 @@ export class NgxBootstrapExpandedFeaturesService {
         this.sheet = sheet;
       }
     }
+    /* this.colors = allColors;
+    console.log('this.colors', this.colors); */
   }
   cssCreate(
     updateBefs: string[] | null = null,
@@ -175,26 +175,31 @@ export class NgxBootstrapExpandedFeaturesService {
     updateBefs: string[] | null = null,
     primordial: boolean = false
   ): void {
-    this.lastTimeAsked2Create = Date.now() + this.timeLastTimeAskedPlus;
-    let timer = setInterval(() => {
-      const currentTime = Date.now();
-      if (
-        (currentTime - this.lastCSSCreate >= this.timeBetweenReCreate &&
-          currentTime <= this.lastTimeAsked2Create) ||
-        primordial === true ||
-        this.timesCSSCreated === 0
-      ) {
-        this.timesCSSCreated++;
-        this.doCssCreate(updateBefs);
-        this.lastCSSCreate = currentTime;
-        this.consoleParser({ thing: this.timesCSSCreated });
-        clearInterval(timer);
+    this.lastTimeAsked2Create = Date.now();
+    this.ta(updateBefs, primordial);
+  }
+
+  private ta(updateBefs: string[] | null = null, primordial: boolean = false) {
+    if (
+      Date.now() - this.lastCSSCreate >= this.timeBetweenReCreate ||
+      primordial === true ||
+      this.timesCSSCreated === 0
+    ) {
+      this.timesCSSCreated++;
+      this.doCssCreate(updateBefs);
+      this.lastCSSCreate = Date.now();
+      this.consoleParser({ thing: { timesCSSCreated: this.timesCSSCreated } });
+    } else {
+      if (Date.now() - this.timeBetweenReCreate < this.lastTimeAsked2Create) {
+        this.tas(updateBefs, primordial);
       }
-      if (this.timer !== timer) {
-        clearInterval(timer);
-      }
+    }
+  }
+
+  private tas(updateBefs: string[] | null = null, primordial: boolean = false) {
+    setTimeout(() => {
+      this.ta(updateBefs, primordial);
     }, this.timeBetweenReCreate);
-    this.timer = timer;
   }
 
   doCssCreate(updateBefs: string[] | null = null): void {
@@ -233,14 +238,28 @@ export class NgxBootstrapExpandedFeaturesService {
       let bpsStringed: IBPS[] = this.bps.map((b) => b);
       for (let bef of befs) {
         if (!updateBefs) {
-          if (this.alreadyCreatedClasses.includes(bef)) {
+          if (
+            this.alreadyCreatedClasses.find((aC) => {
+              return aC === bef;
+            })
+          ) {
             continue;
           }
-          if ([...this.sheet.cssRules].find((i) => i.cssText.includes(bef))) {
+          if (
+            [...this.sheet.cssRules].find((i) =>
+              i.cssText.split(' ').find((aC: string) => {
+                return aC.replace('.', '') === bef;
+              })
+            )
+          ) {
             continue;
           }
         }
-        if (!this.alreadyCreatedClasses.includes(bef)) {
+        if (
+          !this.alreadyCreatedClasses.find((aC) => {
+            return aC === bef;
+          })
+        ) {
           this.alreadyCreatedClasses.push(bef);
         }
         let befStringed = '.' + bef;
@@ -308,7 +327,7 @@ export class NgxBootstrapExpandedFeaturesService {
                       ).toString()}, ${values[v].split('OPA ')[1]})`
                     )
                     .split(' OPA')[0]
-                : this.colors[sv.toString()]
+                : !!this.colors[sv.toString()]
                 ? values[v].replace(sv, this.colors[sv.toString()])
                 : values[v];
           }
@@ -510,15 +529,30 @@ export class NgxBootstrapExpandedFeaturesService {
             }
           }
         )
-          ? [...this.sheet.cssRules].find((i) =>
-              i.cssText.includes(
-                rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
-              )
+          ? [...this.sheet.cssRules].find(
+              (i) =>
+                i.cssText
+                  /* .includes(
+                    rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
+                  ) */
+                  .split(' ')
+                  .find((aC: string) => {
+                    return (
+                      aC.replace('.', '') ===
+                      rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
+                    );
+                  })
+              /*
+            i.cssText.split(' ').find((aC: string) => {
+                return aC.replace('.', '') === bef;
+              })
+            */
             )
           : undefined;
         if (originalRule) {
           this.sheet.deleteRule(index);
         }
+        this.consoleLog('info', { rule: rule }, this.styleConsole);
         this.sheet.insertRule(rule, this.sheet.cssRules.length);
       } else {
         let originalMediaRules: boolean = false;
@@ -555,15 +589,28 @@ export class NgxBootstrapExpandedFeaturesService {
                   }
                 )
                   ? [...css.cssRules].find((i) =>
-                      i.cssText.includes(rulesParsed[i])
+                      i.cssText.split(' ').find((aC: string) => {
+                        return aC.replace('.', '') === rulesParsed[i];
+                      })
                     )
-                  : undefined;
+                  : /* .includes(rulesParsed[i])) */
+                    /*
+            i.cssText.split(' ').find((aC: string) => {
+                return aC.replace('.', '') === bef;
+              })
+            */
+                    undefined;
                 if (!!posibleRule) {
                   css.deleteRule(index);
                 }
                 let newRule: string = `${rulesParsed[i]}{${
                   rulesParsed[i + 1]
                 }}`;
+                this.consoleLog(
+                  'info',
+                  { newRule: newRule },
+                  this.styleConsole
+                );
                 css.insertRule(newRule, css.cssRules.length);
                 i = i + 2;
               }
@@ -571,9 +618,11 @@ export class NgxBootstrapExpandedFeaturesService {
           });
         }
         if (originalMediaRules === false) {
+          this.consoleLog('info', { rule: rule }, this.styleConsole);
           this.sheet.insertRule(rule, this.sheet.cssRules.length);
         }
       }
+      this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
     } catch (err: any) {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
@@ -769,7 +818,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   deleteColor(color: string): void {
     try {
-      if (this.colors.includes(color)) {
+      if (!!this.colors[color.toString()]) {
         delete this.colors[color];
       } else {
         throw new Error(`There is no color named ${color}.`);
@@ -816,10 +865,6 @@ export class NgxBootstrapExpandedFeaturesService {
 
   setTimeBetweenReCreate(time: number): void {
     this.timeBetweenReCreate = time;
-  }
-
-  setTimeLastTimeAskedPlus(time: number): void {
-    this.timeLastTimeAskedPlus = time;
   }
 
   unbefysize(value: string): string {

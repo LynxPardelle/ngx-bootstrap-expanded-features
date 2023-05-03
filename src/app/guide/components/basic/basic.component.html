@@ -58,39 +58,20 @@
     In this library you will have a lot of new colors that are from the original
     bootstrap, but I included some custom colors and you can add even more.
   </p>
-  <h5 class="my-4">List of Bootstrap original colors</h5>
+  <h5 class="my-4">All colors</h5>
   <ul class="list-group">
-    <li class="list-group-item text-light bg-primary">Primary</li>
-    <li class="list-group-item text-light bg-secondary">Secondary</li>
-    <li class="list-group-item text-light bg-success">Success</li>
-    <li class="list-group-item text-dark bg-info">Info</li>
-    <li class="list-group-item text-dark bg-warning">Warning</li>
-    <li class="list-group-item text-light bg-danger">Danger</li>
-    <li class="list-group-item text-dark bg-light">Light</li>
-    <li class="list-group-item text-light bg-dark">Dark</li>
-  </ul>
-  <h5 class="my-4">List of New Bootstrap original colors</h5>
-  <ul class="list-group">
-    <li class="list-group-item text-light bef bef-bg-indigo">Indigo</li>
-    <li class="list-group-item text-light bef bef-bg-purple">Purple</li>
-    <li class="list-group-item text-light bef bef-bg-pink">Pink</li>
-    <li class="list-group-item text-light bef bef-bg-orange">Orange</li>
-    <li class="list-group-item text-dark bef bef-bg-teal">Teal</li>
-    <li class="list-group-item text-dark bef bef-bg-white">White</li>
-    <li class="list-group-item text-light bef bef-bg-gray">Gray</li>
-  </ul>
-  <h5 class="my-4">List of New Custom colors</h5>
-  <ul class="list-group">
-    <li class="list-group-item text-light bef bef-bg-mystic">Mystic</li>
-    <li class="list-group-item text-dark bef bef-bg-lavender">Lavender</li>
-    <li class="list-group-item text-light bef bef-bg-fairy">Fairy</li>
-    <li class="list-group-item text-dark bef bef-bg-summer">Summer</li>
-    <li class="list-group-item text-dark bef bef-bg-old">Old</li>
-    <li class="list-group-item text-dark bef bef-bg-friend">Friend</li>
-    <li class="list-group-item text-light bef bef-bg-tree">Tree</li>
-    <li class="list-group-item text-light bef bef-bg-blood">Blood</li>
-    <li class="list-group-item text-light bef bef-bg-beast">Beast</li>
-    <li class="list-group-item text-light bef bef-bg-abyss">Abyss</li>
+    <li
+      *ngFor="let color of colors; let last$ = last"
+      class="list-group-item text-light bef bef-bg-{{ color }} bef-tsh-1px__1px__2px__darkCOMMIN1px__MIN1px__2px__abyss"
+      [exist]="last$"
+      (befInit)="cssCreate()"
+    >
+      <span *ngIf="!!color" [exist]="!!color" (befInit)="cssCreate()"
+      class="position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{color}}CSP bef-positionBefore-absolute bef-tBefore-MIN2px bef-sBefore-2px bef-zBefore-MIN1 bef bef-textAfter-monster bef-contentAfter-CSP{{color}}CSP bef-positionAfter-absolute bef-tAfter-1px bef-sAfter-MIN2px bef-zAfter-MIN1"
+      >
+        {{ color }}
+      </span>
+    </li>
   </ul>
   <h5 class="my-4">Adding new colors</h5>
   <p class="mt-3 mb-4 text-start bef bef-link-futurePop">

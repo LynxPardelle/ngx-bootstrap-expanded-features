@@ -11,6 +11,7 @@ import { TestingLibraryComponent } from './core/components/testing-library/testi
 import { HomeComponent } from './core/components/home/home.component';
 import { AboutComponent } from './core/components/about/about.component';
 import { ErrorComponent } from './core/components/error/error.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { ErrorComponent } from './core/components/error/error.component';
     AboutComponent,
     ErrorComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, SharedModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

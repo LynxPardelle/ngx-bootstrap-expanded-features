@@ -13,6 +13,7 @@ import { ShadowsComponent } from './components/shadows/shadows.component';
 import { SizingComponent } from './components/sizing/sizing.component';
 import { TextComponent } from './components/text/text.component';
 import { ZIndexComponent } from './components/z-index/z-index.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { ZIndexComponent } from './components/z-index/z-index.component';
     TextComponent,
     ZIndexComponent,
   ],
-  imports: [CommonModule, GuideRoutingModule],
+  imports: [CommonModule, GuideRoutingModule, SharedModule],
   exports: [
     GettingStartedComponent,
     BasicComponent,
