@@ -1,0 +1,36 @@
+<footer
+  class="d-flex flex-column flex-md-row justify-content-between w-100 position-fixed bef bef-z-10 bottom-0"
+>
+  <p
+    class="text-center text-light bef bef-tsh-0px__0px__10px__dark bef-p-1rem bef-w-90per bef-w-md-50per bef-mx-auto bef-mx-md-0 d-block fw-bold bef-link-futurePop"
+  >
+    Remember, you can always use the
+    <a
+      href="/guide/basic"
+      [routerLink]="['/guide/basic']"
+      [fragment]="'bpsBasicHTU'"
+      rel=" noopener noreferrer "
+      class="text-decoration-none"
+      >breakpoints</a
+    >
+    and
+    <a
+      href="/guide/basic"
+      [routerLink]="['/guide/basic']"
+      [fragment]="'newColorsBasicHTU'"
+      rel=" noopener noreferrer "
+      class="text-decoration-none"
+      >colors</a
+    >
+    within every class.
+  </p>
+  <div class="mx-4">
+    <button
+      class="btn bef bef-btn-randNumA__OPA__0_75 bef-btn-sm-randNumB__OPA__0_75 bef-text-randNumB bef-text-sm-randNumA fw-bold d-block mx-auto bef-p-0_25rem__1rem bef-rounded-1rem"
+      (click)="cssCreate()"
+    >
+      cssCreate() function BTN
+    </button>
+    <div id="befTimer" class="text-center fw-bold p-2"></div>
+  </div>
+</footer>

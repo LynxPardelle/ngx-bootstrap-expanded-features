@@ -1,0 +1,408 @@
+<!-- BASICHTU -->
+<section>
+  <a id="basicHTU"></a>
+  <h3 class="bef bef-pt-4rem">Basic</h3>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    To start using this library, you only need to use some classes that seems to
+    much alike the bootstrap classes, but the key to use this tool is to use the
+    bef class like in this example:
+  </p>
+  <p
+    class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+  >
+    <code class="text-dark">
+      <span class="text-primary">
+        &#60;p class=<span class="text-danger">"bef"</span> &#62;
+      </span>
+      <br />
+      <span> Some text. </span>
+      <br />
+      <span class="text-primary"> &#60;&#47;p&#62; </span>
+    </code>
+  </p>
+  <p class="mt-3 mb-3 text-start bef bef-link-futurePop">
+    After that you can write classes like in bootstrap but with custom values
+    like in this example:
+  </p>
+  <div class="d-flex flex-column flex-sm-row justify-content-evenly">
+    <div>
+      <h5 class="text-center my-3">Example</h5>
+      <p class="bg-primary text-light bef bef-p-14px">
+        Box with a 14px padding.
+      </p>
+    </div>
+    <div>
+      <h5 class="text-center my-3">Code</h5>
+      <p
+        class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+      >
+        <code class="text-dark">
+          <span class="text-primary">
+            &#60;p class=<span class="text-danger"
+              >"bg-primary text-light bef bef-p-14px"</span
+            >
+            &#62;
+          </span>
+          <br />
+          &ensp;Box with a 14px padding.
+          <br />
+          <span class="text-primary"> &#60;&#47;p&#62; </span>
+        </code>
+      </p>
+    </div>
+  </div>
+  <!-- NEWCOLORSBASICHTU -->
+  <a id="newColorsBasicHTU"></a>
+  <h4 class="bef bef-pt-4rem">New Colors</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    In this library you will have a lot of new colors that are from the original
+    bootstrap, but I included some custom colors and you can add even more.
+  </p>
+  <h5 class="my-4">List of Bootstrap original colors</h5>
+  <ul class="list-group">
+    <li class="list-group-item text-light bg-primary">Primary</li>
+    <li class="list-group-item text-light bg-secondary">Secondary</li>
+    <li class="list-group-item text-light bg-success">Success</li>
+    <li class="list-group-item text-dark bg-info">Info</li>
+    <li class="list-group-item text-dark bg-warning">Warning</li>
+    <li class="list-group-item text-light bg-danger">Danger</li>
+    <li class="list-group-item text-dark bg-light">Light</li>
+    <li class="list-group-item text-light bg-dark">Dark</li>
+  </ul>
+  <h5 class="my-4">List of New Bootstrap original colors</h5>
+  <ul class="list-group">
+    <li class="list-group-item text-light bef bef-bg-indigo">Indigo</li>
+    <li class="list-group-item text-light bef bef-bg-purple">Purple</li>
+    <li class="list-group-item text-light bef bef-bg-pink">Pink</li>
+    <li class="list-group-item text-light bef bef-bg-orange">Orange</li>
+    <li class="list-group-item text-dark bef bef-bg-teal">Teal</li>
+    <li class="list-group-item text-dark bef bef-bg-white">White</li>
+    <li class="list-group-item text-light bef bef-bg-gray">Gray</li>
+  </ul>
+  <h5 class="my-4">List of New Custom colors</h5>
+  <ul class="list-group">
+    <li class="list-group-item text-light bef bef-bg-mystic">Mystic</li>
+    <li class="list-group-item text-dark bef bef-bg-lavender">Lavender</li>
+    <li class="list-group-item text-light bef bef-bg-fairy">Fairy</li>
+    <li class="list-group-item text-dark bef bef-bg-summer">Summer</li>
+    <li class="list-group-item text-dark bef bef-bg-old">Old</li>
+    <li class="list-group-item text-dark bef bef-bg-friend">Friend</li>
+    <li class="list-group-item text-light bef bef-bg-tree">Tree</li>
+    <li class="list-group-item text-light bef bef-bg-blood">Blood</li>
+    <li class="list-group-item text-light bef bef-bg-beast">Beast</li>
+    <li class="list-group-item text-light bef bef-bg-abyss">Abyss</li>
+  </ul>
+  <h5 class="my-4">Adding new colors</h5>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You can add more colors, but how you do it depends if you are using the CDN
+    or npm installing it.
+  </p>
+  <h6>For the CDN version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to create a var with a object with the name "colors" like in
+    this code that you can copy-paste:
+  </p>
+  <p
+    class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+  >
+    <code class="text-dark">
+      <span class="text-success"> &#60;!-- SOME CODE --&#62; </span>
+      <br />
+      <span class="text-primary"> &#60;script&#62; </span>
+      <br />
+      <span class="text-primary">&ensp;var</span> colors = &#123;
+      <br />
+      &ensp;&ensp;monster: "#00AA00",
+      <br />
+      &ensp;&ensp;futurePop: "#9700FF",
+      <br />
+      &ensp;&#125;;
+      <br />
+      <span class="text-primary"> &#60;&#47;script&#62; </span>
+      <br />
+      <span class="text-success">
+        &#60;!-- SCRIPT LINKED TO THE CDN VERSION --&#62;
+      </span>
+    </code>
+  </p>
+  <h6 class="my-3">For the npm version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to import the library, create a var with a object with any
+    name, it can be "my_new_colors" and then you can use the pushColors()
+    function and then use the cssCreate() function to generate all the css with
+    the new colors that you need like in this code that you can copy-paste:
+  </p>
+  <p
+    class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+  >
+    <code class="text-dark">
+      <span class="bef bef-text-fairy">
+        import &#123;
+        <span class="text-info">cssCreate, pushColors</span> &#125; from
+        <span class="bef bef-text-beast">'bootstrap-expanded-features';</span>
+      </span>
+      <br />
+      <span class="text-primary">const </span>
+      <span class="text-info">my_new_colors</span> = &#123;
+      <br />
+      <span class="text-info">&ensp;monster:</span> "#00AA00",
+      <br />
+      <span class="text-info">&ensp;futurePop:</span> "#9700FF",
+      <br />
+      &#125;;
+      <br />
+      <span class="bef text-warning"
+        >pushColors(<span class="text-info">my_new_colors</span>);</span
+      >
+      <br />
+      <span class="bef text-warning">cssCreate();</span>
+      <br />
+    </code>
+  </p>
+  <h6 class="my-3">For the Angular Library version</h6>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Import the Service (you can change the name as it follows):
+  </p>
+  <code class="text-shadow-0-0-0-tdark">
+    <span class="text-danger">
+      import &#123;
+      <span class="text-primary"
+        >NgxBootstrapExpandedFeaturesService
+        <span class="text-danger">as</span> BefService</span
+      >
+      &#125; from
+      <span class="bef bef-text-summer">"ngx-bootstrap-expanded-features"</span
+      >;</span
+    >
+  </code>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Create new colors in an object inside your component class:
+  </p>
+  <code class="text-shadow-0-0-0-tdark">
+    <span class="text-danger">
+      export <span class="bef bef-text-summer">class </span>
+      <span class="text-info">YourComponent</span> &#123;
+      <br />
+      <span class="text-primary">&ensp;public </span>
+      <span class="text-info">my_new_colors</span> = &#123;
+      <br />
+      <span class="text-info">&ensp;monster:</span> "#00AA00",
+      <br />
+      <span class="text-info">&ensp;futurePop:</span> "#9700FF",
+      <br />
+      &ensp;&#125;;
+      <br />
+      &#125;
+    </span>
+  </code>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Put the service on your constructor, push the new colors and initialize the
+    cssCreate() function:
+  </p>
+  <code class="text-shadow-0-0-0-tdark">
+    <span class="text-danger">
+      <span class="text-primary">constructor</span> (
+      <span class="text-primary">private _befService: </span>
+      <span class="text-info">BefService</span> ) &#123;
+      <br />
+      <span class="text-primary"
+        >&ensp;this._befService<span class="text-warning"
+          >.pushColors(
+          <span class="text-primary">this.my_new_colors</span> )</span
+        >
+      </span>
+      <br />
+      <span class="text-primary"
+        >&ensp;this._befService<span class="text-warning">.cssCreate()</span>
+      </span>
+      <br />
+      &#125;</span
+    >
+  </code>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    You can also put in on any function that change the elements on the screen
+    or with any change like with the DoCheck() function on Angular:
+  </p>
+  <code class="text-shadow-0-0-0-tdark">
+    <span class="text-warning">
+      ngDoCheck()<span class="text-info">: void</span> &#123;
+      <br />
+      <span class="text-primary"
+        >&ensp;this._befService<span class="text-warning"
+          >.pushColors(
+          <span class="text-primary">this.my_new_colors</span> )</span
+        >
+      </span>
+      <br />
+      <span class="text-primary"
+        >&ensp;this._befService<span class="text-warning">.cssCreate()</span>
+      </span>
+      <br />
+      &#125;</span
+    >
+  </code>
+  <!-- BREAKPOINTSBASICHTU -->
+  <a id="bpsBasicHTU"></a>
+  <h4 class="bef bef-pt-4rem">BreakPoints</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    Now you can use the breakpoints of bootstrap within the classes that you
+    didn't before here are some examples.
+  </p>
+  <div class="d-flex flex-column flex-sm-row justify-content-evenly">
+    <div>
+      <h5 class="text-center my-3">Example</h5>
+      <p
+        class="bef bef-text-indigo bef-text-sm-purple bef-text-md-pink bef-text-lg-orange bef-text-xl-teal bef-text-xxl-lavender"
+      >
+        Some text with the color indigo before sm, purple on sm, pink on md,
+        orange on lg, teal on xl and lavender on xxl.
+      </p>
+    </div>
+    <div>
+      <h5 class="text-center my-3">Code</h5>
+      <p
+        class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+      >
+        <code class="text-dark">
+          <span class="text-primary">
+            &#60;p class=<span class="text-danger"
+              >"bef bef-text-indigo bef-text-sm-purple bef-text-md-pink
+              bef-text-lg-orange bef-text-xl-teal bef-text-xxl-lavender"</span
+            >
+            &#62;
+          </span>
+          <br />
+          &ensp;Some text with the color indigo before sm, purple on sm, pink on
+          md, orange on lg, teal on xl and lavender on xxl.
+          <br />
+          <span class="text-primary"> &#60;&#47;p&#62; </span>
+        </code>
+      </p>
+    </div>
+  </div>
+  <!-- RESERVEDWORDSBASICHTU -->
+  <a id="reswordsBasicHTU"></a>
+  <h4 class="bef bef-pt-4rem">Reserved Words</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    There are a few reserved words you should use in some cases and a few way to
+    use the "_" to get more options.
+  </p>
+  <ul class="list-group mt-3">
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-mt-1rem">
+        "per" : "%"
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it with numbers to get percentages, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-w-50per = width: 50%
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-mt-1rem">
+        "MIN" : "-"
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to get negative numbers, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-mt-MIN1rem = margin-top: -1rem
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-mt-1rem">
+        "_" : "."
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to put a point between the numbers, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-mt-MIN1_5rem = margin-top: -1.5rem
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-mt-1rem">
+        "__" : " "
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to get a space in the class, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-boxShadow-0__2px__4px__lavender =
+        <br />
+        box-shadow: 0 2px 4px #D6BCFF
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-my-1rem">
+        "COM" : " , "
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to separate words, example:
+      </span>
+      <br />
+      <span
+        class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem text-wrap"
+      >
+        bef-boxShadow-0__2px__4px__lavenderCOMinset__2px__0__4px__fairy =
+        <br />
+        box-shadow: 0 2px 4px #D6BCFF , inset 2px 0 4px #D680FF
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-my-1rem">
+        "__OPA" : " OPA"
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to active a opacity mode of a color, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-bg-fairy__OPA__0_5 =
+        <br />
+        background-color: rgba(214, 128, 255, 0.5)
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-my-1rem">
+        "SD" : "(" and "ED" : ")"
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to use some CSS functions like calc(), example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-w-calcSD50per__+__2remED =
+        <br />
+        width: calc(50% + 2rem)
+      </span>
+    </li>
+    <li class="list-group-item">
+      <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-my-1rem">
+        "HASH" : "#"
+      </span>
+      <br />
+      <span class="bef bef-mx-2rem">
+        You can use it to choose an especific Hex color, example:
+      </span>
+      <br />
+      <span class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem">
+        bef-bg-HASH990099 =
+        <br />
+        background-color: #990099
+      </span>
+    </li>
+  </ul>
+</section>

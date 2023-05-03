@@ -4,26 +4,26 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HeaderComponent } from './components/header/header.component';
-import { AsideComponent } from './components/aside/aside.component';
-import { MainComponent } from './components/main/main.component';
-import { FooterComponent } from './components/footer/footer.component';
-// import { NgxBootstrapExpandedFeaturesService } from './services/ngx-bootstrap-expanded-features.service';
+import { HeaderComponent } from './core/components/header/header.component';
+import { AsideComponent } from './core/components/aside/aside.component';
+import { FooterComponent } from './core/components/footer/footer.component';
 import { TestingLibraryComponent } from './core/components/testing-library/testing-library.component';
 import { HomeComponent } from './core/components/home/home.component';
+import { AboutComponent } from './core/components/about/about.component';
+import { ErrorComponent } from './core/components/error/error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     AsideComponent,
-    MainComponent,
     FooterComponent,
     TestingLibraryComponent,
     HomeComponent,
+    AboutComponent,
+    ErrorComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
-  // providers: [NgxBootstrapExpandedFeaturesService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

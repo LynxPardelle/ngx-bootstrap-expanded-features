@@ -1,16 +1,16 @@
 {
   "name": "ngx-bootstrap-expanded-features",
-  "version": "0.9.97",
+  "version": "0.9.99",
   "description": "Too many new features for bootstrap made with javascript for better performance and more options without a large css file.",
   "scripts": {
     "ng": "ng",
-    "start": "nx serve",
-    "build": "nx build",
-    "watch": "nx build --watch --configuration development",
-    "test": "nx test",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
     "build:ngxbeflib": "npm run build ngx-bootstrap-expanded-features",
-    "test-library": "nx build ngx-bootstrap-expanded-features --watch --configuration development",
-    "start-test-library": "nx serve --open --poll=2000"
+    "test-library": "ng build ngx-bootstrap-expanded-features --watch --configuration development",
+    "start-test-library": "ng serve --open --poll=2000"
   },
   "author": "lynx-pardelle (https://lynxpardelle.com/)",
   "license": "MIT",
@@ -35,6 +35,7 @@
     "@angular/platform-browser": "^14.1.2",
     "@angular/platform-browser-dynamic": "^14.1.2",
     "@angular/router": "^14.1.2",
+    "ngx-bootstrap-expanded-features": "0.9.98",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -45,10 +46,6 @@
     "@angular-devkit/schematics": "^14.1.2",
     "@angular/cli": "^14.1.2",
     "@angular/compiler-cli": "^14.1.2",
-    "@nrwl/angular": "15.9.2",
-    "@nrwl/nx-cloud": "latest",
-    "@nrwl/workspace": "15.9.2",
-    "@schematics/angular": "^14.1.2",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~4.0.0",
@@ -58,7 +55,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "ng-packagr": "^14.1.0",
-    "nx": "15.9.2",
     "typescript": "~4.7.4"
   }
 }

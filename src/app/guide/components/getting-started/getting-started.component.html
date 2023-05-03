@@ -1,0 +1,108 @@
+<!-- GETTING_STARTED -->
+<section>
+  <a id="getting_started"></a>
+  <h2 class="bef bef-pt-4rem">Getting Started 🏁</h2>
+  <article>
+    <h3>Download Option:</h3>
+    <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+      You can download this repo
+      <a
+        class="text-decoration-none"
+        href="https://github.com/LynxPardelle/bootstrap-expanded-features.git"
+        target="_blank"
+        rel="noopener noreferrer"
+        >here</a
+      >
+      and copy the bootstrap-expanded-feature.js and the bef-styles.css on your
+      site and link it into your html files.
+    </p>
+    <h3>CDN:</h3>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      Or you can copy and paste the CDN and create a CSS file with the name
+      "bef-styles.css" and link it to your html files.
+    </p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-primary">
+        &#60;script src=<span class="text-danger"
+          >"https://cdn.jsdelivr.net/gh/LynxPardelle/bootstrap-expanded-features@latest/bootstrap-expanded-features.min.js"</span
+        >&#62;</span
+      ><span class="text-primary">&#60;&#47;script&#62;</span>
+    </code>
+    <h3 class="mt-3">Angular library:</h3>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      Or you can download the Angular Library with npm and import the Service.
+    </p>
+    <code
+      class="text-shadow-0-0-0-tdark text-dark bef bef-bgHover-success__OPA__0_15 p-3"
+    >
+      npm i ngx-bootstrap-expanded-features
+    </code>
+
+    <h4 class="mt-3">On Your Module</h4>
+    <p class="mt-3 text-start bef bef-link-futurePop">Import the Service:</p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-danger">
+        import &#123;
+        <span class="text-primary">NgxBootstrapExpandedFeaturesService</span>
+        &#125; from
+        <span class="bef bef-text-summer"
+          >"ngx-bootstrap-expanded-features"</span
+        >;</span
+      >
+    </code>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      And add it to your providers on the @NgModule:
+    </p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-primary">
+        providers: [<span class="text-info"
+          >NgxBootstrapExpandedFeaturesService</span
+        >],</span
+      >
+    </code>
+    <h4 class="mt-3">On Your Component</h4>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      Import the Service (you can change the name as it follows):
+    </p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-danger">
+        import &#123;
+        <span class="text-primary"
+          >NgxBootstrapExpandedFeaturesService
+          <span class="text-danger">as</span> BefService</span
+        >
+        &#125; from
+        <span class="bef bef-text-summer"
+          >"ngx-bootstrap-expanded-features"</span
+        >;</span
+      >
+    </code>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      Put in on your constructor and initialize the cssCreate() function:
+    </p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-danger">
+        <span class="text-primary">constructor</span> (
+        <span class="text-primary">private _befService: </span>
+        <span class="text-info">BefService</span> ) &#123;
+        <span class="text-primary"
+          >this._befService<span class="text-warning">cssCreate()</span>
+        </span>
+        &#125;</span
+      >
+    </code>
+    <p class="mt-3 text-start bef bef-link-futurePop">
+      You can also put in on any function that change the elements on the screen
+      or with any change like with the DoCheck() function on Angular:
+    </p>
+    <code class="text-shadow-0-0-0-tdark">
+      <span class="text-warning">
+        ngDoCheck()<span class="text-info">: void</span> &#123;
+        <span class="text-primary"
+          >this._befService<span class="text-warning">.cssCreate()</span>
+        </span>
+        &#125;</span
+      >
+    </code>
+  </article>
+</section>

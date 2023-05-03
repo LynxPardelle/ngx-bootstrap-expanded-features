@@ -62,12 +62,7 @@ export class NgxBootstrapExpandedFeaturesService {
   public separator: string = 'þµÞ';
   /* Console */
   public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors.mystic}; color: ${this.colors.friend};`;
-  /* Time Management*/
-  public lastCSSCreate: number = Date.now();
-  public lastTimeAsked2Create: number = new Date().getTime();
-  public timer: any = null;
-  public timesCSSCreated: number = 0;
-  public timeBetweenReCreate: number = 400;
+  /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
     'Checked',
@@ -149,6 +144,14 @@ export class NgxBootstrapExpandedFeaturesService {
           };
         })
     );
+  /* Time Management*/
+  public lastCSSCreate: number = Date.now();
+  public lastTimeAsked2Create: number = new Date().getTime();
+  public timer: any = null;
+  public timesCSSCreated: number = 0;
+  public timeBetweenReCreate: number = 400;
+  public timeLastTimeAskedPlus: number = 300;
+  public useTimer: boolean = true;
   constructor() {
     let sheets: any[] = [...document.styleSheets];
     for (let sheet of sheets) {
@@ -161,14 +164,25 @@ export class NgxBootstrapExpandedFeaturesService {
     updateBefs: string[] | null = null,
     primordial: boolean = false
   ): void {
-    this.lastTimeAsked2Create = Date.now() + 500;
+    if (!!this.useTimer) {
+      this.DoUseTimer(updateBefs, primordial);
+    } else {
+      this.doCssCreate(updateBefs);
+    }
+  }
+
+  DoUseTimer(
+    updateBefs: string[] | null = null,
+    primordial: boolean = false
+  ): void {
+    this.lastTimeAsked2Create = Date.now() + this.timeLastTimeAskedPlus;
     let timer = setInterval(() => {
       const currentTime = Date.now();
       if (
-        (currentTime - this.lastCSSCreate >= this.timeBetweenReCreate ||
-          primordial === true ||
-          this.timesCSSCreated === 0) &&
-        currentTime <= this.lastTimeAsked2Create
+        (currentTime - this.lastCSSCreate >= this.timeBetweenReCreate &&
+          currentTime <= this.lastTimeAsked2Create) ||
+        primordial === true ||
+        this.timesCSSCreated === 0
       ) {
         this.timesCSSCreated++;
         this.doCssCreate(updateBefs);
@@ -179,7 +193,7 @@ export class NgxBootstrapExpandedFeaturesService {
       if (this.timer !== timer) {
         clearInterval(timer);
       }
-    }, 10);
+    }, this.timeBetweenReCreate);
     this.timer = timer;
   }
 
@@ -743,7 +757,7 @@ export class NgxBootstrapExpandedFeaturesService {
           }
         }
         if (classesToUpdate.length > 0) {
-          this.doCssCreate(classesToUpdate);
+          this.cssCreate(classesToUpdate);
         }
       } else {
         throw new Error(`There is no color named ${color}.`);
@@ -780,7 +794,7 @@ export class NgxBootstrapExpandedFeaturesService {
   }
 
   updateClasses(classesToUpdate: string[]): void {
-    this.doCssCreate(classesToUpdate);
+    this.cssCreate(classesToUpdate);
   }
 
   getSheet(): any {
@@ -796,8 +810,16 @@ export class NgxBootstrapExpandedFeaturesService {
     this.isDebug = !this.isDebug;
   }
 
+  changeUseTimerOption(): void {
+    this.useTimer = !this.useTimer;
+  }
+
   setTimeBetweenReCreate(time: number): void {
     this.timeBetweenReCreate = time;
+  }
+
+  setTimeLastTimeAskedPlus(time: number): void {
+    this.timeLastTimeAskedPlus = time;
   }
 
   unbefysize(value: string): string {
