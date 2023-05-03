@@ -869,7 +869,7 @@ export class NgxBootstrapExpandedFeaturesService {
 
   unbefysize(value: string): string {
     return value
-      .replace(/per/g, '%')
+      .replace(/(\d+)\s*per/g, '$1%')
       .replace(/COM/g, ' , ')
       .replace(/CSP/g, `'`)
       .replace(/CDB/g, `"`)
