@@ -482,7 +482,7 @@ export class NgxBootstrapExpandedFeaturesService {
             this.styleConsole
           );
           this.createCSSRules(
-            `@media only screen and (min-width: ${b.value}) {html ${b.bef}}`
+            `@media only screen and (min-width: ${b.value}) {html body ${b.bef}}`
           );
           b.bef = '';
         }

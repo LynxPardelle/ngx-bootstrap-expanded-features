@@ -47,7 +47,41 @@
   </article>
 </section>
 <!-- HOW_TO_USE -->
-<section>
+<section  class="bef bef-m-4rem__0__5rem__0">
   <a id="howToUse"></a>
-  <h2 class="bef bef-pt-4rem">How To Use ✏️</h2>
+  <h2>How To Use ✏️</h2>
+  <ul class="list-group bef bef-link-futurePop">
+    <li
+      class="list-group-item list-group-item-action"
+      *ngFor="let navItem of navMenu"
+    >
+      <a
+        class="text-decoration-none"
+        href="{{
+          navItem.url + (navItem.fragment ? '#' + navItem.fragment : '')
+        }}"
+        [routerLink]="[navItem.url]"
+        [fragment]="navItem.fragment ? navItem.fragment : undefined"
+        rel=" noopener noreferrer "
+        >{{ navItem.title }}</a
+      >
+      <ng-container *ngIf="navItem.sections">
+        <ul
+          *ngFor="let nI of navItem.sections"
+          class="ms-4 bef bef-link-futurePop list-group list-group-flush"
+        >
+          <li class="list-group-item list-group-item-action">
+            <a
+              class="text-decoration-none"
+              href="{{ nI.url + (nI.fragment ? '#' + nI.fragment : '') }}"
+              [routerLink]="[nI.url]"
+              [fragment]="nI.fragment ? nI.fragment : undefined"
+              rel=" noopener noreferrer "
+              >{{ nI.title }}</a
+            >
+          </li>
+        </ul>
+      </ng-container>
+    </li>
+  </ul>
 </section>
