@@ -883,6 +883,7 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/SLASH/g, '/')
       .replace(/__/g, ' ')
       .replace(/_/g, '.')
+      .replace(/UND/g, '_')
       .replace(/CHILD/g, ' > ')
       .replace(/ADJ/g, ' + ')
       .replace(/SIBL/g, ' ~ ')
@@ -891,8 +892,7 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/ST/g, '^')
       .replace(/INC/g, '$')
       .replace(/DPS/g, ':')
-      .replace(/PNC/g, ';')
-      .replace(/UND/g, '_');
+      .replace(/PNC/g, ';');
   }
 
   befysize(value: string): string {
@@ -909,6 +909,7 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/\]/g, 'EE')
       .replace(/#/g, 'HASH')
       .replace(/\//g, 'SLASH')
+      .replace(/_/g, 'UND')
       .replace(/\s/g, '__')
       .replace(/\./g, '_')
       .replace(/\s+>\s+/g, 'CHILD')
@@ -919,8 +920,7 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/\^/g, 'ST')
       .replace(/\$/g, 'INC')
       .replace(/:/g, 'DPS')
-      .replace(/;/g, 'PNC')
-      .replace(/_/g, 'UND');
+      .replace(/;/g, 'PNC');
   }
 
   getStackTrace(): string {
