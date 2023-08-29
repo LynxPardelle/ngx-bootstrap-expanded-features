@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 /* Colors */
 import { allColors } from './colors';
 import { cssNamesParsed } from './cssNamesParsed';
+import { debug } from 'console';
 
 export interface IBPS {
   bp: string;
@@ -27,6 +28,9 @@ export interface IPseudo {
 })
 export class NgxBootstrapExpandedFeaturesService {
   public colors: { [key: string]: string } = allColors;
+  public abreviationsClasses: { [key: string]: string } = {};
+  public abreviationsValues: { [key: string]: string } = {};
+  public combos: { [key: string]: string[] } = {};
   public cssNamesParsed: any = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
@@ -158,7 +162,8 @@ export class NgxBootstrapExpandedFeaturesService {
       }
     }
     /* this.colors = allColors;
-    console.log('this.colors', this.colors); */
+    console.log('this.colors', this.colors);
+    */
   }
   cssCreate(
     updateBefs: string[] | null = null,
@@ -202,7 +207,7 @@ export class NgxBootstrapExpandedFeaturesService {
     }, this.timeBetweenReCreate);
   }
 
-  doCssCreate(updateBefs: string[] | null = null): void {
+  async doCssCreate(updateBefs: string[] | null = null): Promise<void> {
     try {
       if (!this.sheet) {
         let sheets: any[] = [...document.styleSheets];
@@ -221,10 +226,81 @@ export class NgxBootstrapExpandedFeaturesService {
         let befElements: any = document.getElementsByClassName('bef');
         for (let befElement of befElements) {
           befElement.classList.forEach((item: any) => {
-            if (
+            let comb = Object.keys(this.combos).find((cs) => {
+              return item.includes(cs);
+            });
+            if (!!comb) {
+              if (this.combos[comb]) {
+                //debugger;
+                let vals: string[] = !!item.includes('VALS')
+                  ? item.split('VALS')[1].split('VL')
+                  : [];
+                console.log(this.combos[comb]);
+                this.combos[comb].forEach((c: string) => {
+                  let reg = new RegExp(/VAL[0-9]+(DEF[.]*DEF)?/, 'g');
+                  if (reg.test(c)) {
+                    let matches = c.match(reg);
+                    if (!!matches) {
+                      for (let match of matches) {
+                        let val = parseInt(
+                          match.split('VAL')[1].split('DEF')[0]
+                        );
+                        let nreg = new RegExp(
+                          /VAL'/ + val.toString() + /'+(DEF[.]*DEF)?/,
+                          'g'
+                        );
+                        let def = match.split('DEF')[1];
+                        if (
+                          !!vals[val] &&
+                          vals[val] !== '' &&
+                          vals[val] !== 'undefined' &&
+                          vals[val] !== 'DEF' &&
+                          vals[val] !== 'null'
+                        ) {
+                          if (/VAL[0-9]+/.test(vals[val])) {
+                            let valval = vals[val].replace('VAL', '');
+                            c = c.replace(
+                              nreg,
+                              vals[parseInt(valval)]
+                                ? vals[parseInt(valval)]
+                                : def
+                                ? def
+                                : ''
+                            );
+                          } else {
+                            c = c.replace(nreg, vals[val]);
+                          }
+                        } else {
+                          c = c.replace(nreg, def ? def : '');
+                        }
+                      }
+                    }
+                  }
+                  if (c.startsWith('bef')) {
+                    if (!!c.split('-')[1]?.includes('SEL')) {
+                      c = c.replace('SEL', 'SEL__COM_' + item + '__');
+                    } else {
+                      c = c.replace(
+                        c.split('-')[1],
+                        c.split('-')[1] + 'SEL__COM_' + item
+                      );
+                    }
+                  } else {
+                    befElement.classList.add(c);
+                  }
+                  console.log(c);
+                  if (!befs.includes(c)) {
+                    befs.push(c);
+                  }
+                });
+              }
+            } else if (
               !befs.includes(item) &&
               item !== 'bef' &&
-              item.includes('bef')
+              (item.includes('bef') ||
+                Object.keys(this.abreviationsClasses).find((aC) =>
+                  item.includes(aC)
+                ))
             ) {
               befs.push(item);
             }
@@ -263,6 +339,14 @@ export class NgxBootstrapExpandedFeaturesService {
           this.alreadyCreatedClasses.push(bef);
         }
         let befStringed = '.' + bef;
+        if (!bef.includes('bef')) {
+          let abbrClss = Object.keys(this.abreviationsClasses).find((aC) =>
+            bef.includes(aC)
+          );
+          if (!!abbrClss) {
+            bef = bef.replace(abbrClss, this.abreviationsClasses[abbrClss]);
+          }
+        }
         let befSplited = bef.split('-');
         /* if (befSplited[1].includes('SLASH')) {
           debugger;
@@ -297,8 +381,16 @@ export class NgxBootstrapExpandedFeaturesService {
           .replace(/COM/g, ' , ')
           .replace(/__/g, ' ')
           .replace(/_/g, '.'); */
-        value = this.unbefysize(value);
-        this.consoleLog('info', { value: value }, this.styleConsole);
+        value = this.unbefysize(
+          !!this.abreviationsValues[value]
+            ? this.abreviationsValues[value]
+            : value
+        );
+        secondValue = this.unbefysize(
+          !!this.abreviationsValues[secondValue]
+            ? this.abreviationsValues[secondValue]
+            : secondValue
+        );
         let values: any = {
           value: value,
           secondValue: secondValue,
@@ -741,6 +833,18 @@ export class NgxBootstrapExpandedFeaturesService {
       .toLowerCase();
   }
 
+  /* CRUD */
+  pushCssNamesParsed(cssNamesParsed: any): void {
+    try {
+      Object.keys(cssNamesParsed).forEach((key) => {
+        this.cssNamesParsed[key] = cssNamesParsed[key];
+      });
+      this.cssCreate();
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
   pushBPS(bps: IBPS[]): void {
     try {
       for (let nb of bps) {
@@ -752,6 +856,7 @@ export class NgxBootstrapExpandedFeaturesService {
           this.bps.push({ bp: nb.bp, value: nb.value, bef: '' });
         }
       }
+      this.cssCreate();
     } catch (err) {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
@@ -765,6 +870,71 @@ export class NgxBootstrapExpandedFeaturesService {
           ''
         );
       });
+      this.cssCreate();
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+  pushAbreviationsValues(abreviationsValues: any): void {
+    try {
+      let prevIgnoredAbreviationsValues: string[] = [];
+      Object.keys(abreviationsValues).forEach((key) => {
+        this.abreviationsValues[key] = abreviationsValues[key];
+        prevIgnoredAbreviationsValues = this.alreadyCreatedClasses.filter(
+          (aC) => {
+            return aC.includes(key);
+          }
+        );
+      });
+      if (prevIgnoredAbreviationsValues.length > 0) {
+        this.cssCreate(prevIgnoredAbreviationsValues);
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+  pushAbreviationsClasses(abreviationsClasses: any): void {
+    let prevIgnoredAbreviationsValues: string[] = [];
+    try {
+      Object.keys(abreviationsClasses).forEach((key) => {
+        this.abreviationsClasses[key] = abreviationsClasses[key];
+        prevIgnoredAbreviationsValues = this.alreadyCreatedClasses.filter(
+          (aC) => {
+            return aC.includes(key);
+          }
+        );
+      });
+      if (prevIgnoredAbreviationsValues.length > 0) {
+        this.cssCreate(prevIgnoredAbreviationsValues);
+      } else {
+        this.cssCreate();
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  pushCombos(combos: any): void {
+    try {
+      let prevIgnoredCombosValues: string[] = [];
+      Object.keys(combos).forEach((key) => {
+        this.combos[key] =
+          typeof combos[key] === 'string'
+            ? combos[key].split(' ')
+            : combos[key]
+                .map((c: string) => {
+                  return c.split(' ').flat();
+                })
+                .flat();
+        prevIgnoredCombosValues = this.alreadyCreatedClasses.filter((aC) => {
+          return aC.includes(key);
+        });
+      });
+      if (prevIgnoredCombosValues.length > 0) {
+        this.cssCreate(prevIgnoredCombosValues);
+      } else {
+        this.cssCreate();
+      }
     } catch (err) {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
@@ -773,6 +943,38 @@ export class NgxBootstrapExpandedFeaturesService {
   getColors(): any {
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     return this.colors;
+  }
+
+  getAbreviationsClasses(): any {
+    this.consoleLog(
+      'info',
+      { abreviationsClasses: this.abreviationsClasses },
+      this.styleConsole
+    );
+    return this.abreviationsClasses;
+  }
+
+  getAbreviationsValues(): any {
+    this.consoleLog(
+      'info',
+      { abreviationsValues: this.abreviationsValues },
+      this.styleConsole
+    );
+    return this.abreviationsValues;
+  }
+
+  getCombos(): any {
+    this.consoleLog('info', { combos: this.combos }, this.styleConsole);
+    return this.combos;
+  }
+
+  getCssNamesParsed(): any {
+    this.consoleLog(
+      'info',
+      { cssNamesParsed: this.cssNamesParsed },
+      this.styleConsole
+    );
+    return this.cssNamesParsed;
   }
 
   getColorsNames(): string[] {
@@ -790,6 +992,24 @@ export class NgxBootstrapExpandedFeaturesService {
       this.styleConsole
     );
     return this.colors[color];
+  }
+
+  getAlreadyCreatedClasses(): string[] {
+    this.consoleLog(
+      'info',
+      { alreadyCreatedClasses: this.alreadyCreatedClasses },
+      this.styleConsole
+    );
+    return this.alreadyCreatedClasses;
+  }
+
+  getSheet(): any {
+    if (this.sheet) {
+      this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
+      return this.sheet;
+    } else {
+      return '';
+    }
   }
 
   updateColor(color: string, value: string): void {
@@ -816,6 +1036,110 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
 
+  updateabreviationsClass(abreviationsClass: string, value: string): void {
+    try {
+      if (this.abreviationsClasses[abreviationsClass.toString()]) {
+        this.abreviationsClasses[abreviationsClass] = value;
+        let classesToUpdate: string[] = [];
+        for (let createdClass of this.alreadyCreatedClasses) {
+          if (createdClass.includes(abreviationsClass)) {
+            classesToUpdate.push(createdClass);
+          }
+        }
+        if (classesToUpdate.length > 0) {
+          this.cssCreate(classesToUpdate);
+        }
+      } else {
+        throw new Error(
+          `There is no abreviationsClass named ${abreviationsClass}.`
+        );
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  updateabreviationsValue(abreviationsValue: string, value: string): void {
+    try {
+      if (this.abreviationsValues[abreviationsValue.toString()]) {
+        this.abreviationsValues[abreviationsValue] = value;
+        let classesToUpdate: string[] = [];
+        for (let createdClass of this.alreadyCreatedClasses) {
+          if (createdClass.includes(abreviationsValue)) {
+            classesToUpdate.push(createdClass);
+          }
+        }
+        if (classesToUpdate.length > 0) {
+          this.cssCreate(classesToUpdate);
+        }
+      } else {
+        throw new Error(
+          `There is no abreviationsValue named ${abreviationsValue}.`
+        );
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  updateabreviationsCombo(combo: string, values: string[]): void {
+    try {
+      if (this.combos[combo.toString()]) {
+        this.combos[combo] = values;
+        let classes2Delete: string[] = [];
+        for (let createdClass of this.alreadyCreatedClasses) {
+          if (createdClass.includes(combo)) {
+            classes2Delete.push(createdClass);
+          }
+        }
+        if (classes2Delete.length > 0) {
+          for (let class2Delete of classes2Delete) {
+            this.sheet.deleteRule(
+              [...this.sheet.cssRules].findIndex((cssRule) => {
+                return cssRule.cssText.includes(class2Delete);
+              })
+            );
+            this.alreadyCreatedClasses = this.alreadyCreatedClasses.filter(
+              (aC) => {
+                return aC !== class2Delete;
+              }
+            );
+          }
+          this.cssCreate();
+        }
+      } else {
+        throw new Error(`There is no combo named ${combo}.`);
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  updateCssNamesParsed(cssNameParsed: string, value: string): void {
+    try {
+      if (this.cssNamesParsed[cssNameParsed.toString()]) {
+        this.cssNamesParsed[cssNameParsed] = value;
+        let classesToUpdate: string[] = [];
+        for (let createdClass of this.alreadyCreatedClasses) {
+          if (createdClass.includes(cssNameParsed)) {
+            classesToUpdate.push(createdClass);
+          }
+        }
+        if (classesToUpdate.length > 0) {
+          this.cssCreate(classesToUpdate);
+        }
+      } else {
+        throw new Error(`There is no cssNameParsed named ${cssNameParsed}.`);
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
+    }
+  }
+
+  updateClasses(classesToUpdate: string[]): void {
+    this.cssCreate(classesToUpdate);
+  }
+
   deleteColor(color: string): void {
     try {
       if (!!this.colors[color.toString()]) {
@@ -833,28 +1157,7 @@ export class NgxBootstrapExpandedFeaturesService {
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
   }
 
-  getAlreadyCreatedClasses(): string[] {
-    this.consoleLog(
-      'info',
-      { alreadyCreatedClasses: this.alreadyCreatedClasses },
-      this.styleConsole
-    );
-    return this.alreadyCreatedClasses;
-  }
-
-  updateClasses(classesToUpdate: string[]): void {
-    this.cssCreate(classesToUpdate);
-  }
-
-  getSheet(): any {
-    if (this.sheet) {
-      this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
-      return this.sheet;
-    } else {
-      return '';
-    }
-  }
-
+  /* Debuging */
   changeDebugOption(): void {
     this.isDebug = !this.isDebug;
   }

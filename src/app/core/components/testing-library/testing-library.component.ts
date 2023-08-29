@@ -8,9 +8,9 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
 })
 export class TestingLibraryComponent implements OnInit {
   public classes2explore: string[] = [
-    'bef-w-85per bef-bg-success bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon span bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark bef-textSEL__spanCOM_btnMINwarning-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
+    'firstBox span',
     'bef-w-85per bef-bg-success bef-text-info bef-p-3rem bef-bgLastChild-lavender bef-pNthChildSD2ED-2rem span-span',
-    'bef-w-75per bef-bg-warning bef-text-danger bef-contentBefore-CSPcomillas__simplesCSP bef-bgBefore-success',
+    'bef-w-75per bef-bg-warning bef-text-danger cBCS bef-bgBefore-success',
     'bef-w-75per bef-bg-sm-success bef-text-sm-info',
     'bef-w-75per bef-bg-md-warning bef-text-md-danger',
     'bef-w-75per bef-bg-mystic bef-text-lavender',
@@ -35,9 +35,24 @@ export class TestingLibraryComponent implements OnInit {
     'bef-overflowX-scroll bef-w-200px bef-asd-as bef-noclass-muchotextosiosiosiosisoisosiso',
   ];
   public examples: any[] = [];
+  public abreviationsValues: { [key: string]: string } = {
+    bor1: '5px__solid__black',
+  };
+  public abreviationsClasses: { [key: string]: string } = {
+    cBCS: 'bef-contentBefore-CSPcomillas__simplesCSP',
+    tsSCBMW: 'bef-textSEL__spanCOM_btnMINwarning',
+  };
+  public combos: { [key: string]: string[] } = {
+    firstBox: [
+      'bef-w-85per bef-border-bor1 bef-bg-success bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark tsSCBMW-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
+    ],
+  };
   constructor(private _befService: BefService) {}
 
   ngOnInit(): void {
+    this._befService.pushAbreviationsValues(this.abreviationsValues);
+    this._befService.pushAbreviationsClasses(this.abreviationsClasses);
+    this._befService.pushCombos(this.combos);
     this.cssCreate();
     let interval = setInterval(() => {
       this.createNewExample();
