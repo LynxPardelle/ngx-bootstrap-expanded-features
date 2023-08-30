@@ -12,6 +12,16 @@ import { ShadowsComponent } from './components/shadows/shadows.component';
 import { SizingComponent } from './components/sizing/sizing.component';
 import { TextComponent } from './components/text/text.component';
 import { ZIndexComponent } from './components/z-index/z-index.component';
+import { ColorsComponent } from './components/colors/colors.component';
+import { BreakpointsComponent } from './components/breakpoints/breakpoints.component';
+import { ReservedWordsComponent } from './components/reserved-words/reserved-words.component';
+import { PseudosComponent } from './components/pseudos/pseudos.component';
+import { CombinatorsComponent } from './components/combinators/combinators.component';
+import { AbbreviationsComponent } from './components/abbreviations/abbreviations.component';
+import { CombosComponent } from './components/combos/combos.component';
+import { MethodsComponent } from './components/methods/methods.component';
+import { AdvancedComponent } from './components/advanced/advanced.component';
+
 /* Components */
 const routes: Routes = [
   { path: '', component: GettingStartedComponent },
@@ -26,6 +36,15 @@ const routes: Routes = [
   { path: 'sizing', component: SizingComponent },
   { path: 'text', component: TextComponent },
   { path: 'z-index', component: ZIndexComponent },
+  { path: 'colors', component: ColorsComponent },
+  { path: 'breakpoints', component: BreakpointsComponent },
+  { path: 'reserved-words', component: ReservedWordsComponent },
+  { path: 'pseudos', component: PseudosComponent },
+  { path: 'combinators', component: CombinatorsComponent },
+  { path: 'abbreviations', component: AbbreviationsComponent },
+  { path: 'combos', component: CombosComponent },
+  { path: 'methods', component: MethodsComponent },
+  { path: 'advanced', component: AdvancedComponent },
   { path: '**', redirectTo: '' },
 ];
 

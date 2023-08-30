@@ -14,6 +14,15 @@ import { SizingComponent } from './components/sizing/sizing.component';
 import { TextComponent } from './components/text/text.component';
 import { ZIndexComponent } from './components/z-index/z-index.component';
 import { SharedModule } from '../shared/shared.module';
+import { ColorsComponent } from './components/colors/colors.component';
+import { BreakpointsComponent } from './components/breakpoints/breakpoints.component';
+import { ReservedWordsComponent } from './components/reserved-words/reserved-words.component';
+import { PseudosComponent } from './components/pseudos/pseudos.component';
+import { CombinatorsComponent } from './components/combinators/combinators.component';
+import { AbbreviationsComponent } from './components/abbreviations/abbreviations.component';
+import { CombosComponent } from './components/combos/combos.component';
+import { MethodsComponent } from './components/methods/methods.component';
+import { AdvancedComponent } from './components/advanced/advanced.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +37,15 @@ import { SharedModule } from '../shared/shared.module';
     SizingComponent,
     TextComponent,
     ZIndexComponent,
+    ColorsComponent,
+    BreakpointsComponent,
+    ReservedWordsComponent,
+    PseudosComponent,
+    CombinatorsComponent,
+    AbbreviationsComponent,
+    CombosComponent,
+    MethodsComponent,
+    AdvancedComponent,
   ],
   imports: [CommonModule, GuideRoutingModule, SharedModule],
   exports: [
@@ -42,6 +60,15 @@ import { SharedModule } from '../shared/shared.module';
     SizingComponent,
     TextComponent,
     ZIndexComponent,
+    ColorsComponent,
+    BreakpointsComponent,
+    ReservedWordsComponent,
+    PseudosComponent,
+    CombinatorsComponent,
+    AbbreviationsComponent,
+    CombosComponent,
+    MethodsComponent,
+    AdvancedComponent,
   ],
 })
 export class GuideModule {}

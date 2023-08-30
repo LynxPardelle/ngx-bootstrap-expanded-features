@@ -1,0 +1,20 @@
+<div
+  [ngClass]="
+    show === 'both'
+      ? 'd-flex flex-column flex-sm-row justify-content-evenly'
+      : ''
+  "
+>
+  <div>
+    <h5 *ngIf="show === 'both'" class="text-center my-3">Example</h5>
+    <div *ngIf="show !== 'code'" [innerHTML]="code | safeHtml"></div>
+  </div>
+  <div>
+    <h5 *ngIf="show === 'both'" class="text-center my-3">Code</h5>
+    <p
+      class="d-inline-block p-2 bef bef-m-0rem__2rem bef-bg-futurePop__OPA__0_03"
+      *ngIf="show !== 'example'"
+      [innerHTML]="codeViewer | safeHtml"
+    ></p>
+  </div>
+</div>

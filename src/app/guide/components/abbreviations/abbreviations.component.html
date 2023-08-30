@@ -1,0 +1,138 @@
+<section>
+  <h4>Value Abbreviations and Class Abbreviations</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    To expand what you can do with this library, now you can abbreviate values
+    and even classes.
+  </p>
+  <h5 class="my-4">Creating value abbreviations</h5>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    To create some value abbreviations you will need to follow some instructions
+    depending of how you are using the library.
+  </p>
+  <h6>For the CDN version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to create a var with a object with the name
+    "abreviationsValues" and then you can use the pushAbreviationsValues()
+    function like in this code that you can copy-paste:
+  </p>
+  <codeviewer [code]="getHTML('abbV1')" [show]="'code'"></codeviewer>
+  <h6 class="my-3">For the npm version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to import the library, create a var with a object with any
+    name, it can be "abreviationsValues" and then you can use the
+    pushAbreviationsValues() function and then use the cssCreate() function to
+    generate all the css with the new abbreviations that you need like in this
+    code that you can copy-paste:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbV2')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h6 class="my-3">For the Angular Library version</h6>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Import the Service (you can change the name as it follows):
+  </p>
+  <codeviewer
+    [code]="getHTML('import')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Create new abbreviation for your values in an object inside your component
+    class:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbV3')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Put the service on your constructor, push the abbreviation for your values
+    and initialize the cssCreate() function:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbV4')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    You can also put in on any function that change the elements on the screen
+    or with any change like with the DoCheck() function on Angular:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbV5')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h6>Using the abbreviation for the value in an example:</h6>
+  <codeviewer [code]="getHTML('abbVEX')"></codeviewer>
+  <h5 class="my-4">Creating class abbreviations</h5>
+  <p class="my-3 text-start bef bef-link-futurePop">
+    The class abbreviations are the bigger and more powerful sisters of the
+    value abbreviations, because you can abbreviate an entire class with all the
+    values that it has and even just the class to put your own values later.
+  </p>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    To create some class abbreviations you will need to follow some instructions
+    depending of how you are using the library.
+  </p>
+  <h6>For the CDN version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to create a var with a object with the name
+    "abreviationsClasses" and then you can use the pushAbreviationsClasses()
+    function like in this code that you can copy-paste:
+  </p>
+  <codeviewer [code]="getHTML('abbC1')" [show]="'code'"></codeviewer>
+  <h6 class="my-3">For the npm version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to import the library, create a var with a object with any
+    name, it can be "abreviationsClasses" and then you can use the
+    pushAbreviationsClasses() function and then use the cssCreate() function to
+    generate all the css with the new abbreviations that you need like in this
+    code that you can copy-paste:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbC2')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h6 class="my-3">For the Angular Library version</h6>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Import the Service (you can change the name as it follows):
+  </p>
+  <codeviewer
+    [code]="getHTML('import')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Create new abbreviation for your classes in an object inside your component
+    class:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbC3')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Put the service on your constructor, push the abbreviation for your classes
+    and initialize the cssCreate() function:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbC4')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    You can also put in on any function that change the elements on the screen
+    or with any change like with the DoCheck() function on Angular:
+  </p>
+  <codeviewer
+    [code]="getHTML('abbC5')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h6>Using the abbreviation for the classes in an example:</h6>
+  <codeviewer [code]="getHTML('abbCEX')"></codeviewer>
+</section>

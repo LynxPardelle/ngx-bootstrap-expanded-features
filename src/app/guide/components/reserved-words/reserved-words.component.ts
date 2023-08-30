@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-basic',
-  templateUrl: './basic.component.html',
-  styleUrls: ['./basic.component.scss'],
+  selector: 'app-reserved-words',
+  templateUrl: './reserved-words.component.html',
+  styleUrls: ['./reserved-words.component.scss'],
 })
-export class BasicComponent implements OnInit {
+export class ReservedWordsComponent implements OnInit {
   public reservedWords: {
     reservedWord: string;
     description: string;
@@ -168,21 +168,6 @@ export class BasicComponent implements OnInit {
 
   ngOnInit(): void {
     this.cssCreate();
-  }
-
-  getHTML(option: string): string {
-    switch (option) {
-      case 'bef1':
-        return `<p class="bef" >
-          Some text.
-        </p>`;
-      case 'bef2':
-        return `<p class="bg-primary text-light bef bef-p-14px" >
-          Box with a 14px padding.
-        </p>`;
-      default:
-        return ``;
-    }
   }
 
   cssCreate() {

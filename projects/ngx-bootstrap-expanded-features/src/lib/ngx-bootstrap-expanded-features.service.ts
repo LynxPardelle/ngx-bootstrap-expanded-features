@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { allColors } from './colors';
 import { cssNamesParsed } from './cssNamesParsed';
 import { debug } from 'console';
+import { get } from 'http';
 
 export interface IBPS {
   bp: string;
@@ -31,6 +32,7 @@ export class NgxBootstrapExpandedFeaturesService {
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
+  public combosCreated: { [key: string]: string } = {};
   public cssNamesParsed: any = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
@@ -231,23 +233,39 @@ export class NgxBootstrapExpandedFeaturesService {
             });
             if (!!comb) {
               if (this.combos[comb]) {
-                //debugger;
                 let vals: string[] = !!item.includes('VALS')
                   ? item.split('VALS')[1].split('VL')
                   : [];
-                console.log(this.combos[comb]);
                 this.combos[comb].forEach((c: string) => {
                   let reg = new RegExp(/VAL[0-9]+(DEF[.]*DEF)?/, 'g');
                   if (reg.test(c)) {
                     let matches = c.match(reg);
+                    this.consoleLog(
+                      'info',
+                      { matches: matches },
+                      this.styleConsole
+                    );
                     if (!!matches) {
                       for (let match of matches) {
                         let val = parseInt(
                           match.split('VAL')[1].split('DEF')[0]
                         );
-                        let nreg = new RegExp(
-                          /VAL'/ + val.toString() + /'+(DEF[.]*DEF)?/,
-                          'g'
+                        this.consoleLog(
+                          'info',
+                          { val: val },
+                          this.styleConsole
+                        );
+                        this.consoleLog(
+                          'info',
+                          { match: match },
+                          this.styleConsole
+                        );
+                        let pattern = `VAL${val}(DEF[.]*DEF)?`;
+                        let nreg = new RegExp(pattern, 'g');
+                        this.consoleLog(
+                          'info',
+                          { nreg: nreg },
+                          this.styleConsole
                         );
                         let def = match.split('DEF')[1];
                         if (
@@ -257,8 +275,18 @@ export class NgxBootstrapExpandedFeaturesService {
                           vals[val] !== 'DEF' &&
                           vals[val] !== 'null'
                         ) {
+                          this.consoleLog(
+                            'info',
+                            { valsval: vals[val] },
+                            this.styleConsole
+                          );
                           if (/VAL[0-9]+/.test(vals[val])) {
                             let valval = vals[val].replace('VAL', '');
+                            this.consoleLog(
+                              'info',
+                              { valval: valval },
+                              this.styleConsole
+                            );
                             c = c.replace(
                               nreg,
                               vals[parseInt(valval)]
@@ -269,26 +297,100 @@ export class NgxBootstrapExpandedFeaturesService {
                             );
                           } else {
                             c = c.replace(nreg, vals[val]);
+                            this.consoleLog(
+                              'info',
+                              { c: c },
+                              this.styleConsole
+                            );
                           }
                         } else {
+                          this.consoleLog(
+                            'info',
+                            { def: def },
+                            this.styleConsole
+                          );
                           c = c.replace(nreg, def ? def : '');
                         }
                       }
                     }
                   }
                   if (c.startsWith('bef')) {
+                    let combosCreatedABBR = Object.keys(this.combosCreated);
+                    this.consoleLog(
+                      'info',
+                      { combosCreatedABBR: combosCreatedABBR },
+                      this.styleConsole
+                    );
+                    let alreadyABBRCombo = combosCreatedABBR.find((cs) => {
+                      return this.combosCreated[cs] === item;
+                    });
+                    this.consoleLog(
+                      'info',
+                      { alreadyABBRCombo: alreadyABBRCombo },
+                      this.styleConsole
+                    );
+                    let combosCreatedLenght = combosCreatedABBR.length;
+                    if (!alreadyABBRCombo) {
+                      this.combosCreated['■■■' + combosCreatedLenght] = item;
+                      this.consoleLog(
+                        'info',
+                        {
+                          cStartsWithBef:
+                            this.combosCreated['■■■' + combosCreatedLenght],
+                        },
+                        this.styleConsole
+                      );
+                    }
+                    this.consoleLog(
+                      'info',
+                      { combosCreatedABBR: combosCreatedABBR },
+                      this.styleConsole
+                    );
+                    let comboABBR: string =
+                      '■■■' +
+                      (combosCreatedLenght !== 0 ? combosCreatedLenght - 1 : 0);
+                    this.consoleLog(
+                      'info',
+                      { comboABBR: comboABBR },
+                      this.styleConsole
+                    );
+                    this.consoleLog('info', { c: c }, this.styleConsole);
                     if (!!c.split('-')[1]?.includes('SEL')) {
-                      c = c.replace('SEL', 'SEL__COM_' + item + '__');
+                      this.consoleLog(
+                        'info',
+                        { cIncludesSEL: c },
+                        this.styleConsole
+                      );
+                      c = c.replace('SEL', 'SEL__COM_' + comboABBR + '__');
+                      this.consoleLog(
+                        'info',
+                        { cIncludesSELAfter: c },
+                        this.styleConsole
+                      );
                     } else {
+                      this.consoleLog(
+                        'info',
+                        { cDoesntIncludesSEL: c },
+                        this.styleConsole
+                      );
                       c = c.replace(
                         c.split('-')[1],
-                        c.split('-')[1] + 'SEL__COM_' + item
+                        c.split('-')[1] + 'SEL__COM_' + comboABBR
+                      );
+                      this.consoleLog(
+                        'info',
+                        { cDoesntIncludesSELAfter: c },
+                        this.styleConsole
                       );
                     }
                   } else {
+                    this.consoleLog(
+                      'info',
+                      { cDoesntStartsWithBef: c },
+                      this.styleConsole
+                    );
                     befElement.classList.add(c);
                   }
-                  console.log(c);
                   if (!befs.includes(c)) {
                     befs.push(c);
                   }
@@ -351,9 +453,19 @@ export class NgxBootstrapExpandedFeaturesService {
         /* if (befSplited[1].includes('SLASH')) {
           debugger;
         } */
+        if (befSplited[1].includes('boxCustom')) {
+          this.consoleLog(
+            'info',
+            { befSplited1: befSplited[1] },
+            this.styleConsole
+          );
+        }
         let befSRP = this.removePseudos(befSplited[1])
           .replace(/SEL/g, this.separator)
           .split(`${this.separator}`);
+        if (befSplited[1].includes('boxCustom')) {
+          this.consoleLog('info', { befSRP: befSRP }, this.styleConsole);
+        }
         let selector = befSRP[0];
         let specify = this.unbefysize(
           befSRP
@@ -366,6 +478,26 @@ export class NgxBootstrapExpandedFeaturesService {
             })
             .join('')
         );
+        if (!!specify) {
+          let alreadyABBRCombo = Object.keys(this.combosCreated).find((cs) =>
+            specify.includes(cs)
+          );
+          if (!!alreadyABBRCombo) {
+            this.consoleLog(
+              'info',
+              { OPalreadyABBRCombo: alreadyABBRCombo },
+              this.styleConsole
+            );
+            specify = specify.replace(
+              alreadyABBRCombo,
+              this.combosCreated[alreadyABBRCombo]
+            );
+            bef = bef.replace(
+              alreadyABBRCombo,
+              this.combosCreated[alreadyABBRCombo]
+            );
+          }
+        }
         let hasBP = false;
         let value = '';
         let secondValue = '';
@@ -943,6 +1075,11 @@ export class NgxBootstrapExpandedFeaturesService {
   getColors(): any {
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     return this.colors;
+  }
+
+  getBPS(): any {
+    this.consoleLog('info', { bps: this.bps }, this.styleConsole);
+    return this.bps;
   }
 
   getAbreviationsClasses(): any {

@@ -1,0 +1,25 @@
+<!-- RESERVEDWORDSBASICHTU -->
+<a id="reswordsBasicHTU"></a>
+<h4 class="bef bef-pt-4rem">Reserved Words</h4>
+<p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+  There are a few reserved words you should use in some cases and a few way to
+  use the "_" to get more options.
+</p>
+<ul class="list-group my-3">
+  <li class="list-group-item" *ngFor="let reservedWord of reservedWords">
+    <span class="bef bef-fs-2rem text-end d-block bef-mx-2rem bef-mt-1rem">
+      {{ reservedWord.reservedWord }}
+    </span>
+    <br />
+    <span class="bef bef-mx-2rem">
+      {{ reservedWord.description }}
+    </span>
+    <br />
+    <span
+      *ngIf="reservedWord.example"
+      class="text-center d-block mx-auto bef bef-text-blood bef-my-1rem"
+    >
+      {{ reservedWord.example }}
+    </span>
+  </li>
+</ul>

@@ -1,0 +1,54 @@
+<section>
+  <h4>Pseudo Classes & Pseudo Elements</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    You can put pseudo classes and pseudo elements on any class to make it more
+    specific, here are some examples.
+  </p>
+  <codeviewer [code]="getHTML('bghover')"></codeviewer>
+  <codeviewer [code]="getHTML('firstLetter')"></codeviewer>
+  <h5 class="my-4">All pseudo classes</h5>
+  <ul class="list-group">
+    <li
+      *ngFor="let psCl of pseudoClasses; let i = index; let last$ = last"
+      class="list-group-item text-light bef bg-dark bef-tsh-1px__1px__2px__darkCOMMIN1px__MIN1px__2px__abyss"
+      [exist]="last$"
+      (befInit)="cssCreate()"
+    >
+      <span
+        *ngIf="!!psCl"
+        [exist]="!!psCl"
+        (befInit)="cssCreate()"
+        class="position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{
+          psCl
+        }}CSP bef-positionBefore-absolute bef-tBefore-MIN2px bef-sBefore-2px bef-zBefore-MIN1 bef bef-textAfter-monster bef-contentAfter-CSP{{
+          psCl
+        }}CSP bef-positionAfter-absolute bef-tAfter-1px bef-sAfter-MIN2px bef-zAfter-MIN1"
+      >
+        {{ psCl }} : {{ pseudoClassesCSS[i] }}
+      </span>
+    </li>
+  </ul>
+
+  <h5 class="my-4">All pseudo Elements</h5>
+  <ul class="list-group">
+    <li
+      *ngFor="let psEl of pseudoElements; let i = index; let last$ = last"
+      class="list-group-item text-light bef bg-dark bef-tsh-1px__1px__2px__darkCOMMIN1px__MIN1px__2px__abyss"
+      [exist]="last$"
+      (befInit)="cssCreate()"
+    >
+      <span
+        *ngIf="!!psEl"
+        [exist]="!!psEl"
+        (befInit)="cssCreate()"
+        class="position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{
+          psEl
+        }}CSP bef-positionBefore-absolute bef-tBefore-MIN2px bef-sBefore-2px bef-zBefore-MIN1 bef bef-textAfter-monster bef-contentAfter-CSP{{
+          psEl
+        }}CSP bef-positionAfter-absolute bef-tAfter-1px bef-sAfter-MIN2px bef-zAfter-MIN1"
+      >
+        {{ psEl }} : {{ pseudoElementsCSS[i] }}
+      </span>
+    </li>
+  </ul>
+</section>

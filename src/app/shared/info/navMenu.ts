@@ -11,19 +11,12 @@ export const navMenu: INavMenu[] = [
         fragment: 'basicHTU',
       },
       {
-        url: '/guide/basic',
-        title: 'New Colors',
-        fragment: 'newColorsBasicHTU',
+        url: '/guide/colors',
+        title: 'Colors',
       },
       {
-        url: '/guide/basic',
+        url: '/guide/breakpoints',
         title: 'BreakPoints',
-        fragment: 'bpsBasicHTU',
-      },
-      {
-        url: '/guide/basic',
-        title: 'Reserved Words',
-        fragment: 'reswordsBasicHTU',
       },
     ],
   },
@@ -174,5 +167,35 @@ export const navMenu: INavMenu[] = [
     url: '/guide/z-index',
     title: 'Z-Index',
     fragment: 'zindexHTU',
+  },
+  {
+    url: '/guide/advanced',
+    title: 'Advanced',
+    sections: [
+      {
+        url: '/guide/pseudos',
+        title: 'Pseudo Classes & Pseudo Elements',
+      },
+      {
+        url: '/guide/reserved-words',
+        title: 'Reserved Words',
+      },
+      {
+        url: '/guide/combinators',
+        title: 'CSS Combinators',
+      },
+      {
+        url: '/guide/abbreviations',
+        title: 'Value Abbreviations and Class Abbreviations',
+      },
+      {
+        url: '/guide/combos',
+        title: 'Combos',
+      },
+      {
+        url: '/guide/methods',
+        title: 'Methods',
+      },
+    ],
   },
 ];

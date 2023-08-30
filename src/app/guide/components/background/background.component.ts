@@ -13,6 +13,24 @@ export class BackgroundComponent implements OnInit {
     this.cssCreate();
   }
 
+  getHTML(option: string): string {
+    switch (option) {
+      case 'bg':
+        return `<p class="text-light bef bef-bg-indigo" >
+          Box with indigo background.
+        </p>`;
+      case 'bghover':
+        return `<p class="text-light bef bef-bg-indigo bef-bgHover-mystic" >
+          Box with indigo background and a mystic background on hover.
+        </p>`;
+      case 'bgactive':
+        return `<p class="text-light bef bef-bg-indigo bef-bgActive-mystic" >
+          Box with indigo background and a mystic background on active.
+        </p>`;
+      default:
+        return ``;
+    }
+  }
   cssCreate() {
     this._befService.cssCreate();
   }

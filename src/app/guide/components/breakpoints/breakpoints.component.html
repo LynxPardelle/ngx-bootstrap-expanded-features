@@ -1,0 +1,89 @@
+<section>
+  <h4 class="bef bef-pt-4rem">BreakPoints</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    Now you can use the breakpoints of bootstrap within the classes that you
+    didn't before here are some examples.
+  </p>
+  <codeviewer [code]="getHTML('bps')"></codeviewer>
+  <h5 class="my-4">Adding new breakpoints</h5>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You can add more breakpoints, but how you do it depends if you are using the
+    CDN, npm install or with the angular library.
+  </p>
+  <h6>For the CDN version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to create a var with a object with the name "breakpoints" and then you can use the pushBPS()
+    function like
+    in this code that you can copy-paste:
+  </p>
+  <codeviewer [code]="getHTML('breakpoint1')" [show]="'code'"></codeviewer>
+  <h6 class="my-3">For the npm version</h6>
+  <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
+    You will need to import the library, create a var with a object with any
+    name, it can be "my_new_breakpoints" and then you can use the pushBPS()
+    function and then use the cssCreate() function to generate all the css with
+    the new breakpoints that you need like in this code that you can copy-paste:
+  </p>
+  <codeviewer
+    [code]="getHTML('breakpoint2')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h6 class="my-3">For the Angular Library version</h6>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Import the Service (you can change the name as it follows):
+  </p>
+  <codeviewer
+    [code]="getHTML('import')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Create new breakpoints in an object inside your component class:
+  </p>
+  <codeviewer
+    [code]="getHTML('breakpoint3')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    Put the service on your constructor, push the new breakpoints and initialize
+    the cssCreate() function:
+  </p>
+  <codeviewer
+    [code]="getHTML('breakpoint4')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    You can also put in on any function that change the elements on the screen
+    or with any change like with the DoCheck() function on Angular:
+  </p>
+  <codeviewer
+    [code]="getHTML('breakpoint5')"
+    [show]="'code'"
+    [type]="'js'"
+  ></codeviewer>
+  <h5 class="my-4">All bps</h5>
+  <ul class="list-group">
+    <li
+      *ngFor="let bp of bps; let last$ = last"
+      class="list-group-item text-light bef bg-dark bef-tsh-1px__1px__2px__darkCOMMIN1px__MIN1px__2px__abyss"
+      [exist]="last$"
+      (befInit)="cssCreate()"
+    >
+      <span
+        *ngIf="!!bp"
+        [exist]="!!bp"
+        (befInit)="cssCreate()"
+        class="position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{
+          bp
+        }}CSP bef-positionBefore-absolute bef-tBefore-MIN2px bef-sBefore-2px bef-zBefore-MIN1 bef bef-textAfter-monster bef-contentAfter-CSP{{
+          bp
+        }}CSP bef-positionAfter-absolute bef-tAfter-1px bef-sAfter-MIN2px bef-zAfter-MIN1"
+      >
+        {{ bp.bp }} : {{ bp.value }}
+      </span>
+    </li>
+  </ul>
+</section>
