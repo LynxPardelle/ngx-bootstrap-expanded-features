@@ -910,35 +910,7 @@ export class NgxBootstrapExpandedFeaturesService {
   }
   HexToRGB(Hex: string): number[] {
     let rgb: number[] = [];
-    if (!Hex.includes('rgb') && !Hex.includes('rgba')) {
-      let HexNoCat = Hex.replace('#', '');
-      rgb =
-        HexNoCat.length !== 3 && HexNoCat.length === 8
-          ? [
-              parseInt(HexNoCat.slice(0, 2), 16),
-              parseInt(HexNoCat.slice(2, 2), 16),
-              parseInt(HexNoCat.slice(4, 2), 16),
-              parseInt(((HexNoCat.slice(6, 2), 16) / 255).toFixed(2)),
-            ]
-          : HexNoCat.length !== 3 && HexNoCat.length === 6
-          ? [
-              parseInt(HexNoCat.slice(0, 2), 16),
-              parseInt(HexNoCat.slice(2, 2), 16),
-              parseInt(HexNoCat.slice(4, 2), 16),
-            ]
-          : HexNoCat.length !== 3 && HexNoCat.length === 4
-          ? [
-              parseInt(HexNoCat.slice(0, 2), 16),
-              parseInt(HexNoCat.slice(1, 2), 16),
-              parseInt(HexNoCat.slice(2, 2), 16),
-              parseInt(((HexNoCat.slice(3, 2), 16) / 255).toFixed(2)),
-            ]
-          : [
-              parseInt(HexNoCat.slice(0, 1) + HexNoCat.slice(0, 1), 16),
-              parseInt(HexNoCat.slice(1, 1) + HexNoCat.slice(1, 1), 16),
-              parseInt(HexNoCat.slice(2, 1) + HexNoCat.slice(2, 1), 16),
-            ];
-    } else {
+    if (Hex.includes('rgb') || Hex.includes('rgba')) {
       rgb = Hex.split('(')[1].split(',')[4]
         ? [
             parseInt(Hex.split('(')[1].split(',')[0]),
@@ -951,6 +923,38 @@ export class NgxBootstrapExpandedFeaturesService {
             parseInt(Hex.split('(')[1].split(',')[1]),
             parseInt(Hex.split('(')[1].split(',')[2]),
           ];
+    } else {
+      const hexCode = Hex.replace('#', '');
+      const hexCodeLength = hexCode.length;
+      if (hexCodeLength === 3) {
+        rgb.push(
+          parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
+          parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
+          parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16)
+        );
+      } else if (hexCodeLength === 4) {
+        rgb.push(
+          parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
+          parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
+          parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16),
+          parseInt(hexCode.charAt(3) + hexCode.charAt(3), 16)
+        );
+      } else if (hexCodeLength === 6) {
+        rgb.push(
+          parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
+          parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
+          parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16)
+        );
+      } else if (hexCodeLength === 8) {
+        rgb.push(
+          parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
+          parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
+          parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16),
+          parseInt(hexCode.charAt(6) + hexCode.charAt(7), 16)
+        );
+      } else {
+        console.error('Invalid hex code');
+      }
     }
     return rgb;
   }

@@ -7,6 +7,14 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent implements OnInit {
+  public combos: { [key: string]: string[] } = {
+    createButton: [
+      'bef-bg-randNumA__OPA__0_75',
+      'bef-text-randNumB',
+      'bef-p-0_25rem__1rem',
+      'bef-rounded-1rem',
+    ],
+  };
   // BEF
   public colors: any = {
     randNumA: `#${this.RandHex()}`,
@@ -14,6 +22,7 @@ export class FooterComponent implements OnInit {
   };
   constructor(private _befService: BefService) {
     //BEF
+    this._befService.pushCombos(this.combos);
     this._befService.pushColors(this.colors);
   }
 
@@ -22,7 +31,9 @@ export class FooterComponent implements OnInit {
   cssCreate() {
     this._befService.cssCreate();
     this._befService.updateColor('randNumA', `#${this.RandHex()}`);
-    this._befService.updateColor('randNumB', `#${this.RandHex()}`);
+    setTimeout(() => {
+      this._befService.updateColor('randNumB', `#${this.RandHex()}`);
+    }, this._befService.timeBetweenReCreate + 10);
   }
 
   RandHex() {

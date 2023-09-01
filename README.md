@@ -9,6 +9,9 @@
 - [More Information](#more_info)
 - [Authors](#authors)
 
+## SUPPORT THIS LIBRARY:
+https://www.buymeacoffee.com/lynxpardelle
+
 ## 🧐 IMPORTANT: BREAKING CHANGES, READ BEFORE UPDATE:
 
 The border changed to borderWidth and bw, please change that in your code to have border well written.
