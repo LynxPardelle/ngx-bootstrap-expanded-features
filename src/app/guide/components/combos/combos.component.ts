@@ -15,7 +15,11 @@ export class CombosComponent implements OnInit {
       'bef-w-85per bef-border-1px__solid__dark bef-bg-success bef-text-aqua bef-p-1_5rem',
     ],
     boxCustom: [
-      'bef-w-VAL1 bef-border-VAL2 bef-bg-VAL3 bef-text-VAL4 bef-p-VAL5',
+      'bef-w-VAL1',
+      'bef-border-VAL2',
+      'bef-bg-VAL3',
+      'bef-text-VAL4',
+      'bef-p-VAL5',
     ],
   };
   constructor(private _befService: BefService) {}
@@ -35,7 +39,7 @@ export class CombosComponent implements OnInit {
               'bef-w-85per bef-border-1px__solid__dark bef-bg-success bef-text-aqua bef-p-1_5rem',
             ],
             boxCustom: [
-              'bef-w-VAL1 bef-border-VAL2 bef-bg-VAL3 bef-text-VAL4 bef-p-VAL5',
+              'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
             ],
           };
           pushCombos(combos);
@@ -47,7 +51,7 @@ export class CombosComponent implements OnInit {
             'bef-w-85per bef-border-1px__solid__dark bef-bg-success bef-text-aqua bef-p-1_5rem',
           ],
           boxCustom: [
-            'bef-w-VAL1 bef-border-VAL2 bef-bg-VAL3 bef-text-VAL4 bef-p-VAL5',
+            'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
           ],
         };
         pushCombos(combos);
@@ -61,7 +65,7 @@ export class CombosComponent implements OnInit {
               'bef-w-85per bef-border-1px__solid__dark bef-bg-success bef-text-aqua bef-p-1_5rem',
             ],
             boxCustom: [
-              'bef-w-VAL1 bef-border-VAL2 bef-bg-VAL3 bef-text-VAL4 bef-p-VAL5',
+              'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
             ],
           };
         }`;

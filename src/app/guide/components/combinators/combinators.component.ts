@@ -31,7 +31,7 @@ export class CombinatorsComponent implements OnInit {
           Some text with the color indigo.
         </p><span>Some text with the color orange.</span>`;
       case 'general':
-        return `<p class="bef bef-text-indigo bef-textSEL__SIBLspan-orange" >
+        return `<p class="bef bef-text-indigo bef-textSELSIBLspan-orange" >
           Some text with the color indigo.
         </p>
         <span>Some text with the color orange.</span>

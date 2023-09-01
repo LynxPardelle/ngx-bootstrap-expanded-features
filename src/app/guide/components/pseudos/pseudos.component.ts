@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  NgxBootstrapExpandedFeaturesService as BefService,
-  IBPS,
-} from 'ngx-bootstrap-expanded-features';
+import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
   selector: 'app-pseudos',

@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 /* Colors */
 import { allColors } from './colors';
 import { cssNamesParsed } from './cssNamesParsed';
-import { debug } from 'console';
-import { get } from 'http';
 
 export interface IBPS {
   bp: string;
@@ -28,7 +26,7 @@ export interface IPseudo {
   providedIn: 'root',
 })
 export class NgxBootstrapExpandedFeaturesService {
-  public colors: { [key: string]: string } = allColors;
+  public colors: { [key: string]: string } = {};
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
@@ -157,35 +155,44 @@ export class NgxBootstrapExpandedFeaturesService {
   public timeBetweenReCreate: number = 400;
   public useTimer: boolean = true;
   constructor() {
+    this.checkSheet();
+    this.pushColors(allColors);
+  }
+  private checkSheet() {
     let sheets: any[] = [...document.styleSheets];
-    for (let sheet of sheets) {
-      if (sheet.href?.includes('bef-styles')) {
-        this.sheet = sheet;
+    for (let nsheet of sheets) {
+      if (nsheet.href?.includes('bef-styles')) {
+        this.sheet = nsheet;
       }
     }
-    /* this.colors = allColors;
-    console.log('this.colors', this.colors);
-    */
   }
   cssCreate(
     updateBefs: string[] | null = null,
     primordial: boolean = false
   ): void {
-    if (!!this.useTimer) {
-      this.DoUseTimer(updateBefs, primordial);
-    } else {
-      this.doCssCreate(updateBefs);
+    try {
+      if (!this.sheet) {
+        this.checkSheet();
+        if (!this.sheet) {
+          throw new Error('There is no bef-styles style sheet!');
+        }
+      }
+      if (!!this.useTimer) {
+        this.DoUseTimer(updateBefs, primordial);
+      } else {
+        this.doCssCreate(updateBefs);
+      }
+    } catch (err) {
+      this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
-  DoUseTimer(
+  private DoUseTimer(
     updateBefs: string[] | null = null,
     primordial: boolean = false
   ): void {
     this.lastTimeAsked2Create = Date.now();
     this.ta(updateBefs, primordial);
   }
-
   private ta(updateBefs: string[] | null = null, primordial: boolean = false) {
     if (
       Date.now() - this.lastCSSCreate >= this.timeBetweenReCreate ||
@@ -202,22 +209,15 @@ export class NgxBootstrapExpandedFeaturesService {
       }
     }
   }
-
   private tas(updateBefs: string[] | null = null, primordial: boolean = false) {
     setTimeout(() => {
       this.ta(updateBefs, primordial);
     }, this.timeBetweenReCreate);
   }
-
   async doCssCreate(updateBefs: string[] | null = null): Promise<void> {
     try {
       if (!this.sheet) {
-        let sheets: any[] = [...document.styleSheets];
-        for (let sheet of sheets) {
-          if (sheet.href?.includes('bef-styles')) {
-            this.sheet = sheet;
-          }
-        }
+        this.checkSheet();
         if (!this.sheet) {
           throw new Error('There is no bef-styles style sheet!');
         }
@@ -355,34 +355,92 @@ export class NgxBootstrapExpandedFeaturesService {
                       this.styleConsole
                     );
                     this.consoleLog('info', { c: c }, this.styleConsole);
-                    if (!!c.split('-')[1]?.includes('SEL')) {
-                      this.consoleLog(
-                        'info',
-                        { cIncludesSEL: c },
-                        this.styleConsole
-                      );
-                      c = c.replace('SEL', 'SEL__COM_' + comboABBR + '__');
-                      this.consoleLog(
-                        'info',
-                        { cIncludesSELAfter: c },
-                        this.styleConsole
-                      );
-                    } else {
-                      this.consoleLog(
-                        'info',
-                        { cDoesntIncludesSEL: c },
-                        this.styleConsole
-                      );
-                      c = c.replace(
-                        c.split('-')[1],
-                        c.split('-')[1] + 'SEL__COM_' + comboABBR
-                      );
-                      this.consoleLog(
-                        'info',
-                        { cDoesntIncludesSELAfter: c },
-                        this.styleConsole
-                      );
+                    let pseudos = this.pseudos.filter((p) =>
+                      c.split('-')[1].includes(p.mask)
+                    );
+                    let firstPseudo =
+                      pseudos.sort((p1, p2) => {
+                        return c.indexOf(p1.mask) - c.indexOf(p2.mask);
+                      })[0] || -1;
+
+                    switch (true) {
+                      case pseudos.length > 0 &&
+                        !!(
+                          !c.includes('SEL') ||
+                          c.indexOf('SEL') > c.indexOf(firstPseudo.mask)
+                        ):
+                        this.consoleLog(
+                          'info',
+                          { firstPseudo: firstPseudo },
+                          this.styleConsole
+                        );
+                        c = c
+                          .replace('SEL', '')
+                          .replace(
+                            firstPseudo.mask,
+                            'SEL__COM_' + comboABBR + firstPseudo.mask
+                          );
+                        this.consoleLog(
+                          'info',
+                          { cIncludesPseudoAfter: c },
+                          this.styleConsole
+                        );
+                        break;
+                      case !!c.includes('SEL'):
+                        c = c.replace('SEL', 'SEL__COM_' + comboABBR + '__');
+                        this.consoleLog(
+                          'info',
+                          { cIncludesSELAfter: c },
+                          this.styleConsole
+                        );
+                        break;
+                      default:
+                        this.consoleLog(
+                          'info',
+                          { cDoesntIncludesSEL: c },
+                          this.styleConsole
+                        );
+                        c = c.replace(
+                          c.split('-')[1],
+                          c.split('-')[1] + 'SEL__COM_' + comboABBR
+                        );
+                        this.consoleLog(
+                          'info',
+                          { cDoesntIncludesSELAfter: c },
+                          this.styleConsole
+                        );
+                        break;
                     }
+                    /* if (!!c.includes('SEL')) {
+                      if (
+                        pseudos.length > 0 &&
+                        !!(c.indexOf('SEL') > c.indexOf(firstPseudo.mask))
+                      ) {
+                        c = c
+                          .replace('SEL', '')
+                          .replace(
+                            firstPseudo.mask,
+                            'SEL__COM_' + comboABBR + firstPseudo.mask
+                          );
+                      } else {
+                        c = c.replace('SEL', 'SEL__COM_' + comboABBR + '__');
+                      }
+                    } else {
+                      if (pseudos.length > 0) {
+                        let firstPseudo = pseudos.sort((p1, p2) => {
+                          return c.indexOf(p1.mask) - c.indexOf(p2.mask);
+                        })[0];
+                        c = c.replace(
+                          firstPseudo.mask,
+                          'SEL__COM_' + comboABBR + firstPseudo.mask
+                        );
+                      } else {
+                        c = c.replace(
+                          c.split('-')[1],
+                          c.split('-')[1] + 'SEL__COM_' + comboABBR
+                        );
+                      }
+                    } */
                   } else {
                     this.consoleLog(
                       'info',
@@ -733,8 +791,7 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
-  createCSSRules(rule: string, update: boolean = false): void {
+  createCSSRules(rule: string): void {
     try {
       this.consoleLog('info', { rule: rule }, this.styleConsole);
       if (rule && !rule.split('{')[0].includes('@media')) {
@@ -851,7 +908,6 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   HexToRGB(Hex: string): number[] {
     let rgb: number[] = [];
     if (!Hex.includes('rgb') && !Hex.includes('rgba')) {
@@ -859,28 +915,28 @@ export class NgxBootstrapExpandedFeaturesService {
       rgb =
         HexNoCat.length !== 3 && HexNoCat.length === 8
           ? [
-              parseInt(HexNoCat.substr(0, 2), 16),
-              parseInt(HexNoCat.substr(2, 2), 16),
-              parseInt(HexNoCat.substr(4, 2), 16),
-              parseInt(((HexNoCat.substr(6, 2), 16) / 255).toFixed(2)),
+              parseInt(HexNoCat.slice(0, 2), 16),
+              parseInt(HexNoCat.slice(2, 2), 16),
+              parseInt(HexNoCat.slice(4, 2), 16),
+              parseInt(((HexNoCat.slice(6, 2), 16) / 255).toFixed(2)),
             ]
           : HexNoCat.length !== 3 && HexNoCat.length === 6
           ? [
-              parseInt(HexNoCat.substr(0, 2), 16),
-              parseInt(HexNoCat.substr(2, 2), 16),
-              parseInt(HexNoCat.substr(4, 2), 16),
+              parseInt(HexNoCat.slice(0, 2), 16),
+              parseInt(HexNoCat.slice(2, 2), 16),
+              parseInt(HexNoCat.slice(4, 2), 16),
             ]
           : HexNoCat.length !== 3 && HexNoCat.length === 4
           ? [
-              parseInt(HexNoCat.substr(0, 2), 16),
-              parseInt(HexNoCat.substr(1, 2), 16),
-              parseInt(HexNoCat.substr(2, 2), 16),
-              parseInt(((HexNoCat.substr(3, 2), 16) / 255).toFixed(2)),
+              parseInt(HexNoCat.slice(0, 2), 16),
+              parseInt(HexNoCat.slice(1, 2), 16),
+              parseInt(HexNoCat.slice(2, 2), 16),
+              parseInt(((HexNoCat.slice(3, 2), 16) / 255).toFixed(2)),
             ]
           : [
-              parseInt(HexNoCat.substr(0, 1) + HexNoCat.substr(0, 1), 16),
-              parseInt(HexNoCat.substr(1, 1) + HexNoCat.substr(1, 1), 16),
-              parseInt(HexNoCat.substr(2, 1) + HexNoCat.substr(2, 1), 16),
+              parseInt(HexNoCat.slice(0, 1) + HexNoCat.slice(0, 1), 16),
+              parseInt(HexNoCat.slice(1, 1) + HexNoCat.slice(1, 1), 16),
+              parseInt(HexNoCat.slice(2, 1) + HexNoCat.slice(2, 1), 16),
             ];
     } else {
       rgb = Hex.split('(')[1].split(',')[4]
@@ -898,7 +954,6 @@ export class NgxBootstrapExpandedFeaturesService {
     }
     return rgb;
   }
-
   shadeTintColor(rgb: number[], percent: number): string {
     let R: any =
       rgb[0] === 0 && percent > 0
@@ -936,8 +991,7 @@ export class NgxBootstrapExpandedFeaturesService {
       return '#' + RR + GG + BB;
     }
   }
-
-  removePseudos(thing: string, remove: boolean = false): string {
+  private removePseudos(thing: string, remove: boolean = false): string {
     let pseudoFiltereds: IPseudo[] = this.pseudos.filter((pseudo: IPseudo) => {
       return thing.includes(pseudo.mask);
     });
@@ -950,13 +1004,11 @@ export class NgxBootstrapExpandedFeaturesService {
     });
     return thing;
   }
-
   cssValidToCamel(st: string): string {
     return st.replace(/([-_][a-z])/gi, ($1) => {
       return $1.toUpperCase().replace('-', '').replace('_', '');
     });
   }
-
   camelToCSSValid(st: string): string {
     return st
       .replace(/[\w]([A-Z])/g, (m) => {
@@ -964,7 +1016,6 @@ export class NgxBootstrapExpandedFeaturesService {
       })
       .toLowerCase();
   }
-
   /* CRUD */
   pushCssNamesParsed(cssNamesParsed: any): void {
     try {
@@ -976,7 +1027,6 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   pushBPS(bps: IBPS[]): void {
     try {
       for (let nb of bps) {
@@ -993,7 +1043,6 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   pushColors(newColors: any): void {
     try {
       Object.keys(newColors).forEach((key) => {
@@ -1045,7 +1094,6 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   pushCombos(combos: any): void {
     try {
       let prevIgnoredCombosValues: string[] = [];
@@ -1071,17 +1119,14 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   getColors(): any {
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
     return this.colors;
   }
-
   getBPS(): any {
     this.consoleLog('info', { bps: this.bps }, this.styleConsole);
     return this.bps;
   }
-
   getAbreviationsClasses(): any {
     this.consoleLog(
       'info',
@@ -1090,7 +1135,6 @@ export class NgxBootstrapExpandedFeaturesService {
     );
     return this.abreviationsClasses;
   }
-
   getAbreviationsValues(): any {
     this.consoleLog(
       'info',
@@ -1099,12 +1143,10 @@ export class NgxBootstrapExpandedFeaturesService {
     );
     return this.abreviationsValues;
   }
-
   getCombos(): any {
     this.consoleLog('info', { combos: this.combos }, this.styleConsole);
     return this.combos;
   }
-
   getCssNamesParsed(): any {
     this.consoleLog(
       'info',
@@ -1113,7 +1155,6 @@ export class NgxBootstrapExpandedFeaturesService {
     );
     return this.cssNamesParsed;
   }
-
   getColorsNames(): string[] {
     const colorsNames: string[] = [];
     Object.keys(this.colors).forEach((key) => {
@@ -1121,7 +1162,6 @@ export class NgxBootstrapExpandedFeaturesService {
     });
     return colorsNames;
   }
-
   getColorValue(color: string): any {
     this.consoleLog(
       'info',
@@ -1130,7 +1170,6 @@ export class NgxBootstrapExpandedFeaturesService {
     );
     return this.colors[color];
   }
-
   getAlreadyCreatedClasses(): string[] {
     this.consoleLog(
       'info',
@@ -1139,7 +1178,6 @@ export class NgxBootstrapExpandedFeaturesService {
     );
     return this.alreadyCreatedClasses;
   }
-
   getSheet(): any {
     if (this.sheet) {
       this.consoleLog('info', { sheet: this.sheet }, this.styleConsole);
@@ -1148,7 +1186,6 @@ export class NgxBootstrapExpandedFeaturesService {
       return '';
     }
   }
-
   updateColor(color: string, value: string): void {
     try {
       if (this.colors[color.toString()]) {
@@ -1172,8 +1209,7 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
-  updateabreviationsClass(abreviationsClass: string, value: string): void {
+  updateAbreviationsClass(abreviationsClass: string, value: string): void {
     try {
       if (this.abreviationsClasses[abreviationsClass.toString()]) {
         this.abreviationsClasses[abreviationsClass] = value;
@@ -1195,8 +1231,7 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
-  updateabreviationsValue(abreviationsValue: string, value: string): void {
+  updateAbreviationsValue(abreviationsValue: string, value: string): void {
     try {
       if (this.abreviationsValues[abreviationsValue.toString()]) {
         this.abreviationsValues[abreviationsValue] = value;
@@ -1218,8 +1253,7 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
-  updateabreviationsCombo(combo: string, values: string[]): void {
+  updateCombo(combo: string, values: string[]): void {
     try {
       if (this.combos[combo.toString()]) {
         this.combos[combo] = values;
@@ -1251,7 +1285,6 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   updateCssNamesParsed(cssNameParsed: string, value: string): void {
     try {
       if (this.cssNamesParsed[cssNameParsed.toString()]) {
@@ -1272,11 +1305,9 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   updateClasses(classesToUpdate: string[]): void {
     this.cssCreate(classesToUpdate);
   }
-
   deleteColor(color: string): void {
     try {
       if (!!this.colors[color.toString()]) {
@@ -1288,25 +1319,20 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-
   clearAllColors(): void {
     this.colors = {};
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
   }
-
   /* Debuging */
   changeDebugOption(): void {
     this.isDebug = !this.isDebug;
   }
-
   changeUseTimerOption(): void {
     this.useTimer = !this.useTimer;
   }
-
   setTimeBetweenReCreate(time: number): void {
     this.timeBetweenReCreate = time;
   }
-
   unbefysize(value: string): string {
     return value
       .replace(/(\d+)\s*per/g, '$1%')
@@ -1334,7 +1360,6 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/DPS/g, ':')
       .replace(/PNC/g, ';');
   }
-
   befysize(value: string): string {
     return value
       .replace(/%/g, 'per')
@@ -1362,8 +1387,7 @@ export class NgxBootstrapExpandedFeaturesService {
       .replace(/:/g, 'DPS')
       .replace(/;/g, 'PNC');
   }
-
-  getStackTrace(): string {
+  private getStackTrace(): string {
     let stack;
     try {
       throw new Error('');
@@ -1375,7 +1399,6 @@ export class NgxBootstrapExpandedFeaturesService {
     });
     return stack.splice(stack[0] == 'Error' ? 2 : 1);
   }
-
   consoleLog(
     type: 'log' | 'info' | 'trace' | 'error' = 'log',
     thing: any,
@@ -1391,7 +1414,6 @@ export class NgxBootstrapExpandedFeaturesService {
       stoper: stoper,
     });
   }
-
   consoleParser(config: IConsoleParser): void {
     config.type = config.type ? config.type : 'log';
     config.style = config.style ? config.style : this.styleConsole;

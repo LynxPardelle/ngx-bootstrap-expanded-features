@@ -1,1 +1,45 @@
-<p>methods works!</p>
+<section>
+  <h4>Methods</h4>
+  <p class="mt-4 mb-3 text-start bef bef-link-futurePop">
+    This is my last thing to teach you about this library, but surely have used
+    varios of this things already. So, let's expand your posibilities with the
+    next list.
+  </p>
+  <h5>Filter</h5>
+  <div class="d-flex flex-row justify-content-between align-items-center">
+    <input
+      type="text"
+      name="filter"
+      class="form-control"
+      [ngModel]="filter"
+      (ngModelChange)="filter = $event"
+    />
+    <button class="btn btn-primary" (click)="doFilter()">Filter</button>
+    <button class="btn btn-warning" (click)="clearFilter()">Clear</button>
+  </div>
+  <ng-container *ngIf="methods2ShowKeys.length > 0">
+    <ul class="list-group my-3">
+      <ng-container *ngFor="let method of methods; let i = index">
+        <li class="list-group-item" *ngIf="!!showMethods[method.id]">
+          <span
+            class="bef bef-fs-2rem text-start d-block bef-mx-2rem bef-mt-1rem"
+          >
+            {{ method.title }}
+          </span>
+          <span
+            class="bef text-end d-block bef-mx-2rem bef-mb-2rem"
+          >
+          <span class="badge bef-cursor-pointer bef bef-btn-futurePop bef-mx-0_25rem" *ngFor="let type of method.types.split(',')"
+          (click)="filter = type;doFilter();">
+            {{ type }}
+          </span>
+          </span>
+          <span class="d-block bef bef-mx-2rem bef-mb-2rem">
+            {{ method.description }}
+          </span>
+          <codeviewer [code]="method.code" [type]="'js'"></codeviewer>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-container>
+</section>

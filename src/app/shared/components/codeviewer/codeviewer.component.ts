@@ -15,6 +15,7 @@ export class CodeviewerComponent implements OnInit {
   ngOnInit(): void {
     if (this.type === 'js') this.show = 'code';
     if (this.show !== 'example') this.createCodeViewer();
+    this.cssCreate();
   }
   createCodeViewer() {
     switch (this.type) {
@@ -64,7 +65,10 @@ export class CodeviewerComponent implements OnInit {
             /(var|let|const|public)\s+([A-z0-9_-]+)\s+(=|{)\s/g,
             `$1 <span class="text-info">$2</span> $3 `
           )
-          .replace(/([A-z0-9_-]+):/g, `<span class="text-info">$1:</span>`)
+          .replace(
+            /([A-z0-9_"'\,\s\-\[\]\{\}]+):/g,
+            `<span class="text-info">$1:</span>`
+          )
           .replace(
             /(:(<\/span>)?\s?[A-z0-9_-]+)/g,
             `<span class="text-info">$1</span>`
@@ -74,7 +78,7 @@ export class CodeviewerComponent implements OnInit {
             '<span class="text-primary">$1</span> '
           )
           .replace(
-            /([A-z-_0-9]+\()([A-z\_\-0-9\s\,\(\)\.]*)(\);?)/g,
+            /([A-z-_0-9]+\()([A-z\_\-0-9\s\,"'\[\]\(\)\.]*)(\);?)/g,
             '<span class="text-warning">$1<span class="text-info">$2</span>$3</span>'
           )
           .replace(/this.(.*)/g, '<span class="text-info">this.$1</span>')
@@ -83,7 +87,7 @@ export class CodeviewerComponent implements OnInit {
             '<span class="text-warning">$1</span>'
           )
           .replace(
-            /#([0-9ABCDEF]{3,6})/g,
+            /#([0-9ABCDEF]{3,8})/g,
             '<span class="bef bef-text-HASH$1">#$1</span>'
           )
           .replace(

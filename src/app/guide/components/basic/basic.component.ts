@@ -180,6 +180,10 @@ export class BasicComponent implements OnInit {
         return `<p class="bg-primary text-light bef bef-p-14px" >
           Box with a 14px padding.
         </p>`;
+      case 'bef3':
+        return `<p class="bg-primary text-light bef bef-p-14px bef-outlineWidth-2px bef-outlineStyle-solid bef-outlineColor-black bef-outlineOffset-4px" >
+          Box with a 14px padding and a 2px solid black outline with 4px outline offset.
+        </p>`;
       default:
         return ``;
     }
