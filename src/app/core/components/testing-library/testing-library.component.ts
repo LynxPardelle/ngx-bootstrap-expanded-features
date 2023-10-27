@@ -33,6 +33,9 @@ export class TestingLibraryComponent implements OnInit {
     'bef-w-75per bef-bg-abyss__OPA__0_75 bef-text-fairy bef-textShadow-8px__4px__2px__tree bef-boxShadow-0px__8px__8px__blood',
     'bef-overflow-hidden',
     'bef-overflowX-scroll bef-w-200px bef-asd-as bef-noclass-muchotextosiosiosiosisoisosiso',
+    'bef-boxShadow-1px__0__2px__summer__OPA__0_75',
+    'bef-boxShadow-0px__8px__8px__dark',
+    'bef-boxShadow-1px__0__2px__monster__OPA__0_725COMMIN1px__MIN3px__2px__HASH45657566OPA0_02COM4px__0__2px__RGBASD12COM__67COM__98COM__0_6EDOPA0_25678899990',
   ];
   public examples: any[] = [];
   public abreviationsValues: { [key: string]: string } = {
@@ -56,10 +59,11 @@ export class TestingLibraryComponent implements OnInit {
     this.cssCreate();
     let interval = setInterval(() => {
       this.createNewExample();
-    }, 100);
+    }, 10);
     setTimeout(() => {
       clearInterval(interval);
     }, 10000);
+    this.TestingFunction();
   }
 
   createNewExample() {
@@ -74,6 +78,7 @@ export class TestingLibraryComponent implements OnInit {
     this.examples.push(class2Explore);
     this.cssCreate();
   }
+  TestingFunction() {}
 
   cssCreate() {
     this._befService.cssCreate();

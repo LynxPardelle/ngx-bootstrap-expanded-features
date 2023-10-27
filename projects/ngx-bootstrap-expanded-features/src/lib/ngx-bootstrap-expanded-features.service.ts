@@ -277,7 +277,7 @@ export class NgxBootstrapExpandedFeaturesService {
                         ) {
                           this.consoleLog(
                             'info',
-                            { valsval: vals[val] },
+                            { vals_val: vals[val] },
                             this.styleConsole
                           );
                           if (/VAL[0-9]+/.test(vals[val])) {
@@ -585,34 +585,48 @@ export class NgxBootstrapExpandedFeaturesService {
           value: value,
           secondValue: secondValue,
         };
-        for (let v in values) {
-          for (let i = 0; i < values[v].split(' ').length; i++) {
-            let sv: string = values[v].split(' ')[i];
-            let hasOPA: boolean = values[v].split(' ')[i + 1] === 'OPA';
-            let OPA: string = values[v].split(' ')[i + 2];
-            values[v] =
-              !!hasOPA && !!OPA
-                ? values[v]
-                    .replace(
-                      sv,
-                      `rgba(${this.HexToRGB(
-                        this.colors[sv.toString()]
-                      ).toString()}, ${OPA})`
-                    )
-                    .split(` OPA ${OPA}`)[0]
-                : values[v].includes(' OPA')
-                ? values[v]
-                    .replace(
-                      sv,
-                      `rgba(${this.HexToRGB(
-                        this.colors[sv.toString()]
-                      ).toString()}, ${values[v].split('OPA ')[1]})`
-                    )
-                    .split(' OPA')[0]
-                : !!this.colors[sv.toString()]
-                ? values[v].replace(sv, this.colors[sv.toString()])
-                : values[v];
-          }
+        if (!selector.includes('content')) {
+          Object.keys(values).forEach((v) => {
+            let hasOPA: boolean = values[v].includes('OPA');
+            if (!!hasOPA) {
+              const reg = new RegExp(
+                /(?:([A-z0-9#]*)|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))\s?OPA\s?0\.[0-9]*/gi
+              );
+              const OPAS = values[v].match(reg);
+              for (let OPA of OPAS) {
+                const color = OPA.split('OPA')[0];
+                const OPAValue = OPA.split('OPA')[1];
+                let realColor = `${this.colorToRGB(
+                  !!this.colors[color.toString().replace(/\s/g, '')]
+                    ? this.colors[color.toString().replace(/\s/g, '')]
+                    : color
+                ).toString()}`;
+                values[v] = !!OPAValue
+                  ? values[v]
+                      .replace(color, `rgba(${realColor},${OPAValue})`)
+                      .replace('OPA' + OPAValue, '')
+                  : values[v];
+              }
+            }
+            let colors = Object.keys(this.colors)
+              .sort((c1, c2) => {
+                return c2.length - c1.length;
+              })
+              .map((c) => `(${c})`)
+              .join('|');
+            let reg = new RegExp('(?:' + colors + ')', 'gi');
+            let matches = values[v].match(reg);
+            if (!!matches) {
+              for (let match of matches) {
+                values[v] = values[v].replace(
+                  match,
+                  `rgba(${this.colorToRGB(
+                    this.colors[match.toString().replace(/\s/g, '')]
+                  )})`
+                );
+              }
+            }
+          });
         }
         value = values.value;
         secondValue = values.secondValue;
@@ -621,6 +635,8 @@ export class NgxBootstrapExpandedFeaturesService {
           { value: value, secondValue: secondValue },
           this.styleConsole
         );
+        /* MatchForColors */
+        /* MatchForColorsEnd */
         switch (true) {
           case !!this.cssNamesParsed[selector.toString()]:
             if (typeof this.cssNamesParsed[selector.toString()] === 'string') {
@@ -636,7 +652,7 @@ export class NgxBootstrapExpandedFeaturesService {
             }
             break;
           case befSplited[1].startsWith('link'):
-            befStringed += ` a${specify}{color:${value} !important;}`;
+            befStringed += ` a${specify}{color:${value};}`;
             break;
           case befSplited[1] === 'btn':
             befStringed += `{
@@ -644,35 +660,43 @@ export class NgxBootstrapExpandedFeaturesService {
                     border-color:${value};}
                   ${
                     this.separator
-                  }.${bef}:hover{background-color:${this.shadeTintColor(
-              this.HexToRGB(value),
+                  }.${bef}:hover{background-color:rgba(${this.shadeTintColor(
+              this.colorToRGB(value),
               -15
-            )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
+            ).toString()});border-color:rgba(${this.shadeTintColor(
+              this.colorToRGB(value),
+              -20
+            ).toString()});}
                   ${
                     this.separator
-                  }.btn-check:focus + .${bef}, .${bef}:focus{background-color:${this.shadeTintColor(
-              this.HexToRGB(value),
+                  }.btn-check:focus + .${bef}, .${bef}:focus{background-color:rgba(${this.shadeTintColor(
+              this.colorToRGB(value),
               -15
-            )};border-color:${this.shadeTintColor(this.HexToRGB(value), -20)};}
+            ).toString()});border-color:rgba(${this.shadeTintColor(
+              this.colorToRGB(value),
+              -20
+            ).toString()});}
                   ${
                     this.separator
                   }.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{background-color:${this.shadeTintColor(
-              this.HexToRGB(value),
+              this.colorToRGB(value),
               -20
-            )};border-color:${this.shadeTintColor(
-              this.HexToRGB(value),
+            )};border-color:rgba(${this.shadeTintColor(
+              this.colorToRGB(value),
               -25
-            )};box-shadow: 0 0 0 0.25rem
-                  rgba(${this.HexToRGB(
-                    this.shadeTintColor(this.HexToRGB(value), 3)
-                  )}, 0.5)
+            ).toString()});box-shadow: 0 0 0 0.25rem
+                  rgba(${this.shadeTintColor(
+                    this.colorToRGB(value),
+                    3
+                  ).toString()}, 0.5)
                   ;}
                   ${
                     this.separator
                   }.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{box-shadow: 0 0 0 0.25rem
-                    rgba(${this.HexToRGB(
-                      this.shadeTintColor(this.HexToRGB(value), 3)
-                    )}, 0.5)
+                    rgba(${this.shadeTintColor(
+                      this.colorToRGB(value),
+                      3
+                    ).toString()}, 0.5)
                   ;}`;
             break;
           case befSplited[1] === 'btnOutline':
@@ -683,34 +707,36 @@ export class NgxBootstrapExpandedFeaturesService {
                     ${this.separator}.${bef}:hover{
                       background-color:${value};
                       color:${secondValue ? secondValue : 'default'};
-                      border-color:${this.shadeTintColor(
-                        this.HexToRGB(value),
+                      border-color:rgba(${this.shadeTintColor(
+                        this.colorToRGB(value),
                         -20
-                      )};}
+                      ).toString()});}
                     ${this.separator}.btn-check:focus + .${bef}, .${bef}:focus{
-                      border-color:${this.shadeTintColor(
-                        this.HexToRGB(value),
+                      border-color:rgba(${this.shadeTintColor(
+                        this.colorToRGB(value),
                         -20
-                      )};}
+                      ).toString()});}
                     ${
                       this.separator
                     }.btn-check:checked + .${bef}, .btn-check:active + .${bef}, .${bef}:active, .${bef}.active, .show > .${bef}.dropdown-toggle{
-                      border-color:${this.shadeTintColor(
-                        this.HexToRGB(value),
+                      border-color:rgba(${this.shadeTintColor(
+                        this.colorToRGB(value),
                         -25
-                      )};
+                      ).toString()});
                     box-shadow: 0 0 0 0.25rem
-                    rgba(${this.HexToRGB(
-                      this.shadeTintColor(this.HexToRGB(value), 3)
-                    )}, 0.5)
+                    rgba(${this.shadeTintColor(
+                      this.colorToRGB(value),
+                      3
+                    ).toString()}, 0.5)
                     ;}
                     ${
                       this.separator
                     }.btn-check:checked + .btn-check:focus, .btn-check:active + .${bef}:focus, .${bef}:active:focus, .${bef}.active:focus, .show > .${bef}.dropdown-toggle:focus{
                       box-shadow: 0 0 0 0.25rem
-                      rgba(${this.HexToRGB(
-                        this.shadeTintColor(this.HexToRGB(value), 3)
-                      )}, 0.5)
+                      rgba(${this.shadeTintColor(
+                        this.colorToRGB(value),
+                        3
+                      ).toString()}, 0.5)
                     ;}`;
             break;
           default:
@@ -719,14 +745,14 @@ export class NgxBootstrapExpandedFeaturesService {
             )}:${value};}`;
             break;
         }
-        for (let cssProperty of befStringed.split(';')) {
+        /* for (let cssProperty of befStringed.split(';')) {
           if (!cssProperty.includes('!important') && cssProperty.length > 5) {
             befStringed = befStringed.replace(
               cssProperty,
               cssProperty + ' !important'
             );
           }
-        }
+        } */
         if (befStringed.includes('{') && befStringed.includes('}')) {
           if (hasBP === true) {
             befStringed = befStringed.replace(
@@ -756,7 +782,15 @@ export class NgxBootstrapExpandedFeaturesService {
           }
         }
       }
-      bpsStringed.forEach((b) => {
+      bpsStringed = bpsStringed
+        .sort((b1, b2) => {
+          return (
+            parseInt(b1.value.replace('px', '')) -
+            parseInt(b2.value.replace('px', ''))
+          );
+        })
+        .reverse();
+      bpsStringed.forEach((b, i) => {
         if (b.bef !== '') {
           this.consoleLog(
             'info',
@@ -764,7 +798,18 @@ export class NgxBootstrapExpandedFeaturesService {
             this.styleConsole
           );
           this.createCSSRules(
-            `@media only screen and (min-width: ${b.value}) {html body ${b.bef}}`
+            `@media only screen and (min-width: ${b.value}) ${
+              bpsStringed.length > 1 && i !== 0
+                ? `and (max-width: ${bpsStringed[i - 1].value})`
+                : ''
+            } { html body ${b.bef}}`
+          );
+          this.createCSSRules(
+            `@media only screen and (min-width: ${b.value}) ${
+              bpsStringed.length > 1 && i !== 0
+                ? `and (max-width: ${bpsStringed[i - 1].value})`
+                : ''
+            } { #bef-bp ${b.bef}}`
           );
           b.bef = '';
         }
@@ -908,57 +953,206 @@ export class NgxBootstrapExpandedFeaturesService {
       this.consoleLog('error', { err: err }, this.styleConsole);
     }
   }
-  HexToRGB(Hex: string): number[] {
+  colorToRGB(color: string): number[] {
     let rgb: number[] = [];
-    if (Hex.includes('rgb') || Hex.includes('rgba')) {
-      rgb = Hex.split('(')[1].split(',')[4]
-        ? [
-            parseInt(Hex.split('(')[1].split(',')[0]),
-            parseInt(Hex.split('(')[1].split(',')[1]),
-            parseInt(Hex.split('(')[1].split(',')[2]),
-            parseInt(Hex.split('(')[1].split(',')[3]),
-          ]
-        : [
-            parseInt(Hex.split('(')[1].split(',')[0]),
-            parseInt(Hex.split('(')[1].split(',')[1]),
-            parseInt(Hex.split('(')[1].split(',')[2]),
-          ];
-    } else {
-      const hexCode = Hex.replace('#', '');
-      const hexCodeLength = hexCode.length;
-      if (hexCodeLength === 3) {
-        rgb.push(
-          parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
-          parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
-          parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16)
-        );
-      } else if (hexCodeLength === 4) {
-        rgb.push(
-          parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
-          parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
-          parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16),
-          parseInt(hexCode.charAt(3) + hexCode.charAt(3), 16)
-        );
-      } else if (hexCodeLength === 6) {
-        rgb.push(
-          parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
-          parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
-          parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16)
-        );
-      } else if (hexCodeLength === 8) {
-        rgb.push(
-          parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
-          parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
-          parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16),
-          parseInt(hexCode.charAt(6) + hexCode.charAt(7), 16)
-        );
-      } else {
-        console.error('Invalid hex code');
-      }
+    color = color.toLowerCase();
+    switch (true) {
+      case !!this.colors[color]:
+        rgb = this.colorToRGB(this.colors[color]);
+        break;
+      case color.includes('rgb') || color.includes('rgba'):
+        rgb = this.parseRGB(color);
+        break;
+      case color.includes('#'):
+        rgb = this.parseRGB(this.HexToRGB(color));
+        break;
+      case color.includes('hsl'):
+        rgb = this.parseRGB(this.HSLToRGB(color));
+        break;
+      case color.includes('hwb'):
+        rgb = this.parseRGB(this.HWBToRGB(color));
+        break;
+      default:
+        rgb = [255, 0, 0];
+        break;
     }
     return rgb;
   }
-  shadeTintColor(rgb: number[], percent: number): string {
+  RGBToRGBA(rgb: number[], alpha: number): string {
+    return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+  }
+  parseRGB(rgba: string): number[] {
+    let rgb: number[] = [];
+    if (rgba.includes('rgb') || rgba.includes('rgba')) {
+      rgb = rgba.split('(')[1].split(',')[4]
+        ? [
+            parseInt(rgba.split('(')[1].split(',')[0]),
+            parseInt(rgba.split('(')[1].split(',')[1]),
+            parseInt(rgba.split('(')[1].split(',')[2]),
+            parseInt(rgba.split('(')[1].split(',')[3]),
+          ]
+        : [
+            parseInt(rgba.split('(')[1].split(',')[0]),
+            parseInt(rgba.split('(')[1].split(',')[1]),
+            parseInt(rgba.split('(')[1].split(',')[2]),
+          ];
+    }
+    return rgb;
+  }
+  HexToRGB(Hex: string): string {
+    let rgb: number[] = [];
+    const hexCode = Hex.replace('#', '');
+    const hexCodeLength = hexCode.length;
+    if (hexCodeLength === 3) {
+      rgb.push(
+        parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
+        parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
+        parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16)
+      );
+    } else if (hexCodeLength === 4) {
+      rgb.push(
+        parseInt(hexCode.charAt(0) + hexCode.charAt(0), 16),
+        parseInt(hexCode.charAt(1) + hexCode.charAt(1), 16),
+        parseInt(hexCode.charAt(2) + hexCode.charAt(2), 16),
+        parseInt(hexCode.charAt(3) + hexCode.charAt(3), 16)
+      );
+    } else if (hexCodeLength === 6) {
+      rgb.push(
+        parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
+        parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
+        parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16)
+      );
+    } else if (hexCodeLength === 8) {
+      rgb.push(
+        parseInt(hexCode.charAt(0) + hexCode.charAt(1), 16),
+        parseInt(hexCode.charAt(2) + hexCode.charAt(3), 16),
+        parseInt(hexCode.charAt(4) + hexCode.charAt(5), 16),
+        parseInt(hexCode.charAt(6) + hexCode.charAt(7), 16)
+      );
+    } else {
+      this.consoleLog(
+        'error',
+        { hexToRGBError: 'Invalid hex code' },
+        this.styleConsole
+      );
+    }
+    return `rgb${![3, 6].includes(hexCodeLength) ? 'a' : ''}(${rgb.join(',')})`;
+  }
+  HSLToRGB(HSL: string): string {
+    /* Convert hsl to rgb please */
+    if (!['hsl', 'hsla'].includes(HSL)) {
+      return 'rgb(255,0,0,1)';
+    }
+    /* Separate string by comas and eliminate rgb or rgba */
+    const rgbSplited = HSL.split('(')[1]
+      .split(')')[0]
+      .split(',')
+      .filter((r) => r !== 'hsl' && r !== 'hsla');
+
+    const hDecimal = parseInt(rgbSplited[0]) / 100;
+    const sDecimal = parseInt(rgbSplited[1]) / 100;
+    const lDecimal = parseInt(rgbSplited[2]) / 100;
+
+    if (parseInt(rgbSplited[1]) === 0) {
+      return `rgb(${lDecimal},${lDecimal},${lDecimal})`;
+    }
+    let q =
+      lDecimal < 0.5
+        ? lDecimal * (1 + sDecimal)
+        : lDecimal + sDecimal - lDecimal * sDecimal;
+    let p = 2 * lDecimal - q;
+    const r = this.HueToRGB(p, q, hDecimal + 1 / 3);
+    const g = this.HueToRGB(p, q, hDecimal);
+    const b = this.HueToRGB(p, q, hDecimal - 1 / 3);
+    return `rgb${
+      rgbSplited[3] && rgbSplited[3] !== '' ? 'a' : ''
+    }(${r},${g},${b}${
+      rgbSplited[3] && rgbSplited[3] !== '' ? `,${rgbSplited[3]}` : ''
+    })`;
+  }
+  HueToRGB = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  HWBToRGB(HWB: string): string {
+    const rgbSplited = HWB.split('(')[1]
+      .split(')')[0]
+      .split(',')
+      .filter((r: string) => r !== 'hsl' && r !== 'hsla');
+    let h = parseInt(rgbSplited[0]) / 360;
+    let wh = parseInt(rgbSplited[1]) / 100;
+    let bl = parseInt(rgbSplited[2]) / 100;
+    let ratio = wh + bl;
+    let i;
+    let v;
+    let f;
+    let n;
+
+    // wh + bl cant be > 1
+    if (ratio > 1) {
+      wh /= ratio;
+      bl /= ratio;
+    }
+
+    i = Math.floor(6 * h);
+    v = 1 - bl;
+    f = 6 * h - i;
+
+    if ((i & 0x01) !== 0) {
+      f = 1 - f;
+    }
+
+    n = wh + f * (v - wh); // linear interpolation
+
+    let r;
+    let g;
+    let b;
+    switch (i) {
+      default:
+      case 6:
+      case 0:
+        r = v;
+        g = n;
+        b = wh;
+        break;
+      case 1:
+        r = n;
+        g = v;
+        b = wh;
+        break;
+      case 2:
+        r = wh;
+        g = v;
+        b = n;
+        break;
+      case 3:
+        r = wh;
+        g = n;
+        b = v;
+        break;
+      case 4:
+        r = n;
+        g = wh;
+        b = v;
+        break;
+      case 5:
+        r = v;
+        g = wh;
+        b = n;
+        break;
+    }
+
+    return `rgb${rgbSplited[3] && rgbSplited[3] !== '' ? 'a' : ''}(${Math.round(
+      r * 255
+    )},${Math.round(g * 255)},${Math.round(b * 255)}${
+      rgbSplited[3] && rgbSplited[3] !== '' ? `,${rgbSplited[3]}` : ''
+    })`;
+  }
+  shadeTintColor(rgb: number[], percent: number): number[] {
     let R: any =
       rgb[0] === 0 && percent > 0
         ? 16
@@ -983,16 +1177,16 @@ export class NgxBootstrapExpandedFeaturesService {
     R = R > 255 ? 255 : R < 0 ? 0 : R;
     G = G > 255 ? 255 : G < 0 ? 0 : G;
     B = B > 255 ? 255 : B < 0 ? 0 : B;
-    let RR = R.toString(16).length == 1 ? '0' + R.toString(16) : R.toString(16);
+    /* let RR = R.toString(16).length == 1 ? '0' + R.toString(16) : R.toString(16);
     let GG = G.toString(16).length == 1 ? '0' + G.toString(16) : G.toString(16);
-    let BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16);
+    let BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16); */
     if (rgb[3]) {
       let A: any = rgb[3] ? (rgb[3] * 255).toString(16) : 'FF';
-      let AA =
-        A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16);
-      return '#' + RR + GG + BB + AA;
+      /* let AA =
+        A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16); */
+      return [R, G, B, A];
     } else {
-      return '#' + RR + GG + BB;
+      return [R, G, B, 1];
     }
   }
   private removePseudos(thing: string, remove: boolean = false): string {
@@ -1422,7 +1616,7 @@ export class NgxBootstrapExpandedFeaturesService {
     config.type = config.type ? config.type : 'log';
     config.style = config.style ? config.style : this.styleConsole;
     config.stoper = config.stoper !== undefined ? config.stoper : !this.isDebug;
-    if (config.stoper === false) {
+    if (config.stoper === false || config.type === 'error') {
       if (config.line) {
         console.info('%cline: ' + config.line + ' = ', config.style);
       }

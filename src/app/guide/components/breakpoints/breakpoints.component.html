@@ -12,9 +12,9 @@
   </p>
   <h6>For the CDN version</h6>
   <p class="mt-3 mb-4 text-start bef bef-link-futurePop">
-    You will need to create a var with a object with the name "breakpoints" and then you can use the pushBPS()
-    function like
-    in this code that you can copy-paste:
+    You will need to create a var with a object with the name "breakpoints" and
+    then you can use the pushBPS() function like in this code that you can
+    copy-paste:
   </p>
   <codeviewer [code]="getHTML('breakpoint1')" [show]="'code'"></codeviewer>
   <h6 class="my-3">For the npm version</h6>
@@ -76,14 +76,19 @@
         *ngIf="!!bp"
         [exist]="!!bp"
         (befInit)="cssCreate()"
-        class="position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{
-          bp
+        class="d-block position-relative bef-z-5 bef bef-textBefore-futurePop bef-contentBefore-CSP{{
+          bp.bp + '__DPS__' + bp.value
         }}CSP bef-positionBefore-absolute bef-tBefore-MIN2px bef-sBefore-2px bef-zBefore-MIN1 bef bef-textAfter-monster bef-contentAfter-CSP{{
-          bp
+          bp.bp + '__DPS__' + bp.value
         }}CSP bef-positionAfter-absolute bef-tAfter-1px bef-sAfter-MIN2px bef-zAfter-MIN1"
       >
         {{ bp.bp }} : {{ bp.value }}
       </span>
     </li>
   </ul>
+  <h5 class="my-4">Pro movement:</h5>
+  <p class="mt-3 text-start bef bef-link-futurePop">
+    You can add bef-bp to an id into the body to improve the specify of the
+    breakpoints
+  </p>
 </section>

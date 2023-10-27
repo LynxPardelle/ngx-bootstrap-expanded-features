@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
       monster: '#00AA00',
       futurePop: '#9700FF',
     });
-    this._befService.changeDebugOption();
+    // this._befService.changeDebugOption();
   }
   ngOnInit(): void {
     this.cssCreate();
