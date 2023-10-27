@@ -39,16 +39,80 @@ export class MethodsComponent implements OnInit {
       createCSSRules(rule)`,
     },
     {
-      id: '2',
-      title: 'HexToRGB',
-      types: 'color, hex, rgb, array, transform',
-      description: 'Transform hexadecimal colors to rgb in array.',
+      id: '1.25',
+      title: 'colorToRGB',
+      types:
+        'color, hex, rgb, rgba, colorName, hsl, hsla, hwb, hwba, array, transform',
+      description:
+        'Transform any type of color(colorName, rgb, hex, hsl and hwb) to rgb in array.',
       code: `
       let hex = "#ff0000ff";
       /* Parameters:
         Hex: string // the hex color to convert.
       */
-      let rgba = HexToRGB(hex) // return number[] - [255,0,0,1]`,
+      let rgba = colorToRGB(hex) // return number[] - [255,0,0,1]`,
+    },
+    {
+      id: '1.5',
+      title: 'RGBToRGBA',
+      types: 'color, rgb, rgba, array, transform',
+      description: 'Transform rgb colors in an array to rgba.',
+      code: `
+      let rgb = [255,0,0];
+      let alpha = 0.5;
+      /* Parameters:
+      rgb: number[] // the rgb in an array color to convert.
+      alpha: number // the alpha of the color.
+      */
+      let rgba = RGBToRGBA(rgb, alpha) // return string - rgba(255,0,0,5)`,
+    },
+    {
+      id: '1.75',
+      title: 'parseRGB',
+      types: 'color, rgb, rgba, array, transform',
+      description: 'Transform rgb colors in an array to rgba.',
+      code: `
+      let rgb = "rgb(255,0,0)";
+      /* Parameters:
+      rgb: number[] // the rgb color to convert.
+      */
+      let rgba = parseRGB(rgb) // return number[] - [255,0,0,5]`,
+    },
+    {
+      id: '2',
+      title: 'HexToRGB',
+      types: 'color, hex, rgb, rgba, array, transform',
+      description: 'Transform hexadecimal colors to rgb.',
+      code: `
+      let hex = "#ff0000ff";
+      /* Parameters:
+        Hex: string // the hex color to convert.
+      */
+      let rgba = HexToRGB(hex) // return string - rgba(255,0,0,1)`,
+    },
+    {
+      id: '2.25',
+      title: 'HSLToRGB',
+      types: 'color, hsl, hsla, rgb, rgba, array, transform',
+      description: 'Transform hsl colors to rgb.',
+      code: `
+      let hsl = "hsla(0,100%,50%,1)";
+      /* Parameters:
+      HSL: string // the hsl color to convert.
+      */
+      let rgba = HSLToRGB(hsl) // return string - rgba(255,0,0,1)`,
+    },
+    {
+      id: '2.50',
+      title: 'HWBToRGB',
+      types: 'color, hwb, rgb, rgba, array, transform',
+      description: 'Transform hwb colors to rgb.',
+      code: `
+      let hwb = "hwb(0,0%,0%)";
+      /* Parameters:
+      HWB: string // the hwb color to convert.
+      */
+      let rgba = HWBToRGB(hwb) // return string - rgb(255,0,0)`,
     },
     {
       id: '3',
@@ -61,7 +125,7 @@ export class MethodsComponent implements OnInit {
         rgb: number[] // the rgb color to convert in array.
         percent: number // the percent to shade the color.
       */
-      let shaded = shadeTintColor(rgba, 50) // return string - '#770000ff'`,
+      let shaded = shadeTintColor(rgba, 50) // return number[] - [127,0,0,1]`,
     },
     {
       id: '4',
@@ -397,13 +461,21 @@ export class MethodsComponent implements OnInit {
     },
     {
       id: '30',
+      title: 'changeImportantActive',
+      types: 'update, modify',
+      description:
+        "Change if you want to have or dont have !important in your clases, by default it's active.",
+      code: `changeImportantActive()`,
+    },
+    {
+      id: '31',
       title: 'changeDebugOption',
       types: 'debug, console, update, modify',
       description: 'Change if you want to see the debug messages or not.',
       code: `changeDebugOption()`,
     },
     {
-      id: '31',
+      id: '32',
       title: 'changeUseTimerOption',
       types: 'time, create, update, modify',
       description:
@@ -411,7 +483,7 @@ export class MethodsComponent implements OnInit {
       code: `changeUseTimerOption()`,
     },
     {
-      id: '32',
+      id: '33',
       title: 'setTimeBetweenReCreate',
       types: 'time, create, update, modify',
       description: 'Change the time to create the css.',
@@ -423,7 +495,7 @@ export class MethodsComponent implements OnInit {
       setTimeBetweenReCreate(time)`,
     },
     {
-      id: '33',
+      id: '34',
       title: 'unbefysize',
       types: 'utility, transform, bef',
       description: 'Traduce the reserved words of a bef class.',
@@ -435,7 +507,7 @@ export class MethodsComponent implements OnInit {
       let befClassTraduced = unbefysize(value) // return string - 'bef-widthSEL spanHover-calc(50px + 75%) OPA 0.5;'`,
     },
     {
-      id: '34',
+      id: '35',
       title: 'befysize',
       types: 'utility, transform, bef',
       description:
@@ -448,7 +520,7 @@ export class MethodsComponent implements OnInit {
       let befClass = befysize(befClass) // return string - 'bef-wSEL__spanHover-calcSD50px__PLUS__75perED__OPA__0_5'`,
     },
     {
-      id: '35',
+      id: '36',
       title: 'consoleLog',
       types: 'debug, console, log, info, trace, error',
       description: 'Show something in the console with some improvements.',
@@ -463,7 +535,7 @@ export class MethodsComponent implements OnInit {
       consoleLog('log', 'Hello World!', 'color: red; font-size: 20px;', 'line 1', false)`,
     },
     {
-      id: '36',
+      id: '37',
       title: 'consoleParser',
       types: 'debug, console, log, info, trace, error',
       description:

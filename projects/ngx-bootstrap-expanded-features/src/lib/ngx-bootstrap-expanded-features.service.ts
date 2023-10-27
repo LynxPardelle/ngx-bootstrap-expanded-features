@@ -148,6 +148,7 @@ export class NgxBootstrapExpandedFeaturesService {
           };
         })
     );
+  public importantActive: boolean = true;
   /* Time Management*/
   public lastCSSCreate: number = Date.now();
   public lastTimeAsked2Create: number = new Date().getTime();
@@ -745,14 +746,16 @@ export class NgxBootstrapExpandedFeaturesService {
             )}:${value};}`;
             break;
         }
-        /* for (let cssProperty of befStringed.split(';')) {
-          if (!cssProperty.includes('!important') && cssProperty.length > 5) {
-            befStringed = befStringed.replace(
-              cssProperty,
-              cssProperty + ' !important'
-            );
+        if (!!this.importantActive) {
+          for (let cssProperty of befStringed.split(';')) {
+            if (!cssProperty.includes('!important') && cssProperty.length > 5) {
+              befStringed = befStringed.replace(
+                cssProperty,
+                cssProperty + ' !important'
+              );
+            }
           }
-        } */
+        }
         if (befStringed.includes('{') && befStringed.includes('}')) {
           if (hasBP === true) {
             befStringed = befStringed.replace(
@@ -1070,14 +1073,14 @@ export class NgxBootstrapExpandedFeaturesService {
       rgbSplited[3] && rgbSplited[3] !== '' ? `,${rgbSplited[3]}` : ''
     })`;
   }
-  HueToRGB = (p: number, q: number, t: number) => {
+  HueToRGB(p: number, q: number, t: number): number {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
     if (t < 1 / 6) return p + (q - p) * 6 * t;
     if (t < 1 / 2) return q;
     if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
     return p;
-  };
+  }
   HWBToRGB(HWB: string): string {
     const rgbSplited = HWB.split('(')[1]
       .split(')')[0]
@@ -1520,6 +1523,10 @@ export class NgxBootstrapExpandedFeaturesService {
   clearAllColors(): void {
     this.colors = {};
     this.consoleLog('info', { colors: this.colors }, this.styleConsole);
+  }
+  changeImportantActive(): void {
+    this.importantActive = !this.importantActive;
+    this.cssCreate();
   }
   /* Debuging */
   changeDebugOption(): void {
