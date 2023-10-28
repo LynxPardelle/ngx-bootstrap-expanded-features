@@ -619,12 +619,14 @@ export class NgxBootstrapExpandedFeaturesService {
             let matches = values[v].match(reg);
             if (!!matches) {
               for (let match of matches) {
-                values[v] = values[v].replace(
-                  match,
-                  `rgba(${this.colorToRGB(
-                    this.colors[match.toString().replace(/\s/g, '')]
-                  )})`
-                );
+                let realColor: string | undefined =
+                  this.colors[match.replace(/\s/g, '')];
+                if (!!realColor) {
+                  values[v] = values[v].replace(
+                    match,
+                    `rgba(${this.colorToRGB(realColor)})`
+                  );
+                }
               }
             }
           });
@@ -957,29 +959,33 @@ export class NgxBootstrapExpandedFeaturesService {
     }
   }
   colorToRGB(color: string): number[] {
-    let rgb: number[] = [];
-    color = color.toLowerCase();
-    switch (true) {
-      case !!this.colors[color]:
-        rgb = this.colorToRGB(this.colors[color]);
-        break;
-      case color.includes('rgb') || color.includes('rgba'):
-        rgb = this.parseRGB(color);
-        break;
-      case color.includes('#'):
-        rgb = this.parseRGB(this.HexToRGB(color));
-        break;
-      case color.includes('hsl'):
-        rgb = this.parseRGB(this.HSLToRGB(color));
-        break;
-      case color.includes('hwb'):
-        rgb = this.parseRGB(this.HWBToRGB(color));
-        break;
-      default:
-        rgb = [255, 0, 0];
-        break;
+    try {
+      let rgb: number[] = [255, 0, 0];
+      color = color.toLowerCase();
+      switch (true) {
+        case !!this.colors[color]:
+          rgb = this.colorToRGB(this.colors[color]);
+          break;
+        case color.includes('rgb') || color.includes('rgba'):
+          rgb = this.parseRGB(color);
+          break;
+        case color.includes('#'):
+          rgb = this.parseRGB(this.HexToRGB(color));
+          break;
+        case color.includes('hsl'):
+          rgb = this.parseRGB(this.HSLToRGB(color));
+          break;
+        case color.includes('hwb'):
+          rgb = this.parseRGB(this.HWBToRGB(color));
+          break;
+        default:
+          break;
+      }
+      return rgb;
+    } catch (error) {
+      this.consoleLog('error', { error: error }, this.styleConsole);
+      return [255, 0, 0];
     }
-    return rgb;
   }
   RGBToRGBA(rgb: number[], alpha: number): string {
     return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
@@ -1627,7 +1633,7 @@ export class NgxBootstrapExpandedFeaturesService {
       if (config.line) {
         console.info('%cline: ' + config.line + ' = ', config.style);
       }
-      console.info('%c' + this.getStackTrace()[1], config.style);
+      console.info('%c' + this.getStackTrace()[2], config.style);
       console.groupCollapsed('Trace');
       console.trace();
       console.groupEnd();
