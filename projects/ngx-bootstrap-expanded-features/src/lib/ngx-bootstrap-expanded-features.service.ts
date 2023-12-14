@@ -512,19 +512,15 @@ export class NgxBootstrapExpandedFeaturesService {
         /* if (befSplited[1].includes('SLASH')) {
           debugger;
         } */
-        if (befSplited[1].includes('boxCustom')) {
-          this.consoleLog(
-            'info',
-            { befSplited1: befSplited[1] },
-            this.styleConsole
-          );
-        }
+        this.consoleLog(
+          'info',
+          { befSplited1: befSplited[1] },
+          this.styleConsole
+        );
         let befSRP = this.removePseudos(befSplited[1])
           .replace(/SEL/g, this.separator)
           .split(`${this.separator}`);
-        if (befSplited[1].includes('boxCustom')) {
-          this.consoleLog('info', { befSRP: befSRP }, this.styleConsole);
-        }
+        this.consoleLog('info', { befSRP: befSRP }, this.styleConsole);
         let selector = befSRP[0];
         let specify = this.unbefysize(
           befSRP
