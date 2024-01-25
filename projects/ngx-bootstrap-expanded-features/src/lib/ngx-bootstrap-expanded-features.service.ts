@@ -69,28 +69,40 @@ export class NgxBootstrapExpandedFeaturesService {
   /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
+    'AnyLink',
+    'Autofill',
+    'Blank',
     'Checked',
+    'Current',
     'Default',
+    'Defined',
     'Dir',
     'Disabled',
     'Empty',
     'Enabled',
+    'First',
     'FirstChild',
     'FirstOfType',
-    'First',
-    'Fullscreen',
+    'Focus',
     'FocusVisible',
     'FocusWithin',
-    'Focus',
+    'Fullscreen',
+    'Future',
+    'Has',
+    'Host',
     'Hover',
-    'Indeterminate',
     'InRange',
+    'Indeterminate',
     'Invalid',
+    'Is',
     'Lang',
     'LastChild',
     'LastOfType',
     'Left',
     'Link',
+    'LocalLink',
+    'Modal',
+    'Muted',
     'Not',
     'NthChild',
     'NthLastChild',
@@ -100,27 +112,67 @@ export class NgxBootstrapExpandedFeaturesService {
     'OnlyOfType',
     'Optional',
     'OutOfRange',
+    'Past',
+    'Paused',
+    'PictureInPicture',
+    'PlaceHolderShown',
+    'Playing',
+    'PopoverOpen',
     'ReadOnly',
     'ReadWrite',
     'Required',
     'Right',
     'Root',
     'Scope',
+    'Seeking',
+    'Stalled',
     'Target',
+    'TargetWithin',
+    'UserInvalid',
+    'UserValid',
     'Valid',
     'Visited',
+    'VolumeLocked',
+    'Where',
+  ];
+  public pseudosHasSDED: string[] = [
+    'Dir',
+    'Not',
+    'Lang',
+    'Has',
+    'Host',
+    'Is',
+    'NthChild',
+    'NthLastChild',
+    'NthLastOfType',
+    'NthOfType',
+    'Part',
+    'Slotted',
+    'Where',
   ];
   public pseudoElements: string[] = [
     'After',
+    'Backdrop',
     'Before',
+    'Cue',
+    'CueRegion',
+    'FileSelectorButton',
     'FirstLetter',
     'FirstLine',
-    'Selection',
-    'Backdrop',
-    'Placeholder',
-    'Marker',
-    'SpellingError',
     'GrammarError',
+    'Highlight',
+    'Marker',
+    'Part',
+    'Placeholder',
+    'Selection',
+    'Slotted',
+    'SpellingError',
+    'TargetText',
+    'ViewTransition',
+    'ViewTransitionGroup',
+    'ViewTransitionImagePair',
+    'ViewTransitionNew',
+    'ViewTransitionOld',
   ];
   public pseudos: IPseudo[] = this.pseudoClasses
     .sort((e1: number | string, e2: number | string) => {
@@ -1201,12 +1253,31 @@ export class NgxBootstrapExpandedFeaturesService {
     let pseudoFiltereds: IPseudo[] = this.pseudos.filter((pseudo: IPseudo) => {
       return thing.includes(pseudo.mask);
     });
-    pseudoFiltereds.forEach((pse) => {
+    pseudoFiltereds.forEach((pse: IPseudo) => {
       let regMask = new RegExp(':*' + pse.mask, 'gi');
+      switch (true) {
+        case this.pseudosHasSDED.includes(pse.mask):
+          regMask = new RegExp(':*' + pse.mask + '(', 'gi');
+          break;
+        case ['Right', 'Left'].includes(pse.mask):
+          regMask = new RegExp('page' + pse.mask, 'gi');
+          break;
+        default:
+          break;
+      }
       thing = thing
         .replace('SD', '(')
         .replace('ED', ')')
-        .replace(regMask, !remove ? pse.real : '');
+        .replace(
+          regMask,
+          !remove
+            ? this.pseudosHasSDED.includes(pse.mask)
+              ? pse.real + '('
+              : ['Right', 'Left'].includes(pse.mask)
+              ? 'page' + pse.real
+              : pse.real
+            : ''
+        );
     });
     return thing;
   }
