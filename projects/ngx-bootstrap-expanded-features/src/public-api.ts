@@ -3,3 +3,5 @@
  */
 
 export * from './lib/ngx-bootstrap-expanded-features.service';
+export * from './lib/bef-init.directive';
+export * from './lib/interfaces';
