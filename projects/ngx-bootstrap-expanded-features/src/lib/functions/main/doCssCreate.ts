@@ -1,14 +1,14 @@
 /* Interfaces */
-import { IBPS } from "../../interfaces";
+import { IBPS } from '../../interfaces';
 /* Singletons */
-import { ValuesSingleton } from "../../singletons/valuesSingleton";
+import { ValuesSingleton } from '../../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "../console_log";
-import { manage_sheet } from "../manage_sheet";
+import { console_log } from '../console_log';
+import { manage_sheet } from '../manage_sheet';
 /* Utilities */
-import { getNewClasses2Create } from "./private_utilities/getNewClasses2Create";
-import { parseClass } from "./private_utilities/parseClass";
-import { send2CreateRules } from "./private_utilities/send2CreateRules";
+import { getNewClasses2Create } from './private_utilities/getNewClasses2Create';
+import { parseClass } from './private_utilities/parseClass';
+import { send2CreateRules } from './private_utilities/send2CreateRules';
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const doCssCreate = {
@@ -29,8 +29,8 @@ export const doCssCreate = {
       } else {
         classes2Create = updateClasses2Create;
       }
-      console_log.consoleLog("info", { classes2Create: classes2Create });
-      let classes2CreateStringed = "";
+      console_log.consoleLog('info', { classes2Create: classes2Create });
+      let classes2CreateStringed = '';
       let bpsStringed: IBPS[] = values.bps.map((b: any) => b);
       for (let class2Create of classes2Create) {
         [class2Create, bpsStringed, classes2CreateStringed] = Object.values(
@@ -42,16 +42,20 @@ export const doCssCreate = {
           )
         );
       }
+      console_log.consoleLog('info', {
+        classes2CreateStringed: classes2CreateStringed,
+        bpsStringed: bpsStringed,
+      });
       send2CreateRules(classes2CreateStringed, bpsStringed);
       const endTimeCSSCreate = performance.now();
       console_log.consoleLog(
-        "info",
+        'info',
         `Call to cssCreate() took ${
           endTimeCSSCreate - startTimeCSSCreate
         } milliseconds`
       );
       let class2CreateTimer = document.getElementById(
-        values.indicatorClass + "Timer"
+        values.indicatorClass + 'Timer'
       );
       if (class2CreateTimer) {
         class2CreateTimer.innerHTML = `
@@ -63,7 +67,7 @@ export const doCssCreate = {
             `;
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
 };

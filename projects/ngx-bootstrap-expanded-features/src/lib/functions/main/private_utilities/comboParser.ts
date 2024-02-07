@@ -1,7 +1,7 @@
-import { ValuesSingleton } from "../../../singletons/valuesSingleton";
-import { console_log } from "../../../functions/console_log";
-import { valueComboReplacer } from "./valueComboReplacer";
-import { values4ComboGetter } from "./values4ComboGetter";
+import { ValuesSingleton } from '../../../singletons/valuesSingleton';
+import { console_log } from '../../../functions/console_log';
+import { valueComboReplacer } from './valueComboReplacer';
+import { values4ComboGetter } from './values4ComboGetter';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 type TVals2Sort = {
   index: number;
@@ -11,45 +11,55 @@ export const comboParser = async (
   class2Create: string,
   comb: string,
   class2CreateElement: HTMLElement,
-  classes2Create: string[],
-  combIndex: number
+  classes2Create: string[]
 ): Promise<string[]> => {
+  let combIndex = comb ? Object.keys(values.combos).indexOf(comb) : -1;
+  console_log.consoleLog('info', { combIndex: combIndex });
+  console_log.consoleLog('info', { class2Create: class2Create });
   let vals: string[] = await values4ComboGetter(class2Create);
-  console_log.consoleLog("info", { vals: vals });
+  console_log.consoleLog('info', { vals: vals });
   await Promise.all(
     values.combos[comb].map(async (c: string) => {
-      console_log.consoleLog("info", { combo: c });
+      console_log.consoleLog('info', { combo: c });
       c = await valueComboReplacer(c, vals);
-      console_log.consoleLog("info", { cAfterValueComboReplacer: c });
+      console_log.consoleLog('info', { cAfterValueComboReplacer: c });
       if (c.startsWith(values.indicatorClass)) {
         let combosCreatedABBR = Object.keys(values.combosCreated);
-        console_log.consoleLog("info", {
+        console_log.consoleLog('info', {
           combosCreatedABBR: combosCreatedABBR,
         });
         let alreadyABBRCombo = combosCreatedABBR.find((cs) => {
           return values.combosCreated[cs] === class2Create;
         });
-        console_log.consoleLog("info", {
+        console_log.consoleLog('info', {
           alreadyABBRCombo: alreadyABBRCombo,
         });
+        let combosCreatedKeys: string[] = Object.keys(values.combosCreated);
+        let combCreatedKey: string =
+          combosCreatedKeys.find((cs) => {
+            return values.combosCreated[cs] === class2Create;
+          }) || values.encryptComboCharacters + combosCreatedKeys.length;
         if (!alreadyABBRCombo) {
-          values.combosCreated[values.encryptCombo ? "■■■" + combIndex : comb] =
-            class2Create;
-          console_log.consoleLog("info", {
+          values.combosCreated[
+            values.encryptCombo ? combCreatedKey : class2Create
+          ] = class2Create;
+          console_log.consoleLog('info', {
             cStartsWithClass2Create:
               values.combosCreated[
-                values.encryptCombo ? "■■■" + combIndex : comb
+                values.encryptCombo ? combCreatedKey : class2Create
               ],
           });
         }
-        console_log.consoleLog("info", {
+        console_log.consoleLog('info', {
           combosCreatedABBR: combosCreatedABBR,
         });
-        let comboABBR: string = values.encryptCombo ? "■■■" + combIndex : comb;
-        console_log.consoleLog("info", { comboABBR: comboABBR });
-        console_log.consoleLog("info", { c: c });
+        let comboABBR: string = values.encryptCombo
+          ? combCreatedKey
+          : class2Create;
+        console_log.consoleLog('info', { comboABBR: comboABBR });
+        console_log.consoleLog('info', { c: c });
         let pseudos = values.pseudos.filter((p: any) =>
-          c.split("-")[1].includes(p.mask)
+          c.split('-')[1].includes(p.mask)
         );
         let firstPseudo =
           pseudos.sort((p1: any, p2: any) => {
@@ -58,35 +68,35 @@ export const comboParser = async (
         switch (true) {
           case pseudos.length > 0 &&
             !!(
-              !c.includes("SEL") ||
-              c.indexOf("SEL") > c.indexOf(firstPseudo.mask)
+              !c.includes('SEL') ||
+              c.indexOf('SEL') > c.indexOf(firstPseudo.mask)
             ):
-            console_log.consoleLog("info", { firstPseudo: firstPseudo });
+            console_log.consoleLog('info', { firstPseudo: firstPseudo });
             c = c
-              .replace("SEL", "")
+              .replace('SEL', '')
               .replace(
                 firstPseudo.mask,
-                "SEL__COM_" + comboABBR + firstPseudo.mask
+                'SEL__COM_' + comboABBR + firstPseudo.mask
               );
-            console_log.consoleLog("info", { cIncludesPseudoAfter: c });
+            console_log.consoleLog('info', { cIncludesPseudoAfter: c });
             break;
-          case !!c.includes("SEL"):
-            c = c.replace("SEL", "SEL__COM_" + comboABBR + "__");
-            console_log.consoleLog("info", { cIncludesSELAfter: c });
+          case !!c.includes('SEL'):
+            c = c.replace('SEL', 'SEL__COM_' + comboABBR + '__');
+            console_log.consoleLog('info', { cIncludesSELAfter: c });
             break;
           default:
-            console_log.consoleLog("info", { cDoesntIncludesSEL: c });
+            console_log.consoleLog('info', { cDoesntIncludesSEL: c });
             c = c.replace(
-              c.split("-")[1],
-              c.split("-")[1] + "SEL__COM_" + comboABBR
+              c.split('-')[1],
+              c.split('-')[1] + 'SEL__COM_' + comboABBR
             );
-            console_log.consoleLog("info", {
+            console_log.consoleLog('info', {
               cDoesntIncludesSELAfter: c,
             });
             break;
         }
       } else {
-        console_log.consoleLog("info", {
+        console_log.consoleLog('info', {
           cDoesntStartsWithClass2Create: c,
         });
         class2CreateElement.classList.add(c);

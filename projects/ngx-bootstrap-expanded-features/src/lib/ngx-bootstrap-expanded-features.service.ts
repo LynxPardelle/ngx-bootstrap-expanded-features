@@ -34,6 +34,9 @@ export class NgxBootstrapExpandedFeaturesService {
   public combos: { [key: string]: string[] } = this.values.combos;
   public combosCreated: { [key: string]: string } = this.values.combosCreated;
   public encryptCombo: boolean = this.values.encryptCombo;
+  public encryptComboCharacters: string = this.values.encryptComboCharacters;
+  public encryptComboCreatedCharacters: string =
+    this.values.encryptComboCreatedCharacters;
   public cssNamesParsed: any = this.values.cssNamesParsed;
   public alreadyCreatedClasses: string[] = this.values.alreadyCreatedClasses;
   public sheet: any = this.values.sheet;
