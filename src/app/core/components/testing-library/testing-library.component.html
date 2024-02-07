@@ -2,10 +2,11 @@
   Create Testing example
 </button>
 <div>
-  <div *ngFor="let item of examples" class="bef mx-auto d-block text-center {{ item }}">
+  <div
+    *ngFor="let item of examples"
+    class="bef mx-auto d-block text-center {{ item }}"
+  >
     {{ item }}
-    <span *ngIf="item.includes('span')">
-      Prueba
-    </span>
+    <span *ngIf="item.includes('span')"> Prueba </span>
   </div>
 </div>

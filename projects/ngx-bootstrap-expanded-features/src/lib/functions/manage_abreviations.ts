@@ -1,8 +1,8 @@
 /* Singletons */
-import { ValuesSingleton } from '../singletons/valuesSingleton';
+import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Funtions */
-import { console_log } from './console_log';
-import { cssCreate } from './cssCreate';
+import { console_log } from "./console_log";
+import { cssCreate } from "./cssCreate";
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const manage_abreviations = {
@@ -21,7 +21,7 @@ export const manage_abreviations = {
         cssCreate.cssCreate(prevIgnoredAbreviationsValues);
       }
     } catch (err) {
-      console_log.consoleLog('error', { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   pushAbreviationsClasses(abreviationsClasses: any): void {
@@ -41,23 +41,19 @@ export const manage_abreviations = {
         cssCreate.cssCreate();
       }
     } catch (err) {
-      console_log.consoleLog('error', { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   getAbreviationsClasses(): any {
-    console_log.consoleLog(
-      'info',
-      { abreviationsClasses: values.abreviationsClasses },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", {
+      abreviationsClasses: values.abreviationsClasses,
+    });
     return values.abreviationsClasses;
   },
   getAbreviationsValues(): any {
-    console_log.consoleLog(
-      'info',
-      { abreviationsValues: values.abreviationsValues },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", {
+      abreviationsValues: values.abreviationsValues,
+    });
     return values.abreviationsValues;
   },
   updateAbreviationsClass(abreviationsClass: string, value: string): void {
@@ -79,7 +75,7 @@ export const manage_abreviations = {
         );
       }
     } catch (err) {
-      console_log.consoleLog('error', { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   updateAbreviationsValue(abreviationsValue: string, value: string): void {
@@ -101,7 +97,7 @@ export const manage_abreviations = {
         );
       }
     } catch (err) {
-      console_log.consoleLog('error', { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
 };

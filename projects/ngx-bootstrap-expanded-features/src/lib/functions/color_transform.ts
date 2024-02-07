@@ -30,7 +30,7 @@ export const color_transform = {
       }
       return rgb;
     } catch (error) {
-      console_log.consoleLog("error", { error: error }, values.styleConsole);
+      console_log.consoleLog("error", { error: error });
       return [255, 0, 0];
     }
   },
@@ -86,11 +86,7 @@ export const color_transform = {
         parseInt(hexCode.charAt(6) + hexCode.charAt(7), 16)
       );
     } else {
-      console_log.consoleLog(
-        "error",
-        { hexToRGBError: "Invalid hex code" },
-        values.styleConsole
-      );
+      console_log.consoleLog("error", { hexToRGBError: "Invalid hex code" });
     }
     return `rgb${![3, 6].includes(hexCodeLength) ? "a" : ""}(${rgb.join(",")})`;
   },
@@ -242,7 +238,7 @@ export const color_transform = {
         A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16); */
       return [R, G, B, A];
     } else {
-      return [R, G, B, 1];
+      return [R, G, B];
     }
   },
 };

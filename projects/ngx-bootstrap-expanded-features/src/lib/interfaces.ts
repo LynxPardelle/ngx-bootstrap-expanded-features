@@ -1,25 +1,9 @@
-export interface IBPS {
-  bp: string;
-  value: string;
-  bef: string;
-}
+import { TAbreviationTraductor, TBPS, TConsoleParser, TPseudo } from "./types";
 
-export interface IConsoleParser {
-  type?: "log" | "info" | "trace" | "error";
-  thing: any;
-  style?: string;
-  line?: string | null;
-  stoper?: boolean;
-}
+export interface IBPS extends TBPS {}
 
-export interface IPseudo {
-  mask: string;
-  real: string;
-}
+export interface IConsoleParser extends TConsoleParser {}
 
-export interface IAbreviationTraductor {
-  abreviation: string;
-  abreviationRegExp: RegExp;
-  traduction: string;
-  traductionRegExp: RegExp;
-}
+export interface IPseudo extends TPseudo {}
+
+export interface IAbreviationTraductor extends TAbreviationTraductor {}

@@ -9,18 +9,16 @@ export const manage_sheet = {
   checkSheet() {
     let sheets: CSSStyleSheet[] = [...document.styleSheets];
     for (let nsheet of sheets) {
-      if (nsheet.href?.includes("bef-styles")) {
+      if (nsheet.href?.includes(values.styleSheetToManage)) {
         values.sheet = nsheet;
+        values.alreadyCreatedClasses = [];
+        values.combosCreated = {};
       }
     }
   },
   getSheet(): CSSStyleSheet | undefined {
     if (values.sheet) {
-      console_log.consoleLog(
-        "info",
-        { sheet: values.sheet },
-        values.styleConsole
-      );
+      console_log.consoleLog("info", { sheet: values.sheet });
       return values.sheet;
     } else {
       return undefined;

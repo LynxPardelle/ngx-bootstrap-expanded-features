@@ -5,7 +5,7 @@ import { IPseudo } from './interfaces';
 /* Singleton */
 import { ValuesSingleton } from './singletons/valuesSingleton';
 /* Functions */
-import { abrevviation_traductors } from './functions/abreviation_traductors';
+import { abreviation_traductors } from './functions/abreviation_traductors';
 import { color_transform } from './functions/color_transform';
 import { console_log } from './functions/console_log';
 import { css_camel } from './functions/css-camel';
@@ -25,6 +25,7 @@ import { utility_configurations } from './functions/utility_configurations';
 })
 export class NgxBootstrapExpandedFeaturesService {
   public values: ValuesSingleton = ValuesSingleton.getInstance();
+  public indicatorClass: string = this.values.indicatorClass;
   public colors: { [key: string]: string } = this.values.colors;
   public abreviationsClasses: { [key: string]: string } =
     this.values.abreviationsClasses;
@@ -32,11 +33,15 @@ export class NgxBootstrapExpandedFeaturesService {
     this.values.abreviationsValues;
   public combos: { [key: string]: string[] } = this.values.combos;
   public combosCreated: { [key: string]: string } = this.values.combosCreated;
+  public encryptCombo: boolean = this.values.encryptCombo;
   public cssNamesParsed: any = this.values.cssNamesParsed;
   public alreadyCreatedClasses: string[] = this.values.alreadyCreatedClasses;
   public sheet: any = this.values.sheet;
   public isDebug: boolean = this.values.isDebug;
   public bps: any = this.values.bps;
+  public bpsSpecifyOptions: string[] = this.values.bpsSpecifyOptions;
+  public limitBPS: boolean = this.values.limitBPS;
+  public styleSheetToManage: string = this.values.styleSheetToManage;
   public separator: string = this.values.separator;
   public styleConsole: string = this.values.styleConsole;
   public pseudoClasses: string[] = this.values.pseudoClasses;
@@ -121,8 +126,8 @@ export class NgxBootstrapExpandedFeaturesService {
   public setTimeBetweenReCreate = (time: number) =>
     debugg_options.setTimeBetweenReCreate(time);
   public unbefysize = (value: string) =>
-    abrevviation_traductors.unbefysize(value);
-  public befysize = (value: string) => abrevviation_traductors.befysize(value);
+    abreviation_traductors.unbefysize(value);
+  public befysize = (value: string) => abreviation_traductors.befysize(value);
   public consoleLog = (
     type: 'log' | 'info' | 'trace' | 'error' = 'log',
     thing: any,

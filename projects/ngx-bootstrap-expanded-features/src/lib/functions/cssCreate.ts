@@ -9,23 +9,25 @@ import { doUseTimer } from "./private/doUseTimer";
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const cssCreate = {
   cssCreate(
-    updateBefs: string[] | null = null,
+    updateClasses2Create: string[] | null = null,
     primordial: boolean = false
   ): void {
     try {
       if (!values.sheet) {
         manage_sheet.checkSheet();
         if (!values.sheet) {
-          throw new Error(`There is no bef-styles style sheet!`);
+          throw new Error(
+            `There is no ${values.styleSheetToManage} style sheet!`
+          );
         }
       }
       if (!!values.useTimer) {
-        doUseTimer(updateBefs, primordial);
+        doUseTimer(updateClasses2Create, primordial);
       } else {
-        doCssCreate.start(updateBefs);
+        doCssCreate.start(updateClasses2Create);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
 };

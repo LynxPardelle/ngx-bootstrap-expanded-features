@@ -47,7 +47,7 @@ export class TestingLibraryComponent implements OnInit {
   };
   public combos: { [key: string]: string[] } = {
     firstBox: [
-      'bef-w-85per bef-border-bor1 bef-bg-success bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark tsSCBMW-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
+      'bef-w-85per bef-border-bor1 bef-bg-VAL1DEFabyssDEF bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark tsSCBMW-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
     ],
   };
   constructor(private _befService: BefService) {}
@@ -56,6 +56,7 @@ export class TestingLibraryComponent implements OnInit {
     this._befService.pushAbreviationsValues(this.abreviationsValues);
     this._befService.pushAbreviationsClasses(this.abreviationsClasses);
     this._befService.pushCombos(this.combos);
+    this._befService.changeDebugOption(true);
     this.cssCreate();
     let interval = setInterval(() => {
       this.createNewExample();

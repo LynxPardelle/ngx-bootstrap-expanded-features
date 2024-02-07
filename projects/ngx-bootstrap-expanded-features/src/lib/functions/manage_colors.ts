@@ -26,15 +26,11 @@ export const manage_colors = {
         }
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   getColors(): any {
-    console_log.consoleLog(
-      "info",
-      { colors: values.colors },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", { colors: values.colors });
     return values.colors;
   },
   getColorsNames(): string[] {
@@ -45,11 +41,10 @@ export const manage_colors = {
     return colorsNames;
   },
   getColorValue(color: string): any {
-    console_log.consoleLog(
-      "info",
-      { color: color, colorValue: values.colors[color] },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", {
+      color: color,
+      colorValue: values.colors[color],
+    });
     return values.colors[color];
   },
   updateColor(color: string, value: string): void {
@@ -72,7 +67,7 @@ export const manage_colors = {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   deleteColor(color: string): void {
@@ -83,15 +78,11 @@ export const manage_colors = {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   clearAllColors(): void {
     values.colors = {};
-    console_log.consoleLog(
-      "info",
-      { colors: values.colors },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", { colors: values.colors });
   },
 };

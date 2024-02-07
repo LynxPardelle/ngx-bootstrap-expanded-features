@@ -21,6 +21,18 @@ export class CombosComponent implements OnInit {
       'bef-text-VAL4',
       'bef-p-VAL5',
     ],
+    cardBootstrapLike: [
+      // Card
+      'bef-maxWidth-VAL1DEF18remDEF bef-bg-VAL2DEFtransparentDEF bef-pos-relative bef-d-flex bef-flexDirection-column bef-border-1px__solid__rgbaSD255COM255COM255COM0_15ED bef-backgroundClip-borderMINbox bef-wordWrap-breakMINword bef-rounded-0_375rem bef-m-VAL3DEF1remDEF__auto bef-text-VAL4DEFwhiteDEF',
+      // Card Body
+      'bef-flexSELCHILDdiv-1__1__auto bef-pSELCHILDdiv-1rem',
+      // Card Title
+      'bef-mbSEL__h2COM_cardBootstrapLike__h3COM_cardBootstrapLike__h4COM_cardBootstrapLike__h5COM_cardBootstrapLike__h6-0_5rem',
+      // Card Text
+      'bef-mtSEL__p-0 bef-mbSEL__p-1rem bef-dSEL__p-block',
+      // Card Link
+      'bef-dSEL__a-inlineMINblock bef-fwSEL__a-400 bef-lhSEL__a-1_5 bef-taSEL__a-center bef-tdeSEL__a-none bef-verticalAlignSEL__a-middle bef-cursorSEL__a-pointer bef-userSelectSEL__a-none bef-pSEL__a-0_375rem__0_75rem bef-roundedSEL__a-0_25rem bef-transitionSEL__a-color___15s__easeMINinMINoutCOMbackgroundMINcolor___15s__easeMINinMINoutCOMborderMINcolor___15s__easeMINinMINoutCOMboxMINchadow___15s__easeMINinMINout bef-btnOutlineSEL__a-primary-lavender',
+    ],
   };
   constructor(private _befService: BefService) {}
   ngOnInit(): void {
@@ -41,6 +53,18 @@ export class CombosComponent implements OnInit {
             boxCustom: [
               'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
             ],
+            cardBootstrapLike: [
+              // Card
+              'bef-maxWidth-VAL1DEF18remDEF bef-bg-VAL2DEFtransparentDEF bef-pos-relative bef-d-flex bef-flexDirection-column bef-border-1px__solid__rgbaSD255COM255COM255COM0_15ED bef-backgroundClip-borderMINbox bef-wordWrap-breakMINword bef-rounded-0_375rem bef-m-VAL3DEF1remDEF__auto bef-text-VAL4DEFwhiteDEF',
+              // Card Body
+              'bef-flexSELCHILDdiv-1__1__auto bef-pSELCHILDdiv-1rem',
+              // Card Title
+              'bef-mbSEL__h2COM_cardBootstrapLike__h3COM_cardBootstrapLike__h4COM_cardBootstrapLike__h5COM_cardBootstrapLike__h6-0_5rem',
+              // Card Text
+              'bef-mtSEL__p-0 bef-mbSEL__p-1rem bef-dSEL__p-block',
+              // Card Link
+              'bef-dSEL__a-inlineMINblock bef-fwSEL__a-400 bef-lhSEL__a-1_5 bef-taSEL__a-center bef-tdeSEL__a-none bef-verticalAlignSEL__a-middle bef-cursorSEL__a-pointer bef-userSelectSEL__a-none bef-pSEL__a-0_375rem__0_75rem bef-roundedSEL__a-0_25rem bef-transitionSEL__a-color___15s__easeMINinMINoutCOMbackgroundMINcolor___15s__easeMINinMINoutCOMborderMINcolor___15s__easeMINinMINoutCOMboxMINchadow___15s__easeMINinMINout bef-btnOutlineSEL__a-primary-lavender',
+            ],
           };
           pushCombos(combos);
         </script>`;
@@ -52,6 +76,18 @@ export class CombosComponent implements OnInit {
           ],
           boxCustom: [
             'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
+          ],
+          cardBootstrapLike: [
+            // Card
+            'bef-maxWidth-VAL1DEF18remDEF bef-bg-VAL2DEFtransparentDEF bef-pos-relative bef-d-flex bef-flexDirection-column bef-border-1px__solid__rgbaSD255COM255COM255COM0_15ED bef-backgroundClip-borderMINbox bef-wordWrap-breakMINword bef-rounded-0_375rem bef-m-VAL3DEF1remDEF__auto bef-text-VAL4DEFwhiteDEF',
+            // Card Body
+            'bef-flexSELCHILDdiv-1__1__auto bef-pSELCHILDdiv-1rem',
+            // Card Title
+            'bef-mbSEL__h2COM_cardBootstrapLike__h3COM_cardBootstrapLike__h4COM_cardBootstrapLike__h5COM_cardBootstrapLike__h6-0_5rem',
+            // Card Text
+            'bef-mtSEL__p-0 bef-mbSEL__p-1rem bef-dSEL__p-block',
+            // Card Link
+            'bef-dSEL__a-inlineMINblock bef-fwSEL__a-400 bef-lhSEL__a-1_5 bef-taSEL__a-center bef-tdeSEL__a-none bef-verticalAlignSEL__a-middle bef-cursorSEL__a-pointer bef-userSelectSEL__a-none bef-pSEL__a-0_375rem__0_75rem bef-roundedSEL__a-0_25rem bef-transitionSEL__a-color___15s__easeMINinMINoutCOMbackgroundMINcolor___15s__easeMINinMINoutCOMborderMINcolor___15s__easeMINinMINoutCOMboxMINchadow___15s__easeMINinMINout bef-btnOutlineSEL__a-primary-lavender',
           ],
         };
         pushCombos(combos);
@@ -66,6 +102,18 @@ export class CombosComponent implements OnInit {
             ],
             boxCustom: [
               'bef-w-VAL1','bef-border-VAL2','bef-bg-VAL3','bef-text-VAL4','bef-p-VAL5',
+            ],
+            cardBootstrapLike: [
+              // Card
+              'bef-maxWidth-VAL1DEF18remDEF bef-bg-VAL2DEFtransparentDEF bef-pos-relative bef-d-flex bef-flexDirection-column bef-border-1px__solid__rgbaSD255COM255COM255COM0_15ED bef-backgroundClip-borderMINbox bef-wordWrap-breakMINword bef-rounded-0_375rem bef-m-VAL3DEF1remDEF__auto bef-text-VAL4DEFwhiteDEF',
+              // Card Body
+              'bef-flexSELCHILDdiv-1__1__auto bef-pSELCHILDdiv-1rem',
+              // Card Title
+              'bef-mbSEL__h2COM_cardBootstrapLike__h3COM_cardBootstrapLike__h4COM_cardBootstrapLike__h5COM_cardBootstrapLike__h6-0_5rem',
+              // Card Text
+              'bef-mtSEL__p-0 bef-mbSEL__p-1rem bef-dSEL__p-block',
+              // Card Link
+              'bef-dSEL__a-inlineMINblock bef-fwSEL__a-400 bef-lhSEL__a-1_5 bef-taSEL__a-center bef-tdeSEL__a-none bef-verticalAlignSEL__a-middle bef-cursorSEL__a-pointer bef-userSelectSEL__a-none bef-pSEL__a-0_375rem__0_75rem bef-roundedSEL__a-0_25rem bef-transitionSEL__a-color___15s__easeMINinMINoutCOMbackgroundMINcolor___15s__easeMINinMINoutCOMborderMINcolor___15s__easeMINinMINoutCOMboxMINchadow___15s__easeMINinMINout bef-btnOutlineSEL__a-primary-lavender',
             ],
           };
         }`;
@@ -86,9 +134,27 @@ export class CombosComponent implements OnInit {
         </p>`;
       case 'combEX2':
         return `
-        <p class="bef boxCustomVALSVL50perVL3px__dashed__grayVLtealVLbeastVL2rem">
+        <p class="bef boxCustomVALSVL75perVL3px__dashed__grayVLtealVLbeastVL2rem">
           Box with combo classes.
         </p>`;
+      case 'combEX3':
+        return `
+        <div class="bef cardBootstrapLikeVALSVAL2NblackVAL2NVL75perVLVAL1">
+          <div>
+            <h5>Card Component</h5>
+            <p>
+              You can see my portfolio in the link below.
+              <br/>
+              If you want to see more about me, you can visit my portfolio.
+              <br/>
+              Check it out!
+            </p>
+            <a href="https://lynxpardelle.com"
+            target="_blank"
+            rel="noopener noreferrer">
+              Visit my portfolio</a>
+          </div>
+        </div>`;
       default:
         return ``;
     }

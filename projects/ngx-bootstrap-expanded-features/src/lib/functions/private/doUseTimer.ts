@@ -4,9 +4,9 @@ import { ValuesSingleton } from "../../singletons/valuesSingleton";
 import { timeManagerCssCreate } from "./timeManagerCssCreate";
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const doUseTimer = (
-  updateBefs: string[] | null = null,
+  updateClasses2Create: string[] | null = null,
   primordial: boolean = false
 ) => {
   values.lastTimeAsked2Create = Date.now();
-  timeManagerCssCreate.delayedCssCreate(updateBefs, primordial);
+  timeManagerCssCreate.delayedCssCreate(updateClasses2Create, primordial);
 };

@@ -1,6 +1,7 @@
 export const cssNamesParsed = {
   d: "display",
   ta: "text-align",
+  tde: "text-decoration",
   w: "width",
   h: "height",
   wmn: "min-width",

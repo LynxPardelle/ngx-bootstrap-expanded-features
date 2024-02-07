@@ -13,15 +13,11 @@ export const manage_CSSNamesParsed = {
       });
       cssCreate.cssCreate();
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   getCssNamesParsed(): any {
-    console_log.consoleLog(
-      "info",
-      { cssNamesParsed: values.cssNamesParsed },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", { cssNamesParsed: values.cssNamesParsed });
     return values.cssNamesParsed;
   },
   updateCssNamesParsed(cssNameParsed: string, value: string): void {
@@ -41,7 +37,7 @@ export const manage_CSSNamesParsed = {
         throw new Error(`There is no cssNameParsed named ${cssNameParsed}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
 };

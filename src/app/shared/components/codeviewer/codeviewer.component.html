@@ -7,7 +7,10 @@
 >
   <div>
     <h5 *ngIf="show === 'both'" class="text-center my-3">Example</h5>
-    <div *ngIf="show !== 'code'" [innerHTML]="code | safeHtml"></div>
+    <div
+      *ngIf="show !== 'code'"
+      [innerHTML]="replaceBlankSpace(code) | safeHtml"
+    ></div>
   </div>
   <div>
     <h5 *ngIf="show === 'both'" class="text-center my-3">Code</h5>

@@ -18,9 +18,9 @@ export class CodeviewerComponent implements OnInit {
     this.cssCreate();
   }
   createCodeViewer() {
+    this.codeViewer = this.code;
     switch (this.type) {
       case 'html':
-        this.codeViewer = this.code;
         this.codeViewer = `<code class="text-dark">${this.codeViewer
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;')
@@ -51,7 +51,6 @@ export class CodeviewerComponent implements OnInit {
           .replace(/<br \/>\s*\n*<\/code>/g, '</code>');
         break;
       case 'js':
-        this.codeViewer = this.code;
         this.codeViewer = `<code class="text-dark">${this.codeViewer
           .replace(
             /(import\s+\{)(.*)(\}\s+from\s+)(".*")(;)/g,
@@ -105,6 +104,9 @@ export class CodeviewerComponent implements OnInit {
         break;
     }
     // console.log(this.codeViewer);
+  }
+  replaceBlankSpace(code: string): string {
+    return code.replace(/ /g, '');
   }
   cssCreate() {
     this._befService.cssCreate();

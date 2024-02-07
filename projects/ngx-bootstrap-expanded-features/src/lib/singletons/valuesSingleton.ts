@@ -8,11 +8,13 @@ import { IAbreviationTraductor, IBPS, IPseudo } from "../interfaces";
 import { css_camel } from "../functions/css-camel";
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
+  public indicatorClass: string = "bef";
   public colors: { [key: string]: string } = allColors;
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
   public combosCreated: { [key: string]: string } = {};
+  public encryptCombo: boolean = true;
   public cssNamesParsed: any = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
@@ -21,30 +23,38 @@ export class ValuesSingleton {
     {
       bp: "sm",
       value: "576px",
-      bef: "",
+      class2Create: "",
     },
     {
       bp: "md",
       value: "768px",
-      bef: "",
+      class2Create: "",
     },
     {
       bp: "lg",
       value: "992px",
-      bef: "",
+      class2Create: "",
     },
     {
       bp: "xl",
       value: "1200px",
-      bef: "",
+      class2Create: "",
     },
     {
       bp: "xxl",
       value: "1400px",
-      bef: "",
+      class2Create: "",
     },
   ];
-
+  public bpsSpecifyOptions: string[] = [
+    "",
+    "html",
+    "html body",
+    "html body #" + this.indicatorClass + "-bp",
+    "#" + this.indicatorClass + "-bp",
+  ];
+  public limitBPS: boolean = false;
+  public styleSheetToManage: string = "bef-styles";
   public separator: string = "þµÞ";
   /* Console */
   public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors["mystic"]}; color: ${this.colors["friend"]};`;

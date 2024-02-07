@@ -3,7 +3,7 @@ import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Functions */
 import { console_log } from "./console_log";
 const values: ValuesSingleton = ValuesSingleton.getInstance();
-export const abrevviation_traductors = {
+export const abreviation_traductors = {
   abreviationTraductor(
     value: string,
     type: "traduce" | "convert" = "traduce"

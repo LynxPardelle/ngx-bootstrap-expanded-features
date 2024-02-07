@@ -30,15 +30,11 @@ export const manage_combos = {
         cssCreate.cssCreate();
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
   getCombos(): any {
-    console_log.consoleLog(
-      "info",
-      { combos: values.combos },
-      values.styleConsole
-    );
+    console_log.consoleLog("info", { combos: values.combos });
     return values.combos;
   },
   updateCombo(combo: string, newValues: string[]): void {
@@ -70,7 +66,7 @@ export const manage_combos = {
         throw new Error(`There is no combo named ${combo}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err }, values.styleConsole);
+      console_log.consoleLog("error", { err: err });
     }
   },
 };
