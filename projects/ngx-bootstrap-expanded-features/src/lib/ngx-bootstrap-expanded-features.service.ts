@@ -62,6 +62,7 @@ export class NgxBootstrapExpandedFeaturesService {
   constructor() {
     manage_sheet.checkSheet();
   }
+  public checkSheet = () => manage_sheet.checkSheet();
   public cssCreate = (
     updateBefs: string[] | null = null,
     primordial: boolean = false
@@ -121,10 +122,12 @@ export class NgxBootstrapExpandedFeaturesService {
   public clearAllColors = () => manage_colors.clearAllColors();
   /* Utility */
   public changeImportantActive = (active: boolean) =>
-    utility_configurations.changeImportantActive(active);
-  public changeDebugOption = (active: boolean) =>
+    utility_configurations.changeImportantActive(
+      (active = !this.importantActive)
+    );
+  public changeDebugOption = (active: boolean = !this.isDebug) =>
     debugg_options.changeDebugOption(active);
-  public changeUseTimerOption = (active: boolean) =>
+  public changeUseTimerOption = (active: boolean = !this.useTimer) =>
     debugg_options.changeUseTimerOption(active);
   public setTimeBetweenReCreate = (time: number) =>
     debugg_options.setTimeBetweenReCreate(time);
