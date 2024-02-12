@@ -8,7 +8,7 @@ import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
 import { css_camel } from '../functions/css-camel';
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
-  public indicatorClass: string = 'bef';
+  public indicatorClass: string = 'ank';
   public colors: { [key: string]: string } = allColors;
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
@@ -17,7 +17,7 @@ export class ValuesSingleton {
   public encryptCombo: boolean = true;
   public encryptComboCharacters: string = '■■■';
   public encryptComboCreatedCharacters: string = '🜔🜔🜔';
-  public cssNamesParsed: any = cssNamesParsed;
+  public cssNamesParsed: { [key: string]: string | string[] } = cssNamesParsed;
   public alreadyCreatedClasses: string[] = [];
   public sheet: any;
   public isDebug: boolean = false;
@@ -56,10 +56,11 @@ export class ValuesSingleton {
     '#' + this.indicatorClass + '-bp',
   ];
   public limitBPS: boolean = false;
-  public styleSheetToManage: string = 'bef-styles';
+  public styleSheetToManage: string = 'angora-styles';
   public separator: string = 'þµÞ';
+  public specify: string = '🜏🜏🜏';
   /* Console */
-  public styleConsole: string = `padding: 0.25rem 0.125rem; background-color: ${this.colors['mystic']}; color: ${this.colors['friend']};`;
+  public styleConsole: string = `padding: 1rem; background-color: ${this.colors['abyss']}; color: ${this.colors['lavenderLP']};`;
   /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
@@ -194,7 +195,7 @@ export class ValuesSingleton {
           };
         })
     );
-  public importantActive: boolean = true;
+  public importantActive: boolean = false;
   public abreviationTraductors: IAbreviationTraductor[] = [
     {
       abreviation: 'per',
@@ -345,7 +346,7 @@ export class ValuesSingleton {
   public lastCSSCreate: number = Date.now();
   public lastTimeAsked2Create: number = new Date().getTime();
   public timesCSSCreated: number = 0;
-  public timeBetweenReCreate: number = 400;
+  public timeBetweenReCreate: number = 300;
   public useTimer: boolean = true;
   private constructor() {}
 

@@ -163,6 +163,9 @@ export const parseClass = async (
   if (!propertyValues[0]) {
     propertyValues[0] = 'default';
   }
+  console_log.consoleLog('info', {
+    class2CreateStringedBeforeProperty2ValueJoiner: class2CreateStringed,
+  });
   // Joining the property and the values
   class2CreateStringed += await property2ValueJoiner(
     property,
@@ -171,6 +174,9 @@ export const parseClass = async (
     propertyValues,
     specify
   );
+  console_log.consoleLog('info', {
+    class2CreateStringedAfterProperty2ValueJoiner: class2CreateStringed,
+  });
   // Put the important flag if it is active
   if (!!values.importantActive) {
     for (let cssProperty of class2CreateStringed.split(';')) {
@@ -182,6 +188,9 @@ export const parseClass = async (
       }
     }
   }
+  console_log.consoleLog('info', {
+    class2CreateStringedAfterImportant: class2CreateStringed,
+  });
   if (
     class2CreateStringed.includes('{') &&
     class2CreateStringed.includes('}')
@@ -201,6 +210,9 @@ export const parseClass = async (
       classes2CreateStringed += class2CreateStringed + values.separator;
     }
   }
+  console_log.consoleLog('info', {
+    classes2CreateStringedAfterSeparators: classes2CreateStringed,
+  });
   return {
     class2Create: class2Create,
     bpsStringed: bpsStringed,

@@ -1,7 +1,7 @@
 /* Singletons */
-import { ValuesSingleton } from "../singletons/valuesSingleton";
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "./console_log";
+import { console_log } from './console_log';
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const color_transform = {
@@ -13,16 +13,16 @@ export const color_transform = {
         case !!values.colors[color]:
           rgb = this.colorToRGB(values.colors[color]);
           break;
-        case color.includes("rgb") || color.includes("rgba"):
+        case color.includes('rgb') || color.includes('rgba'):
           rgb = this.parseRGB(color);
           break;
-        case color.includes("#"):
+        case color.includes('#'):
           rgb = this.parseRGB(this.HexToRGB(color));
           break;
-        case color.includes("hsl"):
+        case color.includes('hsl'):
           rgb = this.parseRGB(this.HSLToRGB(color));
           break;
-        case color.includes("hwb"):
+        case color.includes('hwb'):
           rgb = this.parseRGB(this.HWBToRGB(color));
           break;
         default:
@@ -30,7 +30,7 @@ export const color_transform = {
       }
       return rgb;
     } catch (error) {
-      console_log.consoleLog("error", { error: error });
+      console_log.consoleLog('error', { error: error });
       return [255, 0, 0];
     }
   },
@@ -39,25 +39,25 @@ export const color_transform = {
   },
   parseRGB(rgba: string): number[] {
     let rgb: number[] = [];
-    if (rgba.includes("rgb") || rgba.includes("rgba")) {
-      rgb = rgba.split("(")[1].split(",")[4]
+    if (rgba.includes('rgb') || rgba.includes('rgba')) {
+      rgb = rgba.split('(')[1].split(',')[4]
         ? [
-            parseInt(rgba.split("(")[1].split(",")[0]),
-            parseInt(rgba.split("(")[1].split(",")[1]),
-            parseInt(rgba.split("(")[1].split(",")[2]),
-            parseInt(rgba.split("(")[1].split(",")[3]),
+            parseInt(rgba.split('(')[1].split(',')[0]),
+            parseInt(rgba.split('(')[1].split(',')[1]),
+            parseInt(rgba.split('(')[1].split(',')[2]),
+            parseInt(rgba.split('(')[1].split(',')[3]),
           ]
         : [
-            parseInt(rgba.split("(")[1].split(",")[0]),
-            parseInt(rgba.split("(")[1].split(",")[1]),
-            parseInt(rgba.split("(")[1].split(",")[2]),
+            parseInt(rgba.split('(')[1].split(',')[0]),
+            parseInt(rgba.split('(')[1].split(',')[1]),
+            parseInt(rgba.split('(')[1].split(',')[2]),
           ];
     }
     return rgb;
   },
   HexToRGB(Hex: string): string {
     let rgb: number[] = [];
-    const hexCode = Hex.replace("#", "");
+    const hexCode = Hex.replace('#', '');
     const hexCodeLength = hexCode.length;
     if (hexCodeLength === 3) {
       rgb.push(
@@ -86,20 +86,20 @@ export const color_transform = {
         parseInt(hexCode.charAt(6) + hexCode.charAt(7), 16)
       );
     } else {
-      console_log.consoleLog("error", { hexToRGBError: "Invalid hex code" });
+      console_log.consoleLog('error', { hexToRGBError: 'Invalid hex code' });
     }
-    return `rgb${![3, 6].includes(hexCodeLength) ? "a" : ""}(${rgb.join(",")})`;
+    return `rgb${![3, 6].includes(hexCodeLength) ? 'a' : ''}(${rgb.join(',')})`;
   },
   HSLToRGB(HSL: string): string {
     /* Convert hsl to rgb please */
-    if (!["hsl", "hsla"].includes(HSL)) {
-      return "rgb(255,0,0,1)";
+    if (!['hsl', 'hsla'].includes(HSL)) {
+      return 'rgb(255,0,0,1)';
     }
     /* Separate string by comas and eliminate rgb or rgba */
-    const rgbSplited = HSL.split("(")[1]
-      .split(")")[0]
-      .split(",")
-      .filter((r) => r !== "hsl" && r !== "hsla");
+    const rgbSplited = HSL.split('(')[1]
+      .split(')')[0]
+      .split(',')
+      .filter((r) => r !== 'hsl' && r !== 'hsla');
 
     const hDecimal = parseInt(rgbSplited[0]) / 100;
     const sDecimal = parseInt(rgbSplited[1]) / 100;
@@ -117,9 +117,9 @@ export const color_transform = {
     const g = this.HueToRGB(p, q, hDecimal);
     const b = this.HueToRGB(p, q, hDecimal - 1 / 3);
     return `rgb${
-      rgbSplited[3] && rgbSplited[3] !== "" ? "a" : ""
+      rgbSplited[3] && rgbSplited[3] !== '' ? 'a' : ''
     }(${r},${g},${b}${
-      rgbSplited[3] && rgbSplited[3] !== "" ? `,${rgbSplited[3]}` : ""
+      rgbSplited[3] && rgbSplited[3] !== '' ? `,${rgbSplited[3]}` : ''
     })`;
   },
   HueToRGB(p: number, q: number, t: number): number {
@@ -131,10 +131,10 @@ export const color_transform = {
     return p;
   },
   HWBToRGB(HWB: string): string {
-    const rgbSplited = HWB.split("(")[1]
-      .split(")")[0]
-      .split(",")
-      .filter((r: string) => r !== "hsl" && r !== "hsla");
+    const rgbSplited = HWB.split('(')[1]
+      .split(')')[0]
+      .split(',')
+      .filter((r: string) => r !== 'hsl' && r !== 'hsla');
     let h = parseInt(rgbSplited[0]) / 360;
     let wh = parseInt(rgbSplited[1]) / 100;
     let bl = parseInt(rgbSplited[2]) / 100;
@@ -198,10 +198,10 @@ export const color_transform = {
         break;
     }
 
-    return `rgb${rgbSplited[3] && rgbSplited[3] !== "" ? "a" : ""}(${Math.round(
+    return `rgb${rgbSplited[3] && rgbSplited[3] !== '' ? 'a' : ''}(${Math.round(
       r * 255
     )},${Math.round(g * 255)},${Math.round(b * 255)}${
-      rgbSplited[3] && rgbSplited[3] !== "" ? `,${rgbSplited[3]}` : ""
+      rgbSplited[3] && rgbSplited[3] !== '' ? `,${rgbSplited[3]}` : ''
     })`;
   },
   shadeTintColor(rgb: number[], percent: number): number[] {
@@ -233,12 +233,85 @@ export const color_transform = {
     let GG = G.toString(16).length == 1 ? '0' + G.toString(16) : G.toString(16);
     let BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16); */
     if (rgb[3]) {
-      let A: any = rgb[3] ? (rgb[3] * 255).toString(16) : "FF";
+      let A: any = rgb[3] ? (rgb[3] * 255).toString(16) : 'FF';
       /* let AA =
         A.toString(16).length == 1 ? '0' + A.toString(16) : A.toString(16); */
       return [R, G, B, A];
     } else {
       return [R, G, B];
     }
+  },
+  opacityCreator(value: string, opacity: number): string {
+    if (value.includes('gradient')) {
+      const colorMatches = this.separateColor4Transform(value);
+      console_log.consoleLog('info', { colorMatches: colorMatches });
+      if (!!colorMatches) {
+        for (let colorMatch of colorMatches) {
+          console_log.consoleLog('info', {
+            valuePreSeparateColor4TransformPreCB: value,
+          });
+          value = value.replace(
+            colorMatch,
+            this.opacityCreator(colorMatch, opacity)
+          );
+          console_log.consoleLog('info', {
+            valuePostSeparateColor4TransformPostCB: value,
+          });
+        }
+        console_log.consoleLog('info', {
+          valuePostSeparateColor4Transform: value,
+        });
+        return value;
+      } else {
+        return value;
+      }
+    } else {
+      let shade3Split: number[] = this.colorToRGB(value);
+      console_log.consoleLog('info', { shade3Split: shade3Split });
+      console_log.consoleLog('info', { shade3SplitLength: shade3Split.length });
+      if (shade3Split.length === 4) {
+        shade3Split[3] = opacity;
+      } else {
+        shade3Split.push(opacity);
+      }
+      return `rgba(${shade3Split.join(',')})`;
+    }
+  },
+  getShadeTintColorOrGradient(tintValue: number, value: string): string {
+    if (value.includes('gradient')) {
+      const colorMatches = this.separateColor4Transform(value);
+      console_log.consoleLog('info', { colorMatches: colorMatches });
+      if (!!colorMatches) {
+        for (let colorMatch of colorMatches) {
+          console_log.consoleLog('info', {
+            valuePreSeparateColor4TransformPreCB: value,
+          });
+          value = value.replace(
+            colorMatch,
+            this.getShadeTintColorOrGradient(tintValue, colorMatch)
+          );
+          console_log.consoleLog('info', {
+            valuePostSeparateColor4TransformPostCB: value,
+          });
+        }
+        console_log.consoleLog('info', {
+          valuePostSeparateColor4Transform: value,
+        });
+        return value;
+      } else {
+        return value;
+      }
+    } else {
+      return `rgba(${color_transform
+        .shadeTintColor(color_transform.colorToRGB(value), tintValue)
+        .join(',')})`;
+    }
+  },
+  separateColor4Transform(value: string): RegExpMatchArray | null {
+    console_log.consoleLog('info', { valuePreSeparateColor4Transform: value });
+    const colorReg: RegExp = new RegExp(
+      /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
+    );
+    return value.match(colorReg);
   },
 };
