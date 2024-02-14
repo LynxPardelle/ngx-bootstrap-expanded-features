@@ -8,7 +8,7 @@ import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
 import { css_camel } from '../functions/css-camel';
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
-  public indicatorClass: string = 'ank';
+  public indicatorClass: string = 'bef';
   public colors: { [key: string]: string } = allColors;
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
@@ -56,11 +56,11 @@ export class ValuesSingleton {
     '#' + this.indicatorClass + '-bp',
   ];
   public limitBPS: boolean = false;
-  public styleSheetToManage: string = 'angora-styles';
+  public styleSheetToManage: string = 'bef-styles';
   public separator: string = 'þµÞ';
   public specify: string = '🜏🜏🜏';
   /* Console */
-  public styleConsole: string = `padding: 1rem; background-color: ${this.colors['abyss']}; color: ${this.colors['lavenderLP']};`;
+  public styleConsole: string = `padding: 1rem; background-color: ${this.colors['mystic']}; color: ${this.colors['lavenderLP']};`;
   /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
@@ -195,7 +195,7 @@ export class ValuesSingleton {
           };
         })
     );
-  public importantActive: boolean = false;
+  public importantActive: boolean = true;
   public abreviationTraductors: IAbreviationTraductor[] = [
     {
       abreviation: 'per',
