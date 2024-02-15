@@ -14,7 +14,7 @@ export const btnCreator = async (
   class2Create: string,
   specify: string,
   value: string,
-  secondValue: string = '',
+  secondValue: string = 'transparent',
   outline: boolean = false
 ): Promise<string> => {
   const combinatorsValuesNumbers = combinators.combineArrays<
@@ -118,7 +118,7 @@ export const btnCreator = async (
   /* Basic Button */
   newRuleArray.push(
     `${specify}{${
-      outline && secondValue
+      !!outline
         ? correctVals['value,color'] +
           correctVals['secondValue,background-color'] +
           correctVals['value,border-color']
@@ -129,7 +129,7 @@ export const btnCreator = async (
   /* Hover Button */
   newRuleArray.push(
     `${values.specify}{${
-      outline && secondValue
+      !!outline
         ? correctVals['secondValue,color'] +
           correctVals['value,-15,background-color'] +
           correctVals['secondValue,border-color']
@@ -141,7 +141,7 @@ export const btnCreator = async (
   if (!!outline) {
     newRuleArray.push(
       `${values.specify}{${
-        outline && secondValue
+        !!outline
           ? correctVals['secondValue,-15,background-color'] +
             correctVals['secondValue,-15,border-color']
           : correctVals['value,-15,background-color'] +
@@ -155,12 +155,12 @@ export const btnCreator = async (
   /* Checked Button */
   newRuleArray.push(
     `${values.specify}{${
-      outline && secondValue
+      !!outline
         ? correctVals['value,-25,border-color']
         : correctVals['value,-20,background-color'] +
           correctVals['value,-25,border-color']
     }${
-      outline && secondValue
+      !!outline
         ? correctValsShadows['shadowColorValueCorrected']
         : correctValsShadows['shadowColorValueCorrected']
     }
@@ -171,7 +171,7 @@ export const btnCreator = async (
   );
   newRuleArray.push(
     `${values.specify}{${
-      outline && secondValue
+      !!outline
         ? correctValsShadows['shadowColorValueCorrected']
         : correctValsShadows['shadowColorValueCorrected']
     }}`.replace(

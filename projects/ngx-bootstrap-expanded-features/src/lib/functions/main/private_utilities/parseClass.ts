@@ -181,10 +181,9 @@ export const parseClass = async (
   if (!!values.importantActive) {
     for (let cssProperty of class2CreateStringed.split(';')) {
       if (!cssProperty.includes('!important') && cssProperty.length > 5) {
-        class2CreateStringed = class2CreateStringed.replace(
-          cssProperty,
-          cssProperty + ' !important'
-        );
+        class2CreateStringed = class2CreateStringed
+          .replace(cssProperty, cssProperty + ' !important')
+          .replace(/(\s?\!important\s?)+/g, ' !important');
       }
     }
   }
