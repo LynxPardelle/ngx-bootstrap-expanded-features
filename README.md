@@ -9,8 +9,9 @@
 - [More Information](#more_info)
 - [Authors](#authors)
 
-## SUPPORT THIS LIBRARY:
-https://www.buymeacoffee.com/lynxpardelle
+## Support this library
+
+[Buy Me a Coffe](https://www.buymeacoffee.com/lynxpardelle)
 
 ## 🧐 IMPORTANT: BREAKING CHANGES, READ BEFORE UPDATE:
 
@@ -32,7 +33,7 @@ We can now use this js library that creates all the css with the classes that ar
 
 ## 🏁 Getting Started <a name = “about”></a>
 
-You can check the full tutorial on this [link](https://bootstrap-expanded-features.vercel.app/)
+You can check the full tutorial on this [link](https://ngx-bootstrap-expanded-features.vercel.app/)
 
 ## ⛏️ More Information <a name = “more_info”></a>
 
