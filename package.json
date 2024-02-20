@@ -25,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/LynxPardelle/ngx-bootstrap-expanded-features"
   },
-  "homepage": "https://ngx-bootstrap-expanded-features.vercel.app/",
+  "homepage": "https://https://lynx-bef.vercel.app/",
   "dependencies": {
     "@angular/animations": "^16.2.2",
     "@angular/common": "^16.2.2",

@@ -27,7 +27,7 @@ We can now use this js library that creates all the css with the classes that ar
 
 ## 🏁 Getting Started <a name = “about”></a>
 
-You can check the full tutorial on this [link](https://bootstrap-expanded-features.vercel.app/)
+You can check the full tutorial on this [link](https://lynx-bef.vercel.app/)
 
 ## ⛏️ More Information <a name = “more_info”></a>
 
