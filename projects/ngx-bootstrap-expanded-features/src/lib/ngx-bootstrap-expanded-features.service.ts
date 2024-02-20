@@ -59,9 +59,7 @@ export class NgxBootstrapExpandedFeaturesService {
   public timesCSSCreated: number = this.values.timesCSSCreated;
   public timeBetweenReCreate: number = this.values.timeBetweenReCreate;
   public useTimer: boolean = this.values.useTimer;
-  constructor() {
-    manage_sheet.checkSheet();
-  }
+  constructor() {}
   public checkSheet = () => manage_sheet.checkSheet();
   public cssCreate = (
     updateBefs: string[] | null = null,
