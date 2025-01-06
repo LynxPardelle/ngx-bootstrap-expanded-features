@@ -1,0 +1,30 @@
+---
+repository:
+  name: ngx-bootstrap-expanded-features
+  description: Too many new features for bootstrap made with javascript for better performance and more options without a large css file.
+  homepage: github.com/LynxPardelle/ngx-bootstrap-expanded-features
+  topics: css, bootstrap, ngx-bootstrap-expanded-features, bootstrap-extended-features
+  has_wiki: false
+  private: false
+  has_issues: false
+  has_projects: false
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+branches:
+  - name: main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+      required_status_checks:
+        strict: true
+        contexts: []
+      enforce_admins: false
+      required_linear_history: true
+      restrictions: null

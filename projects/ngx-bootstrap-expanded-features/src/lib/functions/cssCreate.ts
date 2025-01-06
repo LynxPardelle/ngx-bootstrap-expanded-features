@@ -5,6 +5,7 @@ import { console_log } from "./console_log";
 import { manage_sheet } from "./manage_sheet";
 import { doCssCreate } from "./main/doCssCreate";
 import { doUseTimer } from "./private/doUseTimer";
+import { doUseRecurrentStrategy } from "./private/doUseRecurrentStrategy";
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const cssCreate = {
@@ -23,6 +24,8 @@ export const cssCreate = {
       }
       if (!!values.useTimer) {
         doUseTimer(updateClasses2Create, primordial);
+      } else if (!!values.useRecurrentStrategy) {
+        doUseRecurrentStrategy(updateClasses2Create, primordial);
       } else {
         doCssCreate.start(updateClasses2Create);
       }
