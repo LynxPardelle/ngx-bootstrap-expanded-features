@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngx-bef:build:production"
+              "buildTarget": "ngx-bef:build:production"
             },
             "development": {
-              "browserTarget": "ngx-bef:build:development"
+              "buildTarget": "ngx-bef:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-bef:build"
+            "buildTarget": "ngx-bef:build"
           }
         },
         "test": {
