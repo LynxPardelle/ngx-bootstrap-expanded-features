@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 @Component({
-  selector: 'app-advanced',
-  templateUrl: './advanced.component.html',
-  styleUrls: ['./advanced.component.scss'],
+    selector: 'app-advanced',
+    templateUrl: './advanced.component.html',
+    styleUrls: ['./advanced.component.scss'],
+    standalone: false
 })
 export class AdvancedComponent implements OnInit {
   public abreviationsValues: { [key: string]: string } = {

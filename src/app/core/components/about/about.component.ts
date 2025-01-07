@@ -4,9 +4,10 @@ import { navMenu } from 'src/app/shared/info/navMenu';
 import { INavMenu } from 'src/app/shared/interfaces/naveMenu';
 
 @Component({
-  selector: 'app-about',
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.scss'],
+    selector: 'app-about',
+    templateUrl: './about.component.html',
+    styleUrls: ['./about.component.scss'],
+    standalone: false
 })
 export class AboutComponent implements OnInit {
   public navMenu: INavMenu[] = navMenu;

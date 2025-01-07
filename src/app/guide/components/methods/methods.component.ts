@@ -9,9 +9,10 @@ export interface IMethod {
   [key: string]: string;
 }
 @Component({
-  selector: 'app-methods',
-  templateUrl: './methods.component.html',
-  styleUrls: ['./methods.component.scss'],
+    selector: 'app-methods',
+    templateUrl: './methods.component.html',
+    styleUrls: ['./methods.component.scss'],
+    standalone: false
 })
 export class MethodsComponent implements OnInit {
   public methods: IMethod[] = [

@@ -1,7 +1,8 @@
 import { Directive, Input, Output, EventEmitter } from '@angular/core';
 
 @Directive({
-  selector: '[befInit]',
+    selector: '[befInit]',
+    standalone: false
 })
 export class BefInitDirective {
   @Input() exist!: boolean;

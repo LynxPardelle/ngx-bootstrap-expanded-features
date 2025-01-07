@@ -4,9 +4,10 @@ import { navMenu } from 'src/app/shared/info/navMenu';
 import { INavMenu } from 'src/app/shared/interfaces/naveMenu';
 
 @Component({
-  selector: 'app-aside',
-  templateUrl: './aside.component.html',
-  styleUrls: ['./aside.component.scss'],
+    selector: 'app-aside',
+    templateUrl: './aside.component.html',
+    styleUrls: ['./aside.component.scss'],
+    standalone: false
 })
 export class AsideComponent implements OnInit {
   public navMenu: INavMenu[] = navMenu;

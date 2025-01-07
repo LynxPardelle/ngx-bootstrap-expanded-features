@@ -5,9 +5,10 @@ import {
 } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-combinators',
-  templateUrl: './combinators.component.html',
-  styleUrls: ['./combinators.component.scss'],
+    selector: 'app-combinators',
+    templateUrl: './combinators.component.html',
+    styleUrls: ['./combinators.component.scss'],
+    standalone: false
 })
 export class CombinatorsComponent implements OnInit {
   constructor(private _befService: BefService) {}

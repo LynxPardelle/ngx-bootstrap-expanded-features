@@ -5,9 +5,10 @@ import {
 } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-combos',
-  templateUrl: './combos.component.html',
-  styleUrls: ['./combos.component.scss'],
+    selector: 'app-combos',
+    templateUrl: './combos.component.html',
+    styleUrls: ['./combos.component.scss'],
+    standalone: false
 })
 export class CombosComponent implements OnInit {
   public combos: { [key: string]: string[] } = {

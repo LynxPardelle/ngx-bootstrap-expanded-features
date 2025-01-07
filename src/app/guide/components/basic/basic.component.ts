@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-basic',
-  templateUrl: './basic.component.html',
-  styleUrls: ['./basic.component.scss'],
+    selector: 'app-basic',
+    templateUrl: './basic.component.html',
+    styleUrls: ['./basic.component.scss'],
+    standalone: false
 })
 export class BasicComponent implements OnInit {
   public reservedWords: {

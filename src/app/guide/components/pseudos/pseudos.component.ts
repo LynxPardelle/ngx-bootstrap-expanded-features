@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-pseudos',
-  templateUrl: './pseudos.component.html',
-  styleUrls: ['./pseudos.component.scss'],
+    selector: 'app-pseudos',
+    templateUrl: './pseudos.component.html',
+    styleUrls: ['./pseudos.component.scss'],
+    standalone: false
 })
 export class PseudosComponent implements OnInit {
   public pseudoClasses: string[] = [];

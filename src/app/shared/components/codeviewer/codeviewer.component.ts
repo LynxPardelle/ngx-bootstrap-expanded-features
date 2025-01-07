@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'codeviewer',
-  templateUrl: './codeviewer.component.html',
-  styleUrls: ['./codeviewer.component.scss'],
+    selector: 'codeviewer',
+    templateUrl: './codeviewer.component.html',
+    styleUrls: ['./codeviewer.component.scss'],
+    standalone: false
 })
 export class CodeviewerComponent implements OnInit {
   @Input() code: string = '';

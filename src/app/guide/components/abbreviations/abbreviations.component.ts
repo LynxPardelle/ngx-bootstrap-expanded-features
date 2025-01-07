@@ -5,9 +5,10 @@ import {
 } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-abbreviations',
-  templateUrl: './abbreviations.component.html',
-  styleUrls: ['./abbreviations.component.scss'],
+    selector: 'app-abbreviations',
+    templateUrl: './abbreviations.component.html',
+    styleUrls: ['./abbreviations.component.scss'],
+    standalone: false
 })
 export class AbbreviationsComponent implements OnInit {
   public abreviationsValues: { [key: string]: string } = {

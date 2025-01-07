@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-sizing',
-  templateUrl: './sizing.component.html',
-  styleUrls: ['./sizing.component.scss'],
+    selector: 'app-sizing',
+    templateUrl: './sizing.component.html',
+    styleUrls: ['./sizing.component.scss'],
+    standalone: false
 })
 export class SizingComponent implements OnInit {
   constructor(private _befService: BefService) {}

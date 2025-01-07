@@ -5,9 +5,10 @@ import {
 } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-breakpoints',
-  templateUrl: './breakpoints.component.html',
-  styleUrls: ['./breakpoints.component.scss'],
+    selector: 'app-breakpoints',
+    templateUrl: './breakpoints.component.html',
+    styleUrls: ['./breakpoints.component.scss'],
+    standalone: false
 })
 export class BreakpointsComponent implements OnInit {
   public bps: IBPS[] = [];

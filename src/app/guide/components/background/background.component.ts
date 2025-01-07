@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-background',
-  templateUrl: './background.component.html',
-  styleUrls: ['./background.component.scss'],
+    selector: 'app-background',
+    templateUrl: './background.component.html',
+    styleUrls: ['./background.component.scss'],
+    standalone: false
 })
 export class BackgroundComponent implements OnInit {
   constructor(private _befService: BefService) {}

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-  selector: 'app-testing-library',
-  templateUrl: './testing-library.component.html',
-  styleUrls: ['./testing-library.component.scss'],
+    selector: 'app-testing-library',
+    templateUrl: './testing-library.component.html',
+    styleUrls: ['./testing-library.component.scss'],
+    standalone: false
 })
 export class TestingLibraryComponent implements OnInit {
   public classes2explore: string[] = [
