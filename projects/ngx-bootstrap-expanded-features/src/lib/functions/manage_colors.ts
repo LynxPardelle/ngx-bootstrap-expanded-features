@@ -10,7 +10,7 @@ export const manage_colors = {
     try {
       Object.keys(newColors).forEach((key) => {
         values.colors[key] = newColors[key].replace(
-          "!important" || "!default" || /\s+/g,
+          /!important|!default|(\s{2,})/g,
           ""
         );
       });
@@ -51,7 +51,7 @@ export const manage_colors = {
     try {
       if (values.colors[color.toString()]) {
         values.colors[color] = value.replace(
-          "!important" || "!default" || /\s+/g,
+          /!important|!default|(\s{2,})/g,
           ""
         );
         let classesToUpdate: string[] = [];
