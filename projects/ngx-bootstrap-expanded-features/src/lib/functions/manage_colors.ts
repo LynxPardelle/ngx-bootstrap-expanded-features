@@ -6,13 +6,21 @@ import { cssCreate } from "./cssCreate";
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const manage_colors = {
-  pushColors(newColors: any): void {
+  pushColors(newColors: { [key: string]: string }): void | { errors: string[] } | { success: boolean; message: string } {
+    const errors: string[] = [];
     try {
-      Object.keys(newColors).forEach((key) => {
-        values.colors[key] = newColors[key].replace(
+      Object.keys(newColors).forEach((key: string) => {
+        const cleanedValue = newColors[key].replace(
           /!important|!default|(\s{2,})/g,
           ""
         );
+        if (!!values.commonPropertiesValuesAbreviationsValues.find((abbreviation) => abbreviation === cleanedValue)) {
+          errors.push(
+            `The color name "${key}" is a reserved abbreviation and cannot be used.`
+          );
+          delete newColors[key];
+        }
+        values.colors[key] = cleanedValue;
       });
       for (let color in newColors) {
         let classesToUpdate: string[] = [];
@@ -25,22 +33,30 @@ export const manage_colors = {
           cssCreate.cssCreate(classesToUpdate);
         }
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console_log.consoleLog("error", { err: err });
+      if (err instanceof Error) {
+        errors.push(`Error while pushing colors: ${err.message}`);
+      }
+    }
+    if (errors.length > 0) {
+      return { errors };
+    } else {
+      console_log.consoleLog("info", { colors: values.colors });
+      return {
+        success: true,
+        message: "Colors added successfully.",
+      };
     }
   },
-  getColors(): any {
+  getColors(): { [key: string]: string } {
     console_log.consoleLog("info", { colors: values.colors });
     return values.colors;
   },
   getColorsNames(): string[] {
-    const colorsNames: string[] = [];
-    Object.keys(values.colors).forEach((key) => {
-      colorsNames.push(key);
-    });
-    return colorsNames;
+    return Object.keys(values.colors);
   },
-  getColorValue(color: string): any {
+  getColorValue(color: string): string {
     console_log.consoleLog("info", {
       color: color,
       colorValue: values.colors[color],

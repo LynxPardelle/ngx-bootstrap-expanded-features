@@ -21,7 +21,7 @@ export const valueTraductor = async (
       })
       .map((c) => `(${c})`)
       .join('|');
-    let colorsRegString: string = `(?:${colors})`;
+    let colorsRegString: string = `(?<![a-zA-Z0-9])(${colors})(?![a-zA-Z0-9])`;
     let colorsReg = new RegExp(colorsRegString, 'gi');
     let matches = value.match(colorsReg);
     console_log.consoleLog('info', { matches: matches });

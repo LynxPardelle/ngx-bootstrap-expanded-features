@@ -6,6 +6,8 @@ import { cssNamesParsed } from '../values/cssNamesParsed';
 import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
 /* Functions */
 import { css_camel } from '../functions/css-camel';
+/* Common Properties Values */
+import { commonPropertiesValuesAbreviations } from "../values/commonPropertiesValuesAbreviations";
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
   public indicatorClass: string = 'bef';
@@ -352,6 +354,11 @@ export class ValuesSingleton {
   public useRecurrentStrategy: boolean = true;
   public lastTimeCssCreateEnded: number = Date.now();
   public cssCreateIsActive: boolean = false;
+  /* Common Properties Values Abreviations */
+  public commonPropertiesValuesAbreviations: { [key: string]: string } = commonPropertiesValuesAbreviations;
+  public commonPropertiesValuesAbreviationsValues: string[] = Object.values(
+    this.commonPropertiesValuesAbreviations
+  );
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {
