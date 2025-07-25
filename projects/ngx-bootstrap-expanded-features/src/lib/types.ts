@@ -1,8 +1,10 @@
+import { allPosibleParts, allPosibleSections } from "./values/parts_sections";
+
 const LOG_TYPES = {
-  log: "log",
-  info: "info",
-  trace: "trace",
-  error: "error",
+  log: 'log',
+  info: 'info',
+  trace: 'trace',
+  error: 'error',
 } as const;
 type TObjectValues<T> = T[keyof T];
 export type TLOG_TYPE = TObjectValues<
@@ -17,8 +19,9 @@ export type TConsoleParser = {
   type?: TLOG_TYPE;
   thing: any;
   style?: string;
-  line?: string | null;
+  line?: string;
   stoper?: boolean;
+  showObjectAsString?: boolean;
 };
 export type TPseudo = {
   mask: string;
@@ -29,4 +32,11 @@ export type TAbreviationTraductor = {
   abreviationRegExp: RegExp;
   traduction: string;
   traductionRegExp: RegExp;
+};
+
+export type TLogPartsOptions = (typeof allPosibleParts)[number];
+export type TLogSectionOptions = (typeof allPosibleSections)[number];
+export type TChosenLogSectionOptions = {
+  sections: TLogSectionOptions[];
+  parts: TLogPartsOptions[];
 };

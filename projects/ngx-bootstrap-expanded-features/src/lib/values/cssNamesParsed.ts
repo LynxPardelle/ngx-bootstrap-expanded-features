@@ -14,10 +14,10 @@ export const cssNamesParsed = {
     // Flexbox
   fb: "flex-basis",
   fd: "flex-direction",
-  fwr: "flex-wrap",
+  flwr: "flex-wrap",
   fg: "flex-grow",
   fsh: "flex-shrink",
-  flex: "flex",
+  flx: "flex",
   jc: "justify-content",
   ai: "align-items",
   as: "align-self",
@@ -122,7 +122,7 @@ export const cssNamesParsed = {
 
     // Typography
   fs: "font-size",
-  fwg: "font-weight",
+  fw: "font-weight",
   ff: "font-family",
   fst: "font-style",
   fv: "font-variant",

@@ -1,4 +1,12 @@
 import { console_log } from '../../../functions/console_log';
+/* Types */
+import { TLogPartsOptions } from '../../../types';
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('values4ComboGetter', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('values4ComboGetter', toLog);
+};
 
 type TVals2Sort = {
   index: number;
@@ -7,14 +15,15 @@ type TVals2Sort = {
 export const values4ComboGetter = async (
   class2Create: string
 ): Promise<string[]> => {
+  log(class2Create, 'class2Create');
   if (!!class2Create.includes('VALS')) {
     let valsSource: string = class2Create.split('VALS')[1];
-    console_log.consoleLog('info', { valsSource: valsSource });
+    log(valsSource, 'valsSource');
     let valueReg = new RegExp(/VAL([0-9_]+)N[A-z0-9]+VAL\1N/, 'g');
     if (valueReg.test(valsSource)) {
       let valsToSortSource: RegExpMatchArray | null =
         valsSource.match(valueReg);
-      console_log.consoleLog('info', { valsToSortSource: valsToSortSource });
+      log(valsToSortSource, 'valsToSortSource');
       if (!!valsToSortSource) {
         let valsToSortExtras: TVals2Sort[] = [];
         let valsToSort: TVals2Sort[] = valsToSortSource.map((v: string) => {
@@ -39,9 +48,9 @@ export const values4ComboGetter = async (
           };
         });
         valsToSort = valsToSort.concat(valsToSortExtras);
-        console_log.consoleLog('info', { valsToSort: valsToSort });
+        log(valsToSort, 'valsToSort');
         let valsNotSorted: string[] = valsSource.split('VL');
-        console_log.consoleLog('info', { valsNotSorted: valsNotSorted });
+        log(valsNotSorted, 'valsNotSorted');
         let noValsNotSorted: boolean = false;
         if (valsNotSorted.length >= 1) {
           valsNotSorted.shift();
@@ -49,9 +58,9 @@ export const values4ComboGetter = async (
         if (valsNotSorted.length <= 0) {
           noValsNotSorted = true;
         }
-        console_log.consoleLog('info', { noValsNotSorted: noValsNotSorted });
+        log(noValsNotSorted, 'noValsNotSorted');
         let ocupedIndexes: number[] = valsToSort.map((v) => v.index);
-        console_log.consoleLog('info', { ocupedIndexes: ocupedIndexes });
+        log(ocupedIndexes, 'ocupedIndexes');
         if (!noValsNotSorted) {
           // Sort the valsNotSorted with indexes not used
           let valsNotSortedSorted: TVals2Sort[] = valsNotSorted.map((v) => {
@@ -65,26 +74,22 @@ export const values4ComboGetter = async (
               val: v,
             };
           });
-          console_log.consoleLog('info', {
-            valsNotSortedSorted: valsNotSortedSorted,
-          });
+          log(valsNotSortedSorted, 'valsNotSortedSorted');
           valsNotSortedSorted.sort((v1, v2) => {
             return v1.index - v2.index;
           });
-          console_log.consoleLog('info', {
-            valsNotSortedSortedSorted: valsNotSortedSorted,
-          });
+          log(valsNotSortedSorted, 'valsNotSortedSorted Sorted');
           valsToSort = valsToSort.concat(valsNotSortedSorted);
           valsToSort.sort((v1, v2) => {
             return v1.index - v2.index;
           });
-          console_log.consoleLog('info', { valsToSort: valsToSort });
+          log(valsToSort, 'valsToSort');
         }
         let emptyValsToFillValsSorted: TVals2Sort[] = [];
         let lastValIndex = valsToSort.sort((v1, v2) => {
           return v1.index - v2.index;
         })[valsToSort.length - 1].index;
-        console_log.consoleLog('info', { lastValIndex: lastValIndex });
+        log(lastValIndex, 'lastValIndex');
         for (let i = 0; i < lastValIndex; i++) {
           if (!ocupedIndexes.includes(i)) {
             emptyValsToFillValsSorted.push({
@@ -93,15 +98,13 @@ export const values4ComboGetter = async (
             });
           }
         }
-        console_log.consoleLog('info', {
-          emptyValsToFillValsSorted: emptyValsToFillValsSorted,
-        });
+        log(emptyValsToFillValsSorted, 'emptyValsToFillValsSorted');
         let valsSorted: TVals2Sort[] = valsToSort
           .concat(emptyValsToFillValsSorted)
           .sort((v1, v2) => {
             return v1.index - v2.index;
           });
-        console_log.consoleLog('info', { valsSorted: valsSorted });
+        log(valsSorted, 'valsSorted');
         return valsSorted.map((v) => v.val);
       } else {
         return valsSource.split('VL');

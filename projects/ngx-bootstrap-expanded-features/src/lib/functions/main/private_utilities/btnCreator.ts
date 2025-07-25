@@ -9,7 +9,15 @@ import {
   TNameValProp,
 } from '../private_types/types.private';
 import { propertyNValueCorrector } from './propertyNValueCorrector';
+/* Types */
+import { TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('btnCreator', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('btnCreator', toLog);
+};
 export const btnCreator = async (
   class2Create: string,
   specify: string,
@@ -17,6 +25,13 @@ export const btnCreator = async (
   secondValue: string = 'transparent',
   outline: boolean = false
 ): Promise<string> => {
+  multiLog([
+    [class2Create, 'class2Create'],
+    [specify, 'specify'],
+    [value, 'value'],
+    [secondValue, 'secondValue'],
+    [outline, 'outline'],
+  ]);
   const combinatorsValuesNumbers = combinators.combineArrays<
     TNameVal,
     number,
@@ -31,9 +46,7 @@ export const btnCreator = async (
     },
     { name: 'number', array: [-15, -20, -25, 3] }
   );
-  console_log.consoleLog('info', {
-    combinatorsValuesNumbers: combinatorsValuesNumbers,
-  });
+  log(combinatorsValuesNumbers, 'combinatorsValuesNumbers');
   const shadesArray: TNameVal[] = await Promise.all(
     combinatorsValuesNumbers.map(
       async (a: TNameValNumber): Promise<TNameVal> => {
@@ -44,11 +57,14 @@ export const btnCreator = async (
       }
     )
   );
-  console_log.consoleLog('info', { shadesArray: shadesArray });
+  log(shadesArray, 'shadesArray');
   const shades: { [key: string]: string } =
     combinators.combineIntoObject(shadesArray);
-  console_log.consoleLog('info', { shades: shades });
-  console_log.consoleLog('info', { "shades['value,3']": shades['value,3'] });
+  multiLog([
+    [shades, 'shades'],
+    [shades['value,3'], `shades ['value,3']`],
+    [shades['secondValue,3'], `shades ['secondValue,3']`],
+  ]);
   let shadowColorValue: string = color_transform.opacityCreator(
     shades['value,3'],
     0.5
@@ -57,7 +73,7 @@ export const btnCreator = async (
     shades['secondValue,3'],
     0.5
   );
-  console_log.consoleLog('info', { shadowColorValue: shadowColorValue });
+  log(shadowColorValue, 'shadowColorValue');
   const shadowNumericalValues: string = '0 0 0 0.25rem ';
   const correctVals: { [key: string]: string } = combinators.combineIntoObject(
     await Promise.all(
@@ -111,8 +127,10 @@ export const btnCreator = async (
           })
       )
     );
-  console_log.consoleLog('info', { correctVals: correctVals });
-  console_log.consoleLog('info', { correctValsShadows: correctValsShadows });
+  multiLog([
+    [correctVals, 'correctVals'],
+    [correctValsShadows, 'correctValsShadows'],
+  ]);
   let SpecifyRegex: RegExp = new RegExp(values.specify, 'g');
   let newRuleArray: string[] = [];
   /* Basic Button */
@@ -179,6 +197,6 @@ export const btnCreator = async (
       `.show > .${class2Create}${specify} .dropdown-toggle:focus, .btn-check:checked + .btn-check:focus, .btn-check:active + .${class2Create}${specify}:focus, .${class2Create}${specify}.active:focus, .${class2Create}${specify}:active:focus`
     )
   );
-  console_log.consoleLog('info', { newRuleArray: newRuleArray });
+  log(newRuleArray, 'newRuleArray');
   return newRuleArray.filter((c) => c !== '').join(values.separator);
 };

@@ -24,10 +24,8 @@ export const property2ValueJoiner = async (
           })
           .join('')}}`;
       }
-      break;
     case class2CreateSplited[1].startsWith('link'):
       return ` a${specify}{color:${propertyValues[0]};}`;
-      break;
     case class2CreateSplited[1].startsWith('btnOutline'):
       return await btnCreator(
         class2Create,
@@ -36,14 +34,11 @@ export const property2ValueJoiner = async (
         propertyValues[1] || '',
         true
       );
-      break;
     case class2CreateSplited[1].startsWith('btn'):
       return await btnCreator(class2Create, specify, propertyValues[0]);
-      break;
     default:
       return `${specify}{${css_camel.camelToCSSValid(property)}:${
         propertyValues[0]
       };}`;
-      break;
   }
 };

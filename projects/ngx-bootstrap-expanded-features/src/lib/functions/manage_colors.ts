@@ -1,20 +1,33 @@
 /* Singletons */
-import { ValuesSingleton } from "../singletons/valuesSingleton";
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "./console_log";
-import { cssCreate } from "./cssCreate";
-
+import { console_log } from './console_log';
+import { cssCreate } from './cssCreate';
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('manageColors', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('manageColors', toLog);
+};
 export const manage_colors = {
-  pushColors(newColors: { [key: string]: string }): void | { errors: string[] } | { success: boolean; message: string } {
+  pushColors(newColors: {
+    [key: string]: string;
+  }): void | { errors: string[] } | { success: boolean; message: string } {
     const errors: string[] = [];
     try {
       Object.keys(newColors).forEach((key: string) => {
         const cleanedValue = newColors[key].replace(
           /!important|!default|(\s{2,})/g,
-          ""
+          ''
         );
-        if (!!values.commonPropertiesValuesAbreviationsValues.find((abbreviation) => abbreviation === cleanedValue)) {
+        if (
+          !!values.commonPropertiesValuesAbreviationsValues.find(
+            (abbreviation) => abbreviation === cleanedValue
+          )
+        ) {
           errors.push(
             `The color name "${key}" is a reserved abbreviation and cannot be used.`
           );
@@ -34,7 +47,7 @@ export const manage_colors = {
         }
       }
     } catch (err: unknown) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
       if (err instanceof Error) {
         errors.push(`Error while pushing colors: ${err.message}`);
       }
@@ -42,25 +55,25 @@ export const manage_colors = {
     if (errors.length > 0) {
       return { errors };
     } else {
-      console_log.consoleLog("info", { colors: values.colors });
+      log(values.colors, 'colors');
       return {
         success: true,
-        message: "Colors added successfully.",
+        message: 'Colors added successfully.',
       };
     }
   },
   getColors(): { [key: string]: string } {
-    console_log.consoleLog("info", { colors: values.colors });
+    log(values.colors, 'colors');
     return values.colors;
   },
   getColorsNames(): string[] {
     return Object.keys(values.colors);
   },
   getColorValue(color: string): string {
-    console_log.consoleLog("info", {
-      color: color,
-      colorValue: values.colors[color],
-    });
+    multiLog([
+      [color, 'color'],
+      [values.colors[color], 'colorValue'],
+    ]);
     return values.colors[color];
   },
   updateColor(color: string, value: string): void {
@@ -68,7 +81,7 @@ export const manage_colors = {
       if (values.colors[color.toString()]) {
         values.colors[color] = value.replace(
           /!important|!default|(\s{2,})/g,
-          ""
+          ''
         );
         let classesToUpdate: string[] = [];
         for (let createdClass of values.alreadyCreatedClasses) {
@@ -83,7 +96,7 @@ export const manage_colors = {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   deleteColor(color: string): void {
@@ -94,11 +107,11 @@ export const manage_colors = {
         throw new Error(`There is no color named ${color}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   clearAllColors(): void {
     values.colors = {};
-    console_log.consoleLog("info", { colors: values.colors });
+    log(values.colors, 'colors');
   },
 };

@@ -20,6 +20,8 @@ import { manage_CSSNamesParsed } from './functions/manage_CSSNamesParsed';
 import { manage_CSSRules } from './functions/manage_CSSRules';
 import { manage_sheet } from './functions/manage_sheet';
 import { utility_configurations } from './functions/utility_configurations';
+import { managePartsSections } from './functions/managePartsNSectionsToSeeOnLog';
+import { TLogPartsOptions, TLogSectionOptions } from './types';
 @Injectable({
   providedIn: 'root',
 })
@@ -54,7 +56,6 @@ export class NgxBootstrapExpandedFeaturesService {
   public importantActive: boolean = this.values.importantActive;
   public abreviationTraductors: IAbreviationTraductor[] =
     this.values.abreviationTraductors;
-  public lastCSSCreate: number = this.values.lastCSSCreate;
   public lastTimeAsked2Create: number = this.values.lastTimeAsked2Create;
   public timesCSSCreated: number = this.values.timesCSSCreated;
   public timeBetweenReCreate: number = this.values.timeBetweenReCreate;
@@ -136,9 +137,32 @@ export class NgxBootstrapExpandedFeaturesService {
     type: 'log' | 'info' | 'trace' | 'error' = 'log',
     thing: any,
     style: string = this.values.styleConsole,
-    line: string | null = null,
+    line: string | undefined = undefined,
     stoper: boolean = !this.values.isDebug
   ) => console_log.consoleLog(type, thing, style, line, stoper);
   public consoleParser = (config: IConsoleParser) =>
     console_log.consoleParser(config);
+  /* ManagePartsNSectionsForLog */
+  public pushSection = (newSection: string) =>
+    managePartsSections.pushSection(newSection);
+  public pushPart = (newPart: string) =>
+    managePartsSections.pushPart(newPart);
+  public getChosenSectionsOptions = () =>
+    managePartsSections.getChosenSectionsOptions();
+  public getChosenSectionsOptionsSections = () =>
+    managePartsSections.getChosenSectionsOptionsSections();
+  public getChosenSectionsOptionsParts = () =>
+    managePartsSections.getChosenSectionsOptionsParts();
+  public getAllPosibleSections = () =>
+    managePartsSections.getAllPosibleSections();
+  public getAllPosibleParts = () =>
+    managePartsSections.getAllPosibleParts();
+  public changeSections = (newSections: TLogSectionOptions[]) =>
+    managePartsSections.changeSections(newSections);
+  public changeParts = (newParts: TLogPartsOptions[]) =>
+    managePartsSections.changeParts(newParts);
+  public deleteSection = (sectionToDelete: TLogSectionOptions) =>
+    managePartsSections.deleteSection(sectionToDelete);
+  public deletePart = (partToDelete: TLogPartsOptions) =>
+    managePartsSections.deletePart(partToDelete);
 }

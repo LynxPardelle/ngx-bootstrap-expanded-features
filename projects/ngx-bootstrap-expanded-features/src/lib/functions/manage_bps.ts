@@ -10,8 +10,15 @@ interface WithBefs {
   befs: string; // DEPRECATED
 }
 interface IBPSWithBefs extends IBPS, WithBefs {}
-
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('manageBps', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('manageBps', toLog);
+};
 export const manage_bps = {
   pushBPS(bps: IBPSWithBefs[]): void {
     try {
@@ -33,7 +40,7 @@ export const manage_bps = {
     }
   },
   getBPS(): IBPS[] {
-    console_log.consoleLog("info", { bps: values.bps });
+    log(values.bps, 'bps');
     return values.bps;
   },
 };

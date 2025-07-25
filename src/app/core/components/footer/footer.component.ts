@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 /* NGX-BEF */
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 @Component({
@@ -7,7 +7,7 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
     styleUrls: ['./footer.component.scss'],
     standalone: false
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent implements AfterViewInit {
   public combos: { [key: string]: string[] } = {
     createButton: [
       'bef-bg-randNumA__OPA__0_75',
@@ -26,8 +26,9 @@ export class FooterComponent implements OnInit {
     this._befService.pushCombos(this.combos);
     this._befService.pushColors(this.colors);
   }
-
-  ngOnInit(): void {}
+  ngAfterViewInit() {
+    this.cssCreate();
+  }
 
   cssCreate() {
     this._befService.cssCreate();

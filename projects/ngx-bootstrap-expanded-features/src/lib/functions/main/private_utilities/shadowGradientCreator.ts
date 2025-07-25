@@ -1,9 +1,20 @@
-import { console_log } from '../../console_log';
+import { console_log } from '../../console_log'; /* Types */
+import { TLogPartsOptions } from '../../../types';
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('shadowGradientCreator', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('shadowGradientCreator', toLog);
+};
 
 export const shadowGradientCreator = async (
   shadow: string,
   onlyGradient: boolean = false
 ): Promise<string> => {
+  multiLog([
+    [shadow, 'shadow'],
+    [onlyGradient, 'onlyGradient'],
+  ]);
   let hOffset: string = `0`;
   let vOffset: string = `0`;
   let blur: string = `5`;
@@ -14,14 +25,10 @@ export const shadowGradientCreator = async (
     let numericalValuesRegex: RegExp =
       /(?<![\(#]+)^(inset)?(\s?-?[0-9\.]+(?:(px)|(cm)|(mm)|(pt)|(in)|(pc)|(r?em)|(vmin)|(vh)|(vm(ax)?)|(%)|(vw))?\s?){2,4}/g;
     const numericalValuesMatches = shadow.match(numericalValuesRegex);
-    console_log.consoleLog('info', {
-      numericalValuesMatches: numericalValuesMatches,
-    });
+    log(numericalValuesMatches, 'numericalValuesMatches');
     if (!!numericalValuesMatches) {
       color = shadow.replace(numericalValuesRegex, '');
-      console_log.consoleLog('info', {
-        shadowColor: color,
-      });
+      log(color, 'color');
       let numericalValuesSplit: string[] = shadow.replace(color, '').split(' ');
       if (numericalValuesSplit[0] === 'inset') {
         inset = true;
@@ -34,6 +41,12 @@ export const shadowGradientCreator = async (
       vOffset = numericalValuesSplit[1] || '0';
       blur = numericalValuesSplit[3] || '0';
       spread = numericalValuesSplit[2] || '5';
+      multiLog([
+        [hOffset, 'hOffset'],
+        [vOffset, 'vOffset'],
+        [blur, 'blur'],
+        [spread, 'spread'],
+      ]);
     }
   } else {
     color = shadow;

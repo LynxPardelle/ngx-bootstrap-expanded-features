@@ -3,8 +3,15 @@ import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Funtions */
 import { console_log } from "./console_log";
 import { cssCreate } from "./cssCreate";
-
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('manageCSSNamesParsed', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('manageCSSNamesParsed', toLog);
+};
 export const manage_CSSNamesParsed = {
   pushCssNamesParsed(cssNamesParsed: any): void {
     try {
@@ -17,7 +24,7 @@ export const manage_CSSNamesParsed = {
     }
   },
   getCssNamesParsed(): any {
-    console_log.consoleLog("info", { cssNamesParsed: values.cssNamesParsed });
+    log(values.cssNamesParsed, 'cssNamesParsed');
     return values.cssNamesParsed;
   },
   updateCssNamesParsed(cssNameParsed: string, value: string): void {

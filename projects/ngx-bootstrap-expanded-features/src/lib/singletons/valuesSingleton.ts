@@ -2,12 +2,16 @@
 import { allColors } from '../values/colors';
 /* CssNamesParsed */
 import { cssNamesParsed } from '../values/cssNamesParsed';
+/* Parts & Sections */
+import { defaultChosenSectionOptions } from '../values/parts_sections';
 /* Interfaces */
 import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
 /* Functions */
 import { css_camel } from '../functions/css-camel';
 /* Common Properties Values */
-import { commonPropertiesValuesAbreviations } from "../values/commonPropertiesValuesAbreviations";
+import { commonPropertiesValuesAbreviations } from '../values/commonPropertiesValuesAbreviations';
+/* Types */
+import { TChosenLogSectionOptions } from '../types';
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
   public indicatorClass: string = 'bef';
@@ -345,20 +349,25 @@ export class ValuesSingleton {
     },
   ];
   /* Time Management*/
-  public lastCSSCreate: number = Date.now();
+  public useTimer: boolean = true;
   public lastTimeAsked2Create: number = new Date().getTime();
   public timesCSSCreated: number = 0;
   public timeBetweenReCreate: number = 1000;
-  public useTimer: boolean = true;
+  public lastTimeCssCreateEnded: number = Date.now();
+  // Create a public variable to hold the setTimeOut and type it well
+  public creationPostponed: boolean = false;
+  public setTimeOutID: ReturnType<typeof setTimeout> | null = null;
   /* Recurrent Strategy */
   public useRecurrentStrategy: boolean = true;
-  public lastTimeCssCreateEnded: number = Date.now();
   public cssCreateIsActive: boolean = false;
   /* Common Properties Values Abreviations */
-  public commonPropertiesValuesAbreviations: { [key: string]: string } = commonPropertiesValuesAbreviations;
+  public commonPropertiesValuesAbreviations: { [key: string]: string } =
+    commonPropertiesValuesAbreviations;
   public commonPropertiesValuesAbreviationsValues: string[] = Object.values(
     this.commonPropertiesValuesAbreviations
   );
+  /* Logging */
+  chosenSectionOptions: TChosenLogSectionOptions = defaultChosenSectionOptions;
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {

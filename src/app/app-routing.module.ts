@@ -3,7 +3,6 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 /* Components */
 import { HomeComponent } from './core/components/home/home.component';
 import { AboutComponent } from './core/components/about/about.component';
-import { TestingLibraryComponent } from './core/components/testing-library/testing-library.component';
 import { ErrorComponent } from './core/components/error/error.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,7 +16,7 @@ const routes: Routes = [
       import('./guide/guide.module').then((m) => m.GuideModule),
   },
   /* Test */
-  { path: 'testing', component: TestingLibraryComponent },
+  { path: 'testing', loadChildren: () => import('./testing/testing.module').then((m) => m.TestingModule) },
   /* Error */
   { path: '**', component: ErrorComponent },
 ];

@@ -1,39 +1,67 @@
 /* Singletons */
-import { ValuesSingleton } from "../../singletons/valuesSingleton";
+import { ValuesSingleton } from '../../singletons/valuesSingleton';
 /* Functions */
-import { doCssCreate } from "../main/doCssCreate";
-import { console_log } from "../console_log";
+import { doCssCreate } from '../main/doCssCreate';
+import { console_log } from '../console_log';
+/* Types */
+import { TLogPartsOptions } from '../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('doUseRecurrentStrategy', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('doUseRecurrentStrategy', toLog);
+};
 export const doUseRecurrentStrategy = async (
-    updateClasses2Create: string[] | null = null,
-    primordial: boolean = false,
-    recurrent: boolean = false
+  primordial: boolean = false,
+  recurrent: boolean = false,
+  updateClasses2Create?: string[],
 ): Promise<void> => {
-    if (!recurrent) {
-        values.lastTimeAsked2Create = Date.now();
-    }
-    console_log.consoleLog("info", { useRecurrentStrategy: values.useRecurrentStrategy });
-    // Crea una condición que pase si values.lastTimeCssCreateEnded más values.timeBetweenReCreate es menor que lastTimeAsked2Create
-    if ((values.lastTimeCssCreateEnded + values.timeBetweenReCreate < values.lastTimeAsked2Create ||
-        primordial === true ||
-        values.timesCSSCreated === 0) && !values.cssCreateIsActive) {
-        console_log.consoleLog("info", { recurrent: recurrent });
-        console_log.consoleLog("info", { lastTimeAsked2Create: values.lastTimeAsked2Create });
-        console_log.consoleLog("info", { creationPostponed: false });
-        console_log.consoleLog("info", { lastTimeCssCreateEnded: values.lastTimeCssCreateEnded });
-        console_log.consoleLog("info", { timeBetweenReCreate: values.timeBetweenReCreate });
-        console_log.consoleLog("info", { cssCreateIsActive: values.cssCreateIsActive });
-        console_log.consoleLog("info", { timesCSSCreated: values.timesCSSCreated });
-        console_log.consoleLog("info", { updateClasses2Create: updateClasses2Create });
-        console_log.consoleLog("info", { primordial: primordial });
-        values.timesCSSCreated++;
-        values.cssCreateIsActive = true;
-        const lastTimeCssCreateEnded: number = await doCssCreate.start(updateClasses2Create);
-        values.lastTimeCssCreateEnded = lastTimeCssCreateEnded;
-        console_log.consoleLog("info", { lastTimeCssCreateEnded: values.lastTimeCssCreateEnded });
-        values.cssCreateIsActive = false;
-        doUseRecurrentStrategy(updateClasses2Create, false, true);
-    } else if (!recurrent) {
-        console_log.consoleLog("info", { creationPostponed: true });
-    }
+  multiLog([
+    [updateClasses2Create, 'updateClasses2Create'],
+    [primordial, 'primordial'],
+    [recurrent, 'recurrent'],
+  ]);
+  if (!recurrent) {
+    values.lastTimeAsked2Create = Date.now();
+  }
+  multiLog([
+    [values.useRecurrentStrategy, 'useRecurrentStrategy'],
+    [values.lastTimeAsked2Create, 'lastTimeAsked2Create'],
+    [new Date(values.lastTimeAsked2Create), 'lastTimeAsked2Create as Date'],
+    [values.lastTimeCssCreateEnded, 'lastTimeCssCreateEnded'],
+    [new Date(values.lastTimeCssCreateEnded), 'lastTimeCssCreateEnded as Date'],
+    [values.timeBetweenReCreate, 'timeBetweenReCreate'],
+    [values.cssCreateIsActive, 'cssCreateIsActive'],
+    [values.timesCSSCreated, 'timesCSSCreated'],
+  ]);
+  if (
+    (values.lastTimeCssCreateEnded + values.timeBetweenReCreate <
+      values.lastTimeAsked2Create ||
+      primordial === true ||
+      values.timesCSSCreated === 0) &&
+    !values.cssCreateIsActive
+  ) {
+    log(false, 'creationPostponed');
+    values.timesCSSCreated++;
+    values.cssCreateIsActive = true;
+    values.lastTimeCssCreateEnded = await doCssCreate(
+      updateClasses2Create
+    );
+    values.cssCreateIsActive = false;
+    multiLog([
+      [values.timesCSSCreated, 'timesCSSCreated after doCssCreate'],
+      [
+        values.lastTimeCssCreateEnded,
+        'lastTimeCssCreateEnded after doCssCreate',
+      ],
+      [
+        new Date(values.lastTimeCssCreateEnded),
+        'lastTimeCssCreateEnded as Date after doCssCreate',
+      ],
+    ]);
+    doUseRecurrentStrategy(false, true, updateClasses2Create);
+  } else if (!recurrent) {
+    log(true, 'creationPostponed');
+  }
 };

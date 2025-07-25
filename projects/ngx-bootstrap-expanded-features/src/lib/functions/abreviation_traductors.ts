@@ -2,16 +2,26 @@
 import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Functions */
 import { console_log } from "./console_log";
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('abreviationTraductors', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('abreviationTraductors', toLog);
+};
 export const abreviation_traductors = {
   abreviationTraductor(
     value: string,
     type: "traduce" | "convert" = "traduce"
   ): string {
+    multiLog([
+      [value, 'value'],
+      [type, 'type'],
+    ]);
     if (value !== undefined) {
-      console_log.consoleLog("info", {
-        value_beforeAbreviationTraductor: value,
-      });
+      log(value, 'value BeforeAbreviationTraductor');
       for (const abr of values.abreviationTraductors) {
         let traduction: string = abr.traduction;
         let abreviation: string | RegExp = abr.abreviation;
@@ -23,9 +33,7 @@ export const abreviation_traductors = {
           value = value.replace(traductionRegExp, abreviation);
         }
       }
-      console_log.consoleLog("info", {
-        value_afterAbreviationTraductor: value,
-      });
+      log(value, 'value AfterAbreviationTraductor');
     }
     return value;
   },

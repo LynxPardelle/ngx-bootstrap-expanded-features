@@ -1,26 +1,38 @@
 import { console_log } from "../../../functions/console_log";
+/* Types */
+import { TLogPartsOptions } from '../../../types';
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('valueComboReplacer', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('valueComboReplacer', toLog);
+};
 export const valueComboReplacer = async (
   c: string,
   vals: string[]
 ): Promise<string> => {
+  multiLog([
+    [c, 'c'],
+    [vals, 'vals'],
+  ]);
   let reg = new RegExp(/VAL[0-9]+(DEF.*DEF)?/, "g");
   if (reg.test(c)) {
     let matches = c.match(reg);
-    console_log.consoleLog("info", { matches: matches });
+    log(matches, 'matches');
     if (!!matches) {
       for (let match of matches) {
-        console_log.consoleLog("info", { match: match });
+        log(match, 'match');
         let val = parseInt(match.split("VAL")[1].split("DEF")[0]);
-        console_log.consoleLog("info", { val: val });
+        log(val, 'val');
         let valueToMatch = `VAL${val}(DEF.*DEF)?`;
         let valueReg = new RegExp(valueToMatch, "g");
-        console_log.consoleLog("info", {
-          valueToMatch: valueToMatch,
-        });
+        log(valueToMatch, 'valueToMatch');
         let def = match.split("DEF")[1];
-        console_log.consoleLog("info", { def: def });
-        console_log.consoleLog("info", { vals: vals });
-        console_log.consoleLog("info", { vals_val: vals[val] });
+        multiLog([
+          [def, 'def'],
+          [vals, 'vals'],
+          [vals[val], 'vals_val'],
+        ]);
         if (
           !!vals[val] &&
           vals[val] !== "" &&
@@ -31,7 +43,7 @@ export const valueComboReplacer = async (
           if (/VAL[0-9]+/.test(vals[val])) {
             /* When you want to use another defined value */
             let valval = vals[val].replace(/VAL/g, "");
-            console_log.consoleLog("info", { valval: valval });
+            log(valval, 'valval');
             c = c.replace(
               valueReg,
               vals[parseInt(valval)] &&
@@ -41,16 +53,16 @@ export const valueComboReplacer = async (
                 ? def
                 : ""
             );
-            console_log.consoleLog("info", { c: c });
+            log(c, 'c');
           } else {
             /* When you defined a custom value */
             c = c.replace(valueReg, vals[val]);
-            console_log.consoleLog("info", { c: c });
+            log(c, 'c');
           }
         } else {
           /* When you dont define a value its defined the default value */
           c = c.replace(valueReg, def ? def : "");
-          console_log.consoleLog("info", { c: c });
+          log(c, 'c');
         }
       }
       return c;

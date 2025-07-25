@@ -3,8 +3,15 @@ import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Funtions */
 import { console_log } from "./console_log";
 import { cssCreate } from "./cssCreate";
-
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('manageCombos', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('manageCombos', toLog);
+};
 export const manage_combos = {
   pushCombos(combos: any): void {
     try {
@@ -34,7 +41,7 @@ export const manage_combos = {
     }
   },
   getCombos(): any {
-    console_log.consoleLog("info", { combos: values.combos });
+    log(values.combos, 'combos');
     return values.combos;
   },
   updateCombo(combo: string, newValues: string[]): void {

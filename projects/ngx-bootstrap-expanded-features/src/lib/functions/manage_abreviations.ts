@@ -3,8 +3,15 @@ import { ValuesSingleton } from "../singletons/valuesSingleton";
 /* Funtions */
 import { console_log } from "./console_log";
 import { cssCreate } from "./cssCreate";
-
+/* Types */
+import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('manageAbreviations', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('manageAbreviations', toLog);
+};
 export const manage_abreviations = {
   pushAbreviationsValues(abreviationsValues: any): void {
     try {
@@ -45,15 +52,11 @@ export const manage_abreviations = {
     }
   },
   getAbreviationsClasses(): any {
-    console_log.consoleLog("info", {
-      abreviationsClasses: values.abreviationsClasses,
-    });
+    log(values.abreviationsClasses, 'abreviationsClasses');
     return values.abreviationsClasses;
   },
   getAbreviationsValues(): any {
-    console_log.consoleLog("info", {
-      abreviationsValues: values.abreviationsValues,
-    });
+    log(values.abreviationsValues, 'abreviationsValues');
     return values.abreviationsValues;
   },
   updateAbreviationsClass(abreviationsClass: string, value: string): void {

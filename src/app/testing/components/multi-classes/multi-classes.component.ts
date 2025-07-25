@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
-    selector: 'app-testing-library',
-    templateUrl: './testing-library.component.html',
-    styleUrls: ['./testing-library.component.scss'],
-    standalone: false
+  selector: 'app-multi-classes',
+  templateUrl: './multi-classes.component.html',
+  styleUrl: './multi-classes.component.scss',
+  standalone: false,
 })
-export class TestingLibraryComponent implements OnInit {
+export class MultiClassesComponent implements OnInit {
   public classes2explore: string[] = [
     'firstBox span',
     'bef-w-85per bef-bg-success bef-text-info bef-p-3rem bef-bgLastChild-lavender bef-pNthChildSD2ED-2rem span-span',
@@ -51,13 +51,12 @@ export class TestingLibraryComponent implements OnInit {
       'bef-w-85per bef-border-bor1 bef-bg-VAL1DEFabyssDEF bef-text-aqua bef-p-1_5rem bef-bgFirstChildHover-maroon bef-bgSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarning-dark bef-bcSEL__spanCOM_btnMINwarningFocus-dark tsSCBMW-warning bef-mySEL__spanCOM_btnMINwarning-2rem',
     ],
   };
-  constructor(private _befService: BefService) {}
 
+  constructor(private _befService: BefService) {}
   ngOnInit(): void {
     this._befService.pushAbreviationsValues(this.abreviationsValues);
     this._befService.pushAbreviationsClasses(this.abreviationsClasses);
     this._befService.pushCombos(this.combos);
-    this._befService.changeDebugOption(true);
     this.cssCreate();
     let interval = setInterval(() => {
       this.createNewExample();
@@ -65,7 +64,6 @@ export class TestingLibraryComponent implements OnInit {
     setTimeout(() => {
       clearInterval(interval);
     }, 10000);
-    this.TestingFunction();
   }
 
   createNewExample() {
@@ -80,7 +78,6 @@ export class TestingLibraryComponent implements OnInit {
     this.examples.push(class2Explore);
     this.cssCreate();
   }
-  TestingFunction() {}
 
   cssCreate() {
     this._befService.cssCreate();

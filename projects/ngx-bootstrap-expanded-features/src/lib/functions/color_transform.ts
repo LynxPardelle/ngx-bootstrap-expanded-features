@@ -1,7 +1,15 @@
 /* Singletons */
 import { ValuesSingleton } from '../singletons/valuesSingleton';
+/* Types */
+import { TLogPartsOptions } from '../types';
 /* Funtions */
 import { console_log } from './console_log';
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('colorTransform', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('colorTransform', toLog);
+};
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 export const color_transform = {
@@ -244,31 +252,27 @@ export const color_transform = {
   opacityCreator(value: string, opacity: number): string {
     if (value.includes('gradient')) {
       const colorMatches = this.separateColor4Transform(value);
-      console_log.consoleLog('info', { colorMatches: colorMatches });
+      log( colorMatches, 'colorMatches');
       if (!!colorMatches) {
         for (let colorMatch of colorMatches) {
-          console_log.consoleLog('info', {
-            valuePreSeparateColor4TransformPreCB: value,
-          });
+          log(value, 'value Pre SeparateColor4TransformPreCB');
           value = value.replace(
             colorMatch,
             this.opacityCreator(colorMatch, opacity)
           );
-          console_log.consoleLog('info', {
-            valuePostSeparateColor4TransformPostCB: value,
-          });
+          log(value, 'value Post SeparateColor4TransformPostCB');
         }
-        console_log.consoleLog('info', {
-          valuePostSeparateColor4Transform: value,
-        });
+        log(value, 'value Post SeparateColor4Transform');
         return value;
       } else {
         return value;
       }
     } else {
       let shade3Split: number[] = this.colorToRGB(value);
-      console_log.consoleLog('info', { shade3Split: shade3Split });
-      console_log.consoleLog('info', { shade3SplitLength: shade3Split.length });
+      multiLog([
+        [shade3Split, 'shade3Split'],
+        [shade3Split.length, 'shade3Split Length'],
+      ]);
       if (shade3Split.length === 4) {
         shade3Split[3] = opacity;
       } else {
@@ -280,23 +284,17 @@ export const color_transform = {
   getShadeTintColorOrGradient(tintValue: number, value: string): string {
     if (value.includes('gradient')) {
       const colorMatches = this.separateColor4Transform(value);
-      console_log.consoleLog('info', { colorMatches: colorMatches });
+      log(colorMatches, 'colorMatches');
       if (!!colorMatches) {
         for (let colorMatch of colorMatches) {
-          console_log.consoleLog('info', {
-            valuePreSeparateColor4TransformPreCB: value,
-          });
+          log(value, 'value Pre SeparateColor4TransformPreCB');
           value = value.replace(
             colorMatch,
             this.getShadeTintColorOrGradient(tintValue, colorMatch)
           );
-          console_log.consoleLog('info', {
-            valuePostSeparateColor4TransformPostCB: value,
-          });
+          log(value, 'value Post SeparateColor4TransformPostCB');
         }
-        console_log.consoleLog('info', {
-          valuePostSeparateColor4Transform: value,
-        });
+        log(value, 'value Post SeparateColor4Transform');
         return value;
       } else {
         return value;
@@ -308,7 +306,7 @@ export const color_transform = {
     }
   },
   separateColor4Transform(value: string): RegExpMatchArray | null {
-    console_log.consoleLog('info', { valuePreSeparateColor4Transform: value });
+    log(value, 'value Pre SeparateColor4Transform');
     const colorReg: RegExp = new RegExp(
       /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
     );

@@ -1,16 +1,24 @@
 /* Singletons */
-import { ValuesSingleton } from "../../singletons/valuesSingleton";
+import { ValuesSingleton } from '../../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "../console_log";
-
+import { console_log } from '../console_log';
+/* Types */
+import { TLogPartsOptions } from '../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('createMediaRule', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('createMediaRule', toLog);
+};
 export const createMediaRule = (rule: string): void => {
+  log(rule, 'rule');
   let index;
   let originalRule: any = [...values.sheet.cssRules].some(
     (cssRule: any, i: number) => {
       if (
         cssRule.cssText.includes(
-          rule.split("{")[0].replace("\n", "").replace(/\s+/g, " ")
+          rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
         )
       ) {
         index = i;
@@ -26,11 +34,11 @@ export const createMediaRule = (rule: string): void => {
             /* .includes(
                     rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
                   ) */
-            .split(" ")
+            .split(' ')
             .find((aC: string) => {
               return (
-                aC.replace(".", "") ===
-                rule.split("{")[0].replace("\n", "").replace(/\s+/g, " ")
+                aC.replace('.', '') ===
+                rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
               );
             })
         /*
@@ -43,6 +51,6 @@ export const createMediaRule = (rule: string): void => {
   if (originalRule) {
     values.sheet.deleteRule(index);
   }
-  console_log.consoleLog("info", { rule: rule });
+  log(rule, 'rule');
   values.sheet.insertRule(rule, values.sheet.cssRules.length);
 };

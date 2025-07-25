@@ -2,16 +2,29 @@ import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 import { abreviation_traductors } from '../../abreviation_traductors';
 import { console_log } from '../../console_log';
 import { color_transform } from './../../color_transform';
+/* Types */
+import { TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('valueTraductor', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('valueTraductor', toLog);
+};
 export const valueTraductor = async (
   value: string,
   property: string
 ): Promise<string> => {
+  multiLog([
+    [value, 'value'],
+    [property, 'property'],
+  ]);
   value = abreviation_traductors.abreviationTraductor(
     !!values.abreviationsValues[value]
       ? values.abreviationsValues[value]
       : value
   );
+  log(value, 'value After AbreviationTraductor');
   if (!property.includes('content')) {
     value = await opaParser(value);
     // MatchForColors and ReplaceForColors
@@ -24,13 +37,13 @@ export const valueTraductor = async (
     let colorsRegString: string = `(?<![a-zA-Z0-9])(${colors})(?![a-zA-Z0-9])`;
     let colorsReg = new RegExp(colorsRegString, 'gi');
     let matches = value.match(colorsReg);
-    console_log.consoleLog('info', { matches: matches });
+    log(matches, 'matches');
     if (!!matches) {
       for (let match of matches) {
-        console_log.consoleLog('info', { match: match });
+        log(match, 'match');
         let realColor: string | undefined =
           values.colors[match.replace(/\s/g, '')];
-        console_log.consoleLog('info', { realColor: realColor });
+        log(realColor, 'realColor');
         let realColorValue: string = realColor;
         switch (true) {
           case !!realColor &&
@@ -46,10 +59,10 @@ export const valueTraductor = async (
           default:
             realColorValue = realColorValue;
         }
-        console_log.consoleLog('info', { realColorValue: realColorValue });
+        log(realColorValue, 'realColorValue');
         if (!!realColorValue) {
           value = value.replace(match, realColorValue);
-          console_log.consoleLog('info', { value: value });
+          log(value, 'value');
         }
       }
     }
@@ -58,7 +71,10 @@ export const valueTraductor = async (
 };
 export const opaParser = async (value: string): Promise<string> => {
   let hasOPA: boolean = value.includes('OPA');
-  console_log.consoleLog('info', { hasOPA: hasOPA, value: value });
+  multiLog([
+    [hasOPA, 'hasOPA'],
+    [value, 'value'],
+  ]);
   if (!!hasOPA) {
     const reg = new RegExp(
       /(?:([A-z0-9#]*)|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))\s?OPA\s?0\.[0-9]*/gi

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap-expanded-features';
 
 @Component({
@@ -7,10 +7,10 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
     styleUrls: ['./header.component.scss'],
     standalone: false
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements AfterViewInit {
   constructor(private _befService: BefService) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.cssCreate();
   }
 

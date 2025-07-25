@@ -2,9 +2,17 @@
 import { ValuesSingleton } from "../../singletons/valuesSingleton";
 /* Funtions */
 import { console_log } from "../console_log";
-
+/* Types */
+import { TLogPartsOptions } from '../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('createSimpleRule', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('createSimpleRule', toLog);
+};
 export const createSimpleRule = (rule: string): void => {
+  log(rule, 'rule');
   let originalMediaRules: boolean = false;
   let rulesParsed: string[] = rule
     .replace(/{/g, values.separator)
@@ -54,7 +62,7 @@ export const createSimpleRule = (rule: string): void => {
             css.deleteRule(index);
           }
           let newRule: string = `${rulesParsed[i]}{${rulesParsed[i + 1]}}`;
-          console_log.consoleLog("info", { newRule: newRule });
+          log(newRule, 'newRule');
           css.insertRule(newRule, css.cssRules.length);
           i = i + 2;
         }
@@ -62,7 +70,7 @@ export const createSimpleRule = (rule: string): void => {
     });
   }
   if (originalMediaRules === false) {
-    console_log.consoleLog("info", { rule: rule });
+    log(rule, 'rule');
     values.sheet.insertRule(rule, values.sheet.cssRules.length);
   }
 };

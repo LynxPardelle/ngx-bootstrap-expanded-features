@@ -1,15 +1,27 @@
 import { IPseudo } from "../../../interfaces";
 import { ValuesSingleton } from "../../../singletons/valuesSingleton";
 import { console_log } from "../../console_log";
+/* Types */
+import { TLogPartsOptions } from '../../../types';
 const values = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('convertPseudos', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('convertPseudos', toLog);
+};
 export const convertPseudos = (
   thing: string,
   remove: boolean = false
 ): string => {
-  console_log.consoleLog("info", { thing_beforeconvertPseudos: thing });
+  multiLog([
+    [thing, 'thing'],
+    [remove, 'remove'],
+  ]);
   let pseudoFiltereds: IPseudo[] = values.pseudos.filter((pseudo: IPseudo) => {
     return thing.includes(pseudo.mask);
   });
+  log(pseudoFiltereds, 'pseudoFiltereds');
   pseudoFiltereds.forEach((pse: IPseudo) => {
     let regMask = new RegExp(":*" + pse.mask, "gi");
     switch (true) {
@@ -36,6 +48,6 @@ export const convertPseudos = (
           : ""
       );
   });
-  console_log.consoleLog("info", { thing_afterconvertPseudos: thing });
+  log(thing, 'thing After convertPseudos');
   return thing;
 };

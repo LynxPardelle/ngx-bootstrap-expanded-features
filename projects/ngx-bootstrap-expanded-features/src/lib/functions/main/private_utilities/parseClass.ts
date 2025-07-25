@@ -10,8 +10,15 @@ import { look4BPNVals } from './look4BPNVals';
 import { valueTraductor } from './valueTraductor';
 import { decryptCombo } from './decryptCombo';
 import { property2ValueJoiner } from './property2ValueJoiner';
-
+/* Types */
+import { TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+const log = (t: any, p?: TLogPartsOptions) => {
+  console_log.betterLogV1('parseClass', t, p);
+};
+const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
+  console_log.multiBetterLogV1('parseClass', toLog);
+};
 interface IparseClassReturn {
   class2Create: string;
   bpsStringed: IBPS[];
@@ -21,10 +28,16 @@ export const parseClass = async (
   class2Create: string,
   bpsStringed: IBPS[],
   classes2CreateStringed: string,
-  updateClasses2Create: string[] | null = null
+  isClean: boolean = true
 ): Promise<IparseClassReturn> => {
+  multiLog([
+    [class2Create, 'class2Create'],
+    [bpsStringed, 'bpsStringed'],
+    [classes2CreateStringed, 'classes2CreateStringed'],
+    [isClean, 'isClean'],
+  ]);
   // Check if already created CssClass and return if it is
-  if (!updateClasses2Create) {
+  if (isClean) {
     if (
       values.alreadyCreatedClasses.find((aC: any) => {
         return aC === class2Create;
@@ -40,15 +53,16 @@ export const parseClass = async (
         bpsStringed: bpsStringed,
         classes2CreateStringed: classes2CreateStringed,
       };
+    } else {
+      values.alreadyCreatedClasses.push(class2Create);
     }
   } else {
     values.alreadyCreatedClasses.push(class2Create);
   }
+  log(values.alreadyCreatedClasses, 'alreadyCreatedClasses');
   // Get the class for the final string from the original class2Create after the conversion of the abreviations
   let class2CreateStringed = '.' + class2Create;
-  console_log.consoleLog('info', {
-    class2CreateStringed: class2CreateStringed,
-  });
+  log(class2CreateStringed, 'class2CreateStringed');
   // De-abreviate the class if it has abreviations
   if (!class2Create.includes(values.indicatorClass)) {
     let abbrClss = Object.keys(values.abreviationsClasses).find((aC) =>
@@ -68,9 +82,7 @@ export const parseClass = async (
     [2] => bp or the first|unique value
    */
   let class2CreateSplited = class2Create.split('-');
-  console_log.consoleLog('info', {
-    class2CreateSplited: class2CreateSplited,
-  });
+  log(class2CreateSplited, 'class2CreateSplited');
   // Convert the pseudos from camel case into valid pseudo and separate pseudos and combinators from the property
   let comboCreatedKey: string | undefined = Object.keys(
     values.combosCreated
@@ -89,13 +101,13 @@ export const parseClass = async (
   )
     .replace(/SEL/g, values.separator)
     .split(`${values.separator}`);
-  console_log.consoleLog('info', {
-    classWithPseudosConvertedAndSELSplited:
-      classWithPseudosConvertedAndSELSplited,
-  });
+  log(
+    classWithPseudosConvertedAndSELSplited,
+    'classWithPseudosConvertedAndSELSplited'
+  );
   // Declaring the property to create the combinations and use Pseudos
   let property = classWithPseudosConvertedAndSELSplited[0];
-  console_log.consoleLog('info', { property: property });
+  log(property, 'property');
   // Getting the specify to traduce the library abreviations to utilizable css notation
   let specify = abreviation_traductors.abreviationTraductor(
     classWithPseudosConvertedAndSELSplited
@@ -124,48 +136,47 @@ export const parseClass = async (
       comboCreatedKey
     );
   }
-  console_log.consoleLog('info', { specify: specify });
+  log(specify, 'specify');
   // Decrypt the combo of the class if it has been encrypted with the encryptCombo flag
   if (!!specify && values.encryptCombo) {
-    console_log.consoleLog('info', {
-      specifyPreDecryptCombo: specify,
-      class2CreatePreDecryptCombo: class2Create,
-      class2CreateStringedPreDecryptCombo: class2CreateStringed,
-    });
+    multiLog([
+      [specify, 'specify PreDecryptCombo'],
+      [class2Create, 'class2Create PreDecryptCombo'],
+      [class2CreateStringed, 'class2CreateStringed PreDecryptCombo'],
+    ]);
     [specify, class2Create, class2CreateStringed] = await decryptCombo(
       specify,
       class2Create,
       class2CreateStringed
     );
-    console_log.consoleLog('info', {
-      specifyPostDecryptCombo: specify,
-      class2CreatePostDecryptCombo: class2Create,
-      class2CreateStringedPostDecryptCombo: class2CreateStringed,
-    });
+    multiLog([
+      [specify, 'specify PostDecryptCombo'],
+      [class2Create, 'class2Create PostDecryptCombo'],
+      [class2CreateStringed, 'class2CreateStringed PostDecryptCombo'],
+    ]);
   }
   // Getting if the class has breakPoints, the value and the second value if it has
   let [hasBP, propertyValues] = Object.values(
     await look4BPNVals(class2CreateSplited)
   );
-  console_log.consoleLog('info', {
-    hasBP: hasBP,
-    propertyValues: propertyValues,
-  });
+  multiLog([
+    [hasBP, 'hasBP'],
+    [propertyValues, 'propertyValues'],
+  ]);
   // Traducing the values to the css notation
   propertyValues = await Promise.all(
     propertyValues.map(async (pv: string) => {
       return await valueTraductor(pv, property);
     })
   );
-  console_log.consoleLog('info', {
-    propertyValues: propertyValues,
-  });
+  log(propertyValues, 'propertyValues');
   if (!propertyValues[0]) {
     propertyValues[0] = 'default';
   }
-  console_log.consoleLog('info', {
-    class2CreateStringedBeforeProperty2ValueJoiner: class2CreateStringed,
-  });
+  multiLog([
+    [propertyValues, 'propertyValues AfterValueTraductor'],
+    [class2CreateSplited, 'class2CreateStringed BeforeProperty2ValueJoiner'],
+  ]);
   // Joining the property and the values
   class2CreateStringed += await property2ValueJoiner(
     property,
@@ -174,9 +185,7 @@ export const parseClass = async (
     propertyValues,
     specify
   );
-  console_log.consoleLog('info', {
-    class2CreateStringedAfterProperty2ValueJoiner: class2CreateStringed,
-  });
+  log(class2CreateStringed, 'class2CreateStringed AfterProperty2ValueJoiner');
   // Put the important flag if it is active
   if (!!values.importantActive) {
     for (let cssProperty of class2CreateStringed.split(';')) {
@@ -187,9 +196,7 @@ export const parseClass = async (
       }
     }
   }
-  console_log.consoleLog('info', {
-    class2CreateStringedAfterImportant: class2CreateStringed,
-  });
+  log(class2CreateStringed, 'class2CreateStringed AfterImportant');
   if (
     class2CreateStringed.includes('{') &&
     class2CreateStringed.includes('}')
@@ -209,9 +216,11 @@ export const parseClass = async (
       classes2CreateStringed += class2CreateStringed + values.separator;
     }
   }
-  console_log.consoleLog('info', {
-    classes2CreateStringedAfterSeparators: classes2CreateStringed,
-  });
+  multiLog([
+    [class2Create, 'class2Create AfterSeparators'],
+    [bpsStringed, 'bpsStringed AfterSeparators'],
+    [classes2CreateStringed, 'classes2CreateStringed AfterSeparators'],
+  ]);
   return {
     class2Create: class2Create,
     bpsStringed: bpsStringed,

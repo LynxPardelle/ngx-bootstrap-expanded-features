@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './core/components/header/header.component';
 import { AsideComponent } from './core/components/aside/aside.component';
 import { FooterComponent } from './core/components/footer/footer.component';
-import { TestingLibraryComponent } from './core/components/testing-library/testing-library.component';
 import { HomeComponent } from './core/components/home/home.component';
 import { AboutComponent } from './core/components/about/about.component';
 import { ErrorComponent } from './core/components/error/error.component';
@@ -19,7 +18,6 @@ import { SharedModule } from './shared/shared.module';
     HeaderComponent,
     AsideComponent,
     FooterComponent,
-    TestingLibraryComponent,
     HomeComponent,
     AboutComponent,
     ErrorComponent,
