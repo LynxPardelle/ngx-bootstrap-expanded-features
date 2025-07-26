@@ -24,6 +24,67 @@ interface IparseClassReturn {
   bpsStringed: IBPS[];
   classes2CreateStringed: string;
 }
+/**
+ * Parses a CSS class string and converts it into valid CSS rules with breakpoint support.
+ * 
+ * This function takes a class name with abbreviated CSS properties and values, processes it through
+ * various transformations including abbreviation expansion, pseudo-class conversion, breakpoint handling,
+ * and value translation to generate valid CSS rules.
+ * 
+ * @param class2Create - The CSS class name to parse and create (may contain abbreviations)
+ * @param bpsStringed - Array of breakpoint objects containing breakpoint information
+ * @param classes2CreateStringed - Accumulated string of CSS classes being created
+ * @param isClean - Whether to check for already created classes to avoid duplicates (default: true)
+ * 
+ * @returns Promise resolving to an object containing:
+ *   - class2Create: The processed class name
+ *   - bpsStringed: Updated breakpoint array with new CSS rules
+ *   - classes2CreateStringed: Updated accumulated CSS classes string
+ * 
+ * @example
+ * ```typescript
+ * await parseClass('bef-overflowX-hidden', [], '', true): 
+ * {
+ *   class2Create: 'lib-margin-10',
+ *   bpsStringed: [
+ *      {
+ *        "bp": "sm",
+ *        "value": "576px",
+ *        "class2Create": ""
+ *      },
+ *      {
+ *        "bp": "md",
+ *        "value": "768px",
+ *        "class2Create": ""
+ *      },
+ *      {
+ *        "bp": "lg",
+ *        "value": "992px",
+ *        "class2Create": ""
+ *      },
+ *      {
+ *        "bp": "xl",
+ *        "value": "1200px",
+ *        "class2Create": ""
+ *      },
+ *      {
+ *        "bp": "xxl",
+ *        "value": "1400px",
+ *        "class2Create": ""
+ *      }
+ *   ],
+ *   classes2CreateStringed: '.bef-overflowX-hidden{overflow-x:hidden !important;}þµÞ'
+ * }
+ * ```
+ * 
+ * @remarks
+ * - Handles abbreviation expansion (e.g., 'm' to 'margin')
+ * - Processes pseudo-classes and combinators
+ * - Supports breakpoint-specific styling
+ * - Applies important flags when active
+ * - Maintains cache of already created classes to prevent duplicates
+ * - Supports encrypted combo classes when encryption is enabled
+ */
 export const parseClass = async (
   class2Create: string,
   bpsStringed: IBPS[],
@@ -216,6 +277,7 @@ export const parseClass = async (
       classes2CreateStringed += class2CreateStringed + values.separator;
     }
   }
+  classes2CreateStringed = classes2CreateStringed.replace(/\s+/g, ' ');
   multiLog([
     [class2Create, 'class2Create AfterSeparators'],
     [bpsStringed, 'bpsStringed AfterSeparators'],

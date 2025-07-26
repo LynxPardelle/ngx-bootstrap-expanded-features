@@ -70,7 +70,9 @@ export const allPosibleParts: string[] = [
   'specify',
   'hasBP',
   'propertyValues',
+  /* decryptCombo */
   'cs',
+  'comboDecrypted',
   /* send2CreateRules */
   'bp',
   /* abreviationTraductors */
@@ -78,6 +80,7 @@ export const allPosibleParts: string[] = [
   /* convertPseudos */
   'thing',
   'remove',
+  'pseudoFiltereds',
   /* valueTraductor */
   'realColor',
   'realColorValue',
