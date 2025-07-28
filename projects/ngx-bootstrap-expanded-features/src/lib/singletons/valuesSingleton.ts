@@ -20,7 +20,7 @@ export class ValuesSingleton {
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
   public combosCreated: { [key: string]: string } = {};
-  public encryptCombo: boolean = true;
+  public encryptCombo: boolean = false;
   public encryptComboCharacters: string = '■■■';
   public encryptComboCreatedCharacters: string = '🜔🜔🜔';
   public cssNamesParsed: { [key: string]: string | string[] } = cssNamesParsed;

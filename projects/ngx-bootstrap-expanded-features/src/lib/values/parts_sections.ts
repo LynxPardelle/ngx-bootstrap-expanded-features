@@ -67,6 +67,7 @@ export const allPosibleParts: string[] = [
   'class2CreateStringed',
   'classWithPseudosConvertedAndSELSplited',
   'property',
+  'comboCreatedKey',
   'specify',
   'hasBP',
   'propertyValues',
@@ -77,6 +78,7 @@ export const allPosibleParts: string[] = [
   'bp',
   /* abreviationTraductors */
   'value',
+  'translatorMap',
   /* convertPseudos */
   'thing',
   'remove',

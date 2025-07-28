@@ -1,13 +1,56 @@
 import { ValuesSingleton } from "../../../singletons/valuesSingleton";
-interface BPNVals {
+/* Cache Management */
+import { 
+  smartCacheValidation,
+  getUnifiedCache
+} from '../../unified_cache_manager';
+
+// Unified cache for performance optimization - centralized with smart invalidation
+const cache = getUnifiedCache();
+
+const values: ValuesSingleton = ValuesSingleton.getInstance();
+
+// Smart cache validation - only invalidates when data actually changes
+smartCacheValidation(values);
+
+// Use unified cache for breakpoint data
+function getBPSet(): Set<string> {
+  if (!cache.breakpointLookupCache.has(values)) {
+    cache.breakpointLookupCache.set(values, new Set(values.bps.map(bp => bp.bp)));
+  }
+  return cache.breakpointLookupCache.get(values)!;
+}
+/**
+ * Looks for breakpoint values in a split class string and determines if a breakpoint is present.
+ * 
+ * @param class2CreateSplited - An array of strings representing a split CSS class name
+ * @returns An object containing:
+ *   - hasBP: boolean indicating whether a breakpoint was found
+ *   - values: array of remaining class parts after the breakpoint (if found) or from index 2 (if not found)
+ * 
+ * @example
+ * ```typescript
+ * const result = look4BPNVals(['bef', 'm', 'md', '1px']);
+ * // If 'md' is a valid breakpoint: { hasBP: true, values: ['1px'] }
+ * // If 'md' is not a breakpoint: { hasBP: false, values: ['md', '1px'] }
+ * ```
+ */
+export const look4BPNVals = (
+  class2CreateSplited: string[]
+): {
   hasBP: boolean;
   values: string[];
-}
-const values: ValuesSingleton = ValuesSingleton.getInstance();
-export const look4BPNVals = async (
-  class2CreateSplited: string[]
-): Promise<BPNVals> => {
-  if (values.bps.find((b: any) => class2CreateSplited[2] === b.bp)) {
+} => {
+  // Early bounds check to avoid accessing undefined array elements
+  if (class2CreateSplited.length < 3) {
+    return {
+      hasBP: false,
+      values: class2CreateSplited.slice(2),
+    };
+  }
+
+  // Use cached Set for O(1) breakpoint lookup instead of O(n) find operation
+  if (getBPSet().has(class2CreateSplited[2])) {
     return {
       hasBP: true,
       values: class2CreateSplited.slice(3),

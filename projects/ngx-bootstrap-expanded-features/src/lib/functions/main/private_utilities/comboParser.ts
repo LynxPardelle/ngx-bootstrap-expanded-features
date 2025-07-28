@@ -3,8 +3,15 @@ import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 import { console_log } from '../../../functions/console_log';
 import { valueComboReplacer } from './valueComboReplacer';
 import { values4ComboGetter } from './values4ComboGetter';
+/* Cache Management */
+import { cacheManager } from '../../cache_solutions';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
+/**
+ * Cache for complete parseClass results to avoid repeated processing
+ * Now managed by centralized cache system
+ */
+const cache = cacheManager.getContainer();
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('comboParser', t, p);
@@ -52,6 +59,10 @@ export const comboParser = async (
           values.combosCreated[
             values.encryptCombo ? combCreatedKey : class2Create
           ] = class2Create;
+          cache.comboKeysCache.set(
+            values,
+            new Set(Object.keys(values.combosCreated))
+          );
           multiLog([
             [
               values.combosCreated[

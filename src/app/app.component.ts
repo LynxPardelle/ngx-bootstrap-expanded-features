@@ -8,7 +8,8 @@ import { NgxBootstrapExpandedFeaturesService as BefService } from 'ngx-bootstrap
 })
 export class AppComponent implements AfterViewInit {
   constructor(private _befService: BefService) {
-    this._befService.changeSections([/* 'getNewClasses2Create' */]);
+    /* this._befService.changeSections(['valueTraductor', 'abreviationTraductors']); */
+    /* this._befService.changeParts([]); */
     this._befService.changeDebugOption(true);
     this._befService.pushColors({
       monster: '#00AA00',

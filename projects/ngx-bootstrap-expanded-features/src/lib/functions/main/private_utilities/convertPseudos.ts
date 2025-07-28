@@ -1,9 +1,38 @@
 import { IPseudo } from '../../../interfaces';
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 import { console_log } from '../../console_log';
+/* Cache Management */
+import { 
+  cacheManager, 
+  checkAndHandleValuesChange 
+} from '../../cache_solutions';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
+
+// Cache for performance optimization - now managed by centralized cache system
+const cache = cacheManager.getContainer();
+let cachedPseudoData: {
+  pseudosHasSDEDSet: Set<string>;
+  pageSpecificSet: Set<string>;
+  lastValuesInstance: ValuesSingleton | null;
+} = {
+  pseudosHasSDEDSet: new Set(),
+  pageSpecificSet: new Set(['Right', 'Left']),
+  lastValuesInstance: null
+};
+
 const values = ValuesSingleton.getInstance();
+
+// Check for ValuesSingleton instance changes and handle cache invalidation
+checkAndHandleValuesChange(values);
+
+// Initialize cache if values instance changed
+if (cachedPseudoData.lastValuesInstance !== values) {
+  cachedPseudoData.pseudosHasSDEDSet = new Set(values.pseudosHasSDED);
+  cache.regexCache.clear();
+  cachedPseudoData.lastValuesInstance = values;
+}
+
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('convertPseudos', t, p);
 };
@@ -26,10 +55,10 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
  * @example
  * ```typescript
  * // Convert pseudo-class masks to real pseudo-classes
- * const result = convertPseudos("div:hoverMask", false);
+ * const result = convertPseudos("bgHover", false): "bgþµÞ:hover"
  *
  * // Remove pseudo-class masks entirely
- * const cleaned = convertPseudos("div:hoverMask", true);
+ * const cleaned = convertPseudos("bgHover", true): "bg"
  * ```
  */
 export const convertPseudos = (
@@ -40,38 +69,55 @@ export const convertPseudos = (
     [thing, 'thing'],
     [remove, 'remove'],
   ]);
-  const pseudoFiltereds: IPseudo[] = values.pseudos.filter((pseudo: IPseudo) => {
-    return thing.includes(pseudo.mask);
-  });
-  log(pseudoFiltereds, 'pseudoFiltereds');
-  if (pseudoFiltereds.length !== 0) {
-    pseudoFiltereds.forEach((pse: IPseudo) => {
-      let regMask = new RegExp(':*' + pse.mask, 'gi');
-      switch (true) {
-        case values.pseudosHasSDED.includes(pse.mask):
-          regMask = new RegExp(':*' + pse.mask + '\\' + '(', 'gi');
-          break;
-        case ['Right', 'Left'].includes(pse.mask):
-          regMask = new RegExp('page' + pse.mask, 'gi');
-          break;
-        default:
-          break;
-      }
-      thing = thing
-        .replace('SD', '(')
-        .replace('ED', ')')
-        .replace(
-          regMask,
-          !remove
-            ? values.pseudosHasSDED.includes(pse.mask)
-              ? pse.real + '('
-              : ['Right', 'Left'].includes(pse.mask)
-              ? 'page' + pse.real
-              : pse.real
-            : ''
-        );
-    });
-    log(thing, 'thing After convertPseudos');
+
+  // Find matching pseudos efficiently
+  const pseudoFiltereds: IPseudo[] = [];
+  for (const pseudo of values.pseudos) {
+    if (thing.includes(pseudo.mask)) {
+      pseudoFiltereds.push(pseudo);
+    }
   }
-  return thing;
+
+  log(pseudoFiltereds, 'pseudoFiltereds');
+
+  // Early exit if no pseudos found
+  if (pseudoFiltereds.length === 0) {
+    return thing;
+  }
+
+  // Batch SD/ED replacements once
+  let result = thing.replace(/SD/g, '(').replace(/ED/g, ')');
+
+  // Process each matching pseudo
+  for (const pse of pseudoFiltereds) {
+    // Get or create cached regex
+    let regexKey = pse.mask;
+    let replacement = '';
+
+    if (cachedPseudoData.pseudosHasSDEDSet.has(pse.mask)) {
+      regexKey = `${pse.mask}_SDED`;
+      if (!cache.regexCache.has(regexKey)) {
+        cache.regexCache.set(regexKey, new RegExp(':*' + pse.mask + '\\(', 'gi'));
+      }
+      replacement = remove ? '' : pse.real + '(';
+    } else if (cachedPseudoData.pageSpecificSet.has(pse.mask)) {
+      regexKey = `${pse.mask}_PAGE`;
+      if (!cache.regexCache.has(regexKey)) {
+        cache.regexCache.set(regexKey, new RegExp('page' + pse.mask, 'gi'));
+      }
+      replacement = remove ? '' : 'page' + pse.real;
+    } else {
+      if (!cache.regexCache.has(regexKey)) {
+        cache.regexCache.set(regexKey, new RegExp(':*' + pse.mask, 'gi'));
+      }
+      replacement = remove ? '' : pse.real;
+    }
+
+    // Apply the replacement
+    const regex = cache.regexCache.get(regexKey)!;
+    result = result.replace(regex, replacement);
+  }
+
+  log(result, 'thing After convertPseudos');
+  return result;
 };

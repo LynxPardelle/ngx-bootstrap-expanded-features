@@ -35,16 +35,16 @@ export const manage_colors = {
         }
         values.colors[key] = cleanedValue;
       });
+      let classesToUpdate: string[] = [];
       for (let color in newColors) {
-        let classesToUpdate: string[] = [];
         for (let createdClass of values.alreadyCreatedClasses) {
           if (createdClass.includes(color)) {
             classesToUpdate.push(createdClass);
           }
         }
-        if (classesToUpdate.length > 0) {
-          cssCreate.cssCreate(classesToUpdate);
-        }
+      }
+      if (classesToUpdate.length > 0) {
+        cssCreate.cssCreate(classesToUpdate);
       }
     } catch (err: unknown) {
       console_log.consoleLog('error', { err: err });

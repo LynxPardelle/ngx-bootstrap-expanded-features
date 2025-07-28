@@ -32,10 +32,15 @@ export class FooterComponent implements AfterViewInit {
 
   cssCreate() {
     this._befService.cssCreate();
-    this._befService.updateColor('randNumA', `#${this.RandHex()}`);
+    let colors = {
+      randNumA: `#${this.RandHex()}`,
+      randNumB: `#${this.RandHex()}`,
+    }
+    this._befService.pushColors(colors);
+    /* this._befService.updateColor('randNumA', `#${this.RandHex()}`);
     setTimeout(() => {
       this._befService.updateColor('randNumB', `#${this.RandHex()}`);
-    }, this._befService.timeBetweenReCreate + 10);
+    }, this._befService.timeBetweenReCreate + 10); */
   }
 
   RandHex() {

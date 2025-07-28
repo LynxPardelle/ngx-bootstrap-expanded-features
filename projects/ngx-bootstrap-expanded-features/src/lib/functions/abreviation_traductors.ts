@@ -1,10 +1,26 @@
 /* Singletons */
 import { ValuesSingleton } from "../singletons/valuesSingleton";
+/* Cache Management */
+import { 
+  smartCacheValidation, 
+  getUnifiedCache,
+  initializeAbbreviationTranslators
+} from './unified_cache_manager';
 /* Functions */
 import { console_log } from "./console_log";
 /* Types */
 import { TLogPartsOptions } from '../types';
+
+// Unified cache system - centralized and intelligent invalidation
+const cache = getUnifiedCache();
 const values: ValuesSingleton = ValuesSingleton.getInstance();
+
+// Smart cache validation - only invalidates if abbreviation data actually changed
+const hasChanges = smartCacheValidation(values);
+
+// Initialize translation maps using centralized cache system
+const cachedTranslators = initializeAbbreviationTranslators(values);
+
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('abreviationTraductors', t, p);
 };
@@ -12,6 +28,22 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('abreviationTraductors', toLog);
 };
 export const abreviation_traductors = {
+  /**
+   * Translates between abbreviations and their correct css.
+   * 
+   * @param value - The string to be processed for abbreviation translation or conversion
+   * @param type - The operation type: "traduce" converts abbreviations to correct css, "convert" converts correct css to abbreviations
+   * @returns The processed string with abbreviations translated or converted according to the specified type
+   * 
+   * @example
+   * ```typescript
+   * // Convert abbreviations to correct css
+   * const result = abreviationTraductor("__COM_🜔🜔🜔", "traduce"):" , .🜔🜔🜔"
+   * 
+   * // Convert correct css to abbreviations
+   * const result = abreviationTraductor(" , .🜔🜔🜔", "convert"):"__COM_🜔🜔🜔"
+   * ```
+   */
   abreviationTraductor(
     value: string,
     type: "traduce" | "convert" = "traduce"
@@ -20,26 +52,52 @@ export const abreviation_traductors = {
       [value, 'value'],
       [type, 'type'],
     ]);
-    if (value !== undefined) {
-      log(value, 'value BeforeAbreviationTraductor');
-      for (const abr of values.abreviationTraductors) {
-        let traduction: string = abr.traduction;
-        let abreviation: string | RegExp = abr.abreviation;
-        let traductionRegExp: RegExp = abr.traductionRegExp;
-        let abreviationRegExp: RegExp = abr.abreviationRegExp;
-        if (type === "traduce") {
-          value = value.replace(abreviationRegExp, traduction);
-        } else if (type === "convert") {
-          value = value.replace(traductionRegExp, abreviation);
-        }
-      }
-      log(value, 'value AfterAbreviationTraductor');
+
+    // Early exit for empty or undefined values
+    if (!value || value === '') {
+      return value;
     }
-    return value;
+
+    log(value, 'value BeforeAbreviationTraductor');
+
+    // Use appropriate cached map based on type
+    const translatorMap = type === "traduce" 
+      ? cachedTranslators.traduceMap 
+      : cachedTranslators.convertMap;
+    log(translatorMap, 'translatorMap');
+
+    let result = value;
+    let hasMatches = false;
+
+
+    // Process translations using cached maps
+    for (const [key, translator] of translatorMap) {
+      // Quick check if the value contains the key before running expensive regex
+      if (type === "traduce" ? result.includes(key) : translator.regex.test(result)) {
+        const previousResult = result;
+        result = result.replace(translator.regex, translator.replacement as string);
+        
+        // Track if any changes were made for logging purposes
+        if (previousResult !== result) {
+          hasMatches = true;
+        }
+
+        // Reset regex lastIndex for global regexes to ensure consistent behavior
+        translator.regex.lastIndex = 0;
+      }
+    }
+
+    if (hasMatches) {
+      log(result, 'value AfterAbreviationTraductor');
+    }
+
+    return result;
   },
+
   unbefysize(value: string): string {
-    return this.abreviationTraductor(value);
+    return this.abreviationTraductor(value, "traduce");
   },
+
   befysize(value: string): string {
     return this.abreviationTraductor(value, "convert");
   },
