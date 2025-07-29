@@ -1,25 +1,10 @@
 /* Singletons */
 import { ValuesSingleton } from "../singletons/valuesSingleton";
-/* Cache Management */
-import { 
-  smartCacheValidation, 
-  getUnifiedCache,
-  initializeAbbreviationTranslators
-} from './unified_cache_manager';
 /* Functions */
 import { console_log } from "./console_log";
 /* Types */
 import { TLogPartsOptions } from '../types';
-
-// Unified cache system - centralized and intelligent invalidation
-const cache = getUnifiedCache();
 const values: ValuesSingleton = ValuesSingleton.getInstance();
-
-// Smart cache validation - only invalidates if abbreviation data actually changed
-const hasChanges = smartCacheValidation(values);
-
-// Initialize translation maps using centralized cache system
-const cachedTranslators = initializeAbbreviationTranslators(values);
 
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('abreviationTraductors', t, p);
@@ -62,8 +47,8 @@ export const abreviation_traductors = {
 
     // Use appropriate cached map based on type
     const translatorMap = type === "traduce" 
-      ? cachedTranslators.traduceMap 
-      : cachedTranslators.convertMap;
+      ? values.translatorMaps.traduceMap 
+      : values.translatorMaps.convertMap;
     log(translatorMap, 'translatorMap');
 
     let result = value;

@@ -3,15 +3,8 @@ import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 import { console_log } from '../../../functions/console_log';
 import { valueComboReplacer } from './valueComboReplacer';
 import { values4ComboGetter } from './values4ComboGetter';
-/* Cache Management */
-import { cacheManager } from '../../cache_solutions';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
-/**
- * Cache for complete parseClass results to avoid repeated processing
- * Now managed by centralized cache system
- */
-const cache = cacheManager.getContainer();
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('comboParser', t, p);
@@ -43,26 +36,25 @@ export const comboParser = async (
       c = await valueComboReplacer(c, vals);
       log(c, 'c AfterValueComboReplacer');
       if (c.startsWith(values.indicatorClass)) {
-        let combosCreatedABBR = Object.keys(values.combosCreated);
-        log(combosCreatedABBR, 'combosCreatedABBR');
-        let alreadyABBRCombo = combosCreatedABBR.find((cs) => {
-          return values.combosCreated[cs] === class2Create;
-        });
+        log(values.combosCreatedKeys, 'combosCreatedKeys');
+        let alreadyABBRCombo: boolean = false;
+        for (const cs of values.combosCreatedKeys) {
+          if (values.combosCreated[cs] === class2Create) {
+            alreadyABBRCombo = true;
+            break;
+          }
+        }
         log(alreadyABBRCombo, 'alreadyABBRCombo');
-        let combosCreatedKeys: string[] = Object.keys(values.combosCreated);
-        let combCreatedKey: string =
-          combosCreatedKeys.find((cs) => {
+        const combCreatedKey: string =
+          Array.from(values.combosCreatedKeys).find((cs) => {
             return values.combosCreated[cs] === class2Create;
-          }) || values.encryptComboCharacters + combosCreatedKeys.length;
+          }) || values.encryptComboCharacters + values.combosCreatedKeys.size;
         log(combCreatedKey, 'combCreatedKey');
         if (!alreadyABBRCombo) {
           values.combosCreated[
             values.encryptCombo ? combCreatedKey : class2Create
           ] = class2Create;
-          cache.comboKeysCache.set(
-            values,
-            new Set(Object.keys(values.combosCreated))
-          );
+          values.combosCreatedKeys.add(combCreatedKey);
           multiLog([
             [
               values.combosCreated[
@@ -71,21 +63,20 @@ export const comboParser = async (
               'c StartsWithClass2Create',
             ],
             [combCreatedKey, 'combCreatedKey'],
-            [combosCreatedABBR, 'combosCreatedABBR'],
+            [values.combosCreatedKeys, 'combosCreatedKeys After ComboCreated'],
           ]);
         }
-        log(combosCreatedABBR, 'combosCreatedABBR After ComboCreated');
-        let comboABBR: string = values.encryptCombo
+        const comboABBR: string = values.encryptCombo
           ? combCreatedKey
           : class2Create;
         multiLog([
           [comboABBR, 'comboABBR'],
           [c, 'c'],
         ]);
-        let pseudos = values.pseudos.filter((p: any) =>
+        const pseudos = values.pseudos.filter((p: any) =>
           c.split('-')[1].includes(p.mask)
         );
-        let firstPseudo =
+        const firstPseudo =
           pseudos.sort((p1: any, p2: any) => {
             return c.indexOf(p1.mask) - c.indexOf(p2.mask);
           })[0] || -1;

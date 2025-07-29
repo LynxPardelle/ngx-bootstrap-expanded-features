@@ -1,7 +1,7 @@
 /* Singletons */
-import { ValuesSingleton } from "../../singletons/valuesSingleton";
+import { ValuesSingleton } from '../../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "../console_log";
+import { console_log } from '../console_log';
 /* Types */
 import { TLogPartsOptions } from '../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
@@ -13,25 +13,30 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 };
 export const createSimpleRule = (rule: string): void => {
   log(rule, 'rule');
+  if (!values.sheet) return;
   let originalMediaRules: boolean = false;
   let rulesParsed: string[] = rule
     .replace(/{/g, values.separator)
     .replace(/}/g, values.separator)
     .split(values.separator)
-    .filter((r) => r !== "")
+    .filter((r) => r !== '')
     .map((r) => {
-      return r.replace(/\n/g, "").replace(/\s{2}/g, "");
+      return r.replace(/\n/g, '').replace(/\s{2}/g, '');
     });
-  let mediaRule: string = rulesParsed[0].includes("media")
+  let mediaRule: string = rulesParsed[0].includes('media')
     ? rulesParsed[0]
-    : "";
-  if (mediaRule !== "") {
-    if (mediaRule.endsWith(" ")) {
+    : '';
+  if (mediaRule !== '') {
+    if (mediaRule.endsWith(' ')) {
       mediaRule = mediaRule.slice(0, -1);
     }
     rulesParsed.shift();
-    [...values.sheet.cssRules].forEach((css) => {
-      if (css.cssText.includes(mediaRule) && css.cssRules) {
+    [...values.sheet.cssRules].forEach((css: CSSRule | CSSGroupingRule) => {
+      if (
+        css.cssText.includes(mediaRule) &&
+        css instanceof CSSGroupingRule &&
+        css.cssRules
+      ) {
         originalMediaRules = true;
         let i = 0;
         while (i <= rulesParsed.length) {
@@ -46,9 +51,9 @@ export const createSimpleRule = (rule: string): void => {
               }
             }
           )
-            ? [...css.cssRules].find((i) =>
-                i.cssText.split(" ").find((aC: string) => {
-                  return aC.replace(".", "") === rulesParsed[i];
+            ? [...css.cssRules].find((cs, i) =>
+                cs.cssText.split(' ').find((aC: string) => {
+                  return aC.replace('.', '') === rulesParsed[i];
                 })
               )
             : /* .includes(rulesParsed[i])) */

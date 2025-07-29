@@ -1,10 +1,11 @@
 /* Singletons */
-import { ValuesSingleton } from "../singletons/valuesSingleton";
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "./console_log";
-import { cssCreate } from "./cssCreate";
+import { console_log } from './console_log';
+import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
+import { manage_cache, TCacheOptions } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageAbreviations', t, p);
@@ -24,11 +25,14 @@ export const manage_abreviations = {
           }
         );
       });
+      manage_cache.clearAllNoneEssential();
       if (prevIgnoredAbreviationsValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredAbreviationsValues);
+      } else {
+        cssCreate.cssCreate();
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   pushAbreviationsClasses(abreviationsClasses: any): void {
@@ -42,13 +46,14 @@ export const manage_abreviations = {
           }
         );
       });
+      manage_cache.clearAllNoneEssential();
       if (prevIgnoredAbreviationsValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredAbreviationsValues);
       } else {
         cssCreate.cssCreate();
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   getAbreviationsClasses(): any {
@@ -69,8 +74,11 @@ export const manage_abreviations = {
             classesToUpdate.push(createdClass);
           }
         }
+        manage_cache.clearAllNoneEssential();
         if (classesToUpdate.length > 0) {
           cssCreate.cssCreate(classesToUpdate);
+        } else {
+          cssCreate.cssCreate();
         }
       } else {
         throw new Error(
@@ -78,7 +86,7 @@ export const manage_abreviations = {
         );
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   updateAbreviationsValue(abreviationsValue: string, value: string): void {
@@ -91,8 +99,11 @@ export const manage_abreviations = {
             classesToUpdate.push(createdClass);
           }
         }
+        manage_cache.clearAllNoneEssential();
         if (classesToUpdate.length > 0) {
           cssCreate.cssCreate(classesToUpdate);
+        } else {
+          cssCreate.cssCreate();
         }
       } else {
         throw new Error(
@@ -100,7 +111,7 @@ export const manage_abreviations = {
         );
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
 };

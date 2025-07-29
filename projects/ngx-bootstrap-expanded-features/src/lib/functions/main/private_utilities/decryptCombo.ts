@@ -1,16 +1,8 @@
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 import { console_log } from '../../../functions/console_log';
-/* Cache Management */
-import { 
-  smartCacheValidation,
-  getUnifiedCache
-} from '../../unified_cache_manager';
+import { manage_cache } from '../../manage_cache';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
-
-// Unified cache for performance optimization - centralized with smart invalidation
-const cache = getUnifiedCache();
-
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('decryptCombo', t, p);
 };
@@ -20,59 +12,24 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 
-// Smart cache validation - only invalidates when data actually changes
-smartCacheValidation(values);
-
-/**
- * Gets or creates cached combo keys Set for the current ValuesSingleton instance
- * @param valuesInstance - ValuesSingleton instance
- * @returns Set of combo keys for O(1) lookup operations
- */
-const getCachedComboKeys = (valuesInstance: ValuesSingleton): Set<string> => {
-  if (!cache.comboKeysCache.has(valuesInstance)) {
-    const comboKeys = new Set(Object.keys(valuesInstance.combosCreated));
-    cache.comboKeysCache.set(valuesInstance, comboKeys);
-  }
-  return cache.comboKeysCache.get(valuesInstance)!;
-};
-
-/**
- * Gets or creates cached regex for a combo key
- * @param comboKey - The combo key to create regex for
- * @returns Compiled RegExp object for efficient replacement
- */
-const getCachedRegex = (comboKey: string): RegExp => {
-  const regexKey = `decryptCombo_${comboKey}`;
-  if (!cache.regexCache.has(regexKey)) {
-    // Clean cache if it gets too large
-    const maxCacheSize = 1000;
-    if (cache.regexCache.size >= maxCacheSize) {
-      // Clear half the cache when limit is reached, focusing on decryptCombo entries
-      const keysToDelete = Array.from(cache.regexCache.keys())
-        .filter(k => k.startsWith('decryptCombo_'))
-        .slice(0, Math.floor(maxCacheSize / 4));
-      keysToDelete.forEach(key => cache.regexCache.delete(key));
-    }
-    const regex = new RegExp(comboKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-    cache.regexCache.set(regexKey, regex);
-  }
-  return cache.regexCache.get(regexKey)!;
-};
-
 /**
  * Creates a cache key from the input parameters for result caching
  * @param specify - Specification string
- * @param class2Create - Class creation string  
+ * @param class2Create - Class creation string
  * @param class2CreateStringed - Stringified class creation string
  * @returns Cache key string
  */
-const createCacheKey = (specify: string, class2Create: string, class2CreateStringed: string): string => {
+const createCacheKey = (
+  specify: string,
+  class2Create: string,
+  class2CreateStringed: string
+): string => {
   return `${specify}|${class2Create}|${class2CreateStringed}`;
 };
 
 /**
  * Decrypts a combination by finding and replacing abbreviated combo strings with their full values.
- * 
+ *
  * This function efficiently processes combo abbreviations using intelligent caching and optimized algorithms.
  * It maintains caches for combo key lookups, regex patterns, and complete decryption results to minimize
  * processing overhead on repeated calls.
@@ -96,7 +53,7 @@ const createCacheKey = (specify: string, class2Create: string, class2CreateStrin
  *   '.bef-wSEL__COM_boxOne-85per'
  * ]
  * ```
- * 
+ *
  * @remarks
  * **Performance Optimizations:**
  * - Uses Set-based combo key lookup for O(1) complexity instead of O(n) Object.keys().find()
@@ -106,13 +63,13 @@ const createCacheKey = (specify: string, class2Create: string, class2CreateStrin
  * - Converted from async to synchronous operation (combo decryption is inherently synchronous)
  * - Uses direct string replacement instead of Promise.all with async map
  * - Implements cache size limits to prevent memory leaks
- * 
+ *
  * **Cache Management:**
  * - Combo keys cache automatically invalidates when ValuesSingleton instance changes
  * - Regex cache has a maximum size limit with automatic cleanup
  * - Decryption results cache provides near-instant responses for repeated inputs
  * - All caches are designed to be memory-efficient and prevent leaks
- * 
+ *
  * **Backward Compatibility:**
  * - Maintains the same function signature and return type
  * - Returns identical results to the original implementation
@@ -130,7 +87,7 @@ export const decryptCombo = (
 
   // Check result cache first for instant response
   const cacheKey = createCacheKey(specify, class2Create, class2CreateStringed);
-  const cachedDecryption = cache.comboDecryptCache.get(cacheKey);
+  const cachedDecryption = manage_cache.getCached(cacheKey, 'comboDecrypt');
   if (cachedDecryption) {
     return JSON.parse(cachedDecryption) as string[];
   }
@@ -142,8 +99,8 @@ export const decryptCombo = (
   ]);
 
   // Get cached combo keys for O(1) lookup instead of O(n) Object.keys().find()
-  const comboKeys = getCachedComboKeys(values);
-  
+  const comboKeys = values.combosKeys;
+
   // Find matching combo key using efficient Set-based lookup
   let alreadyABBRCombo: string | undefined;
   for (const comboKey of comboKeys) {
@@ -157,17 +114,25 @@ export const decryptCombo = (
   log(alreadyABBRCombo, 'alreadyABBRCombo');
 
   let comboDecrypted: string[];
-  
+
   if (alreadyABBRCombo) {
     // Get cached regex for efficient replacement
-    const regex = getCachedRegex(alreadyABBRCombo);
+    const regex = manage_cache.getCached<RegExp>(
+      `decryptCombo_${alreadyABBRCombo}`,
+      'regExp',
+      () =>
+        new RegExp(
+          alreadyABBRCombo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+          'gi'
+        )
+    ) as RegExp;
     const replacement = values.combosCreated[alreadyABBRCombo];
-    
+
     // Direct synchronous replacement - no need for async operations
     comboDecrypted = [
       specify.replace(regex, replacement),
       class2Create.replace(regex, replacement),
-      class2CreateStringed.replace(regex, replacement)
+      class2CreateStringed.replace(regex, replacement),
     ];
   } else {
     // No combo found, return originals
@@ -177,13 +142,11 @@ export const decryptCombo = (
   log(comboDecrypted, 'comboDecrypted');
 
   // Cache the result for future calls
-  const maxCacheSize = 1000;
-  if (cache.comboDecryptCache.size >= maxCacheSize) {
-    // Clean cache if it gets too large (remove oldest entries)
-    const keysToDelete = Array.from(cache.comboDecryptCache.keys()).slice(0, Math.floor(maxCacheSize / 2));
-    keysToDelete.forEach(key => cache.comboDecryptCache.delete(key));
-  }
-  cache.comboDecryptCache.set(cacheKey, JSON.stringify(comboDecrypted));
+  manage_cache.addCached(
+    cacheKey,
+    'comboDecrypt',
+    JSON.stringify(comboDecrypted)
+  );
 
   return comboDecrypted;
 };

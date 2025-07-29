@@ -4,8 +4,6 @@ import { IAbreviationTraductor, IConsoleParser } from './interfaces';
 import { IPseudo } from './interfaces';
 /* Singleton */
 import { ValuesSingleton } from './singletons/valuesSingleton';
-/* Cache Management */
-import { triggerCacheEvent } from './functions/unified_cache_manager';
 /* Functions */
 import { abreviation_traductors } from './functions/abreviation_traductors';
 import { color_transform } from './functions/color_transform';
@@ -52,7 +50,7 @@ export class NgxBootstrapExpandedFeaturesService {
   public separator: string = this.values.separator;
   public styleConsole: string = this.values.styleConsole;
   public pseudoClasses: string[] = this.values.pseudoClasses;
-  public pseudosHasSDED: string[] = this.values.pseudosHasSDED;
+  public pseudosHasSDED: Set<string> = this.values.pseudosHasSDED;
   public pseudoElements: string[] = this.values.pseudoElements;
   public pseudos: IPseudo[] = this.values.pseudos;
   public importantActive: boolean = this.values.importantActive;
@@ -82,36 +80,15 @@ export class NgxBootstrapExpandedFeaturesService {
   public cssValidToCamel = (st: string) => css_camel.cssValidToCamel(st);
   public camelToCSSValid = (st: string) => css_camel.camelToCSSValid(st);
   /* CRUD */
-  public pushCssNamesParsed = (cssNamesParsed: any) => {
-    const result = manage_CSSNamesParsed.pushCssNamesParsed(cssNamesParsed);
-    triggerCacheEvent('cssnames:added');
-    return result;
-  };
-  public pushBPS = (bps: any) => {
-    const result = manage_bps.pushBPS(bps);
-    triggerCacheEvent('breakpoints:added');
-    return result;
-  };
-  public pushColors = (newColors: any) => {
-    const result = manage_colors.pushColors(newColors);
-    triggerCacheEvent('colors:added');
-    return result;
-  };
-  public pushAbreviationsValues = (abreviationsValues: any) => {
-    const result = manage_abreviations.pushAbreviationsValues(abreviationsValues);
-    triggerCacheEvent('abbreviations:values-added');
-    return result;
-  };
-  public pushAbreviationsClasses = (abreviationsClasses: any) => {
-    const result = manage_abreviations.pushAbreviationsClasses(abreviationsClasses);
-    triggerCacheEvent('abbreviations:classes-added');
-    return result;
-  };
-  public pushCombos = (combos: any) => {
-    const result = manage_combos.pushCombos(combos);
-    triggerCacheEvent('combos:added');
-    return result;
-  };
+  public pushCssNamesParsed = (cssNamesParsed: any) =>
+    manage_CSSNamesParsed.pushCssNamesParsed(cssNamesParsed);
+  public pushBPS = (bps: any) => manage_bps.pushBPS(bps);
+  public pushColors = (newColors: any) => manage_colors.pushColors(newColors);
+  public pushAbreviationsValues = (abreviationsValues: any) =>
+    manage_abreviations.pushAbreviationsValues(abreviationsValues);
+  public pushAbreviationsClasses = (abreviationsClasses: any) =>
+    manage_abreviations.pushAbreviationsClasses(abreviationsClasses);
+  public pushCombos = (combos: any) => manage_combos.pushCombos(combos);
   /* Getters */
   public getColors = () => manage_colors.getColors();
   public getBPS = () => manage_bps.getBPS();
@@ -127,47 +104,21 @@ export class NgxBootstrapExpandedFeaturesService {
     manage_classes.getAlreadyCreatedClasses();
   public getSheet = () => manage_sheet.getSheet();
   /* Update */
-  public updateColor = (color: string, value: string) => {
-    const result = manage_colors.updateColor(color, value);
-    triggerCacheEvent('colors:updated');
-    return result;
-  };
-  public updateAbreviationsClass = (abreviationsClass: string, value: string) => {
-    const result = manage_abreviations.updateAbreviationsClass(abreviationsClass, value);
-    triggerCacheEvent('abbreviations:classes-updated');
-    return result;
-  };
-  public updateAbreviationsValue = (abreviationsValue: string, value: string) => {
-    const result = manage_abreviations.updateAbreviationsValue(abreviationsValue, value);
-    triggerCacheEvent('abbreviations:values-updated');
-    return result;
-  };
-  public updateCombo = (combo: string, values: string[]) => {
-    const result = manage_combos.updateCombo(combo, values);
-    triggerCacheEvent('combos:updated');
-    return result;
-  };
-  public updateCssNamesParsed = (cssNameParsed: string, value: string) => {
-    const result = manage_CSSNamesParsed.updateCssNamesParsed(cssNameParsed, value);
-    triggerCacheEvent('cssnames:updated');
-    return result;
-  };
-  public updateClasses = (classesToUpdate: string[]) => {
-    const result = manage_classes.updateClasses(classesToUpdate);
-    triggerCacheEvent('classes:updated');
-    return result;
-  };
+  public updateColor = (color: string, value: string) =>
+    manage_colors.updateColor(color, value);
+  public updateAbreviationsClass = (abreviationsClass: string, value: string) =>
+    manage_abreviations.updateAbreviationsClass(abreviationsClass, value);
+  public updateAbreviationsValue = (abreviationsValue: string, value: string) =>
+    manage_abreviations.updateAbreviationsValue(abreviationsValue, value);
+  public updateCombo = (combo: string, values: string[]) =>
+    manage_combos.updateCombo(combo, values);
+  public updateCssNamesParsed = (cssNameParsed: string, value: string) =>
+    manage_CSSNamesParsed.updateCssNamesParsed(cssNameParsed, value);
+  public updateClasses = (classesToUpdate: string[]) =>
+    manage_classes.updateClasses(classesToUpdate);
   /* Delete */
-  public deleteColor = (color: string) => {
-    const result = manage_colors.deleteColor(color);
-    triggerCacheEvent('colors:deleted');
-    return result;
-  };
-  public clearAllColors = () => {
-    const result = manage_colors.clearAllColors();
-    triggerCacheEvent('colors:cleared');
-    return result;
-  };
+  public deleteColor = (color: string) => manage_colors.deleteColor(color);
+  public clearAllColors = () => manage_colors.clearAllColors();
   /* Utility */
   public changeImportantActive = (active: boolean) =>
     utility_configurations.changeImportantActive(
@@ -194,8 +145,7 @@ export class NgxBootstrapExpandedFeaturesService {
   /* ManagePartsNSectionsForLog */
   public pushSection = (newSection: string) =>
     managePartsSections.pushSection(newSection);
-  public pushPart = (newPart: string) =>
-    managePartsSections.pushPart(newPart);
+  public pushPart = (newPart: string) => managePartsSections.pushPart(newPart);
   public getChosenSectionsOptions = () =>
     managePartsSections.getChosenSectionsOptions();
   public getChosenSectionsOptionsSections = () =>
@@ -204,8 +154,7 @@ export class NgxBootstrapExpandedFeaturesService {
     managePartsSections.getChosenSectionsOptionsParts();
   public getAllPosibleSections = () =>
     managePartsSections.getAllPosibleSections();
-  public getAllPosibleParts = () =>
-    managePartsSections.getAllPosibleParts();
+  public getAllPosibleParts = () => managePartsSections.getAllPosibleParts();
   public changeSections = (newSections: TLogSectionOptions[]) =>
     managePartsSections.changeSections(newSections);
   public changeParts = (newParts: TLogPartsOptions[]) =>

@@ -1,38 +1,13 @@
-import { IPseudo } from '../../../interfaces';
+/* Singletons */
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
+/* Interfaces */
+import { IPseudo } from '../../../interfaces';
+/* Functions */
 import { console_log } from '../../console_log';
-/* Cache Management */
-import { 
-  cacheManager, 
-  checkAndHandleValuesChange 
-} from '../../cache_solutions';
+import { manage_cache } from '../../manage_cache';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
-
-// Cache for performance optimization - now managed by centralized cache system
-const cache = cacheManager.getContainer();
-let cachedPseudoData: {
-  pseudosHasSDEDSet: Set<string>;
-  pageSpecificSet: Set<string>;
-  lastValuesInstance: ValuesSingleton | null;
-} = {
-  pseudosHasSDEDSet: new Set(),
-  pageSpecificSet: new Set(['Right', 'Left']),
-  lastValuesInstance: null
-};
-
 const values = ValuesSingleton.getInstance();
-
-// Check for ValuesSingleton instance changes and handle cache invalidation
-checkAndHandleValuesChange(values);
-
-// Initialize cache if values instance changed
-if (cachedPseudoData.lastValuesInstance !== values) {
-  cachedPseudoData.pseudosHasSDEDSet = new Set(values.pseudosHasSDED);
-  cache.regexCache.clear();
-  cachedPseudoData.lastValuesInstance = values;
-}
-
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('convertPseudos', t, p);
 };
@@ -93,29 +68,35 @@ export const convertPseudos = (
     // Get or create cached regex
     let regexKey = pse.mask;
     let replacement = '';
+    let regExp: RegExp | undefined;
 
-    if (cachedPseudoData.pseudosHasSDEDSet.has(pse.mask)) {
+    if (values.pseudosHasSDED.has(pse.mask)) {
       regexKey = `${pse.mask}_SDED`;
-      if (!cache.regexCache.has(regexKey)) {
-        cache.regexCache.set(regexKey, new RegExp(':*' + pse.mask + '\\(', 'gi'));
-      }
+      regExp = manage_cache.getCached<RegExp>(
+        regexKey,
+        'regExp',
+        () => new RegExp(':*' + pse.mask + '\\(', 'gi')
+      );
       replacement = remove ? '' : pse.real + '(';
-    } else if (cachedPseudoData.pageSpecificSet.has(pse.mask)) {
+    } else if (values.pageSpecificSet.has(pse.mask)) {
       regexKey = `${pse.mask}_PAGE`;
-      if (!cache.regexCache.has(regexKey)) {
-        cache.regexCache.set(regexKey, new RegExp('page' + pse.mask, 'gi'));
-      }
+      regExp = manage_cache.getCached<RegExp>(
+        regexKey,
+        'regExp',
+        () => new RegExp('page' + pse.mask, 'gi')
+      );
       replacement = remove ? '' : 'page' + pse.real;
     } else {
-      if (!cache.regexCache.has(regexKey)) {
-        cache.regexCache.set(regexKey, new RegExp(':*' + pse.mask, 'gi'));
-      }
+      regExp = manage_cache.getCached<RegExp>(
+        regexKey,
+        'regExp',
+        () => new RegExp(':*' + pse.mask, 'gi')
+      );
       replacement = remove ? '' : pse.real;
     }
 
     // Apply the replacement
-    const regex = cache.regexCache.get(regexKey)!;
-    result = result.replace(regex, replacement);
+    result = result.replace(regExp as RegExp, replacement);
   }
 
   log(result, 'thing After convertPseudos');

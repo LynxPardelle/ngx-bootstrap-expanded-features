@@ -13,7 +13,8 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 };
 export const createMediaRule = (rule: string): void => {
   log(rule, 'rule');
-  let index;
+  let index: number | undefined;
+  if (!values.sheet) return;
   let originalRule: any = [...values.sheet.cssRules].some(
     (cssRule: any, i: number) => {
       if (
@@ -48,7 +49,7 @@ export const createMediaRule = (rule: string): void => {
             */
       )
     : undefined;
-  if (originalRule) {
+  if (originalRule && index !== undefined) {
     values.sheet.deleteRule(index);
   }
   log(rule, 'rule');

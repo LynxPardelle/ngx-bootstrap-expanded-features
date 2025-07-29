@@ -1,10 +1,11 @@
 /* Singletons */
-import { ValuesSingleton } from "../singletons/valuesSingleton";
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
-import { console_log } from "./console_log";
-import { cssCreate } from "./cssCreate";
+import { console_log } from './console_log';
+import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
+import { manage_cache, TCacheOptions } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageCombos', t, p);
@@ -18,11 +19,11 @@ export const manage_combos = {
       let prevIgnoredCombosValues: string[] = [];
       Object.keys(combos).forEach((key) => {
         values.combos[key] =
-          typeof combos[key] === "string"
-            ? combos[key].split(" ")
+          typeof combos[key] === 'string'
+            ? combos[key].split(' ')
             : combos[key]
                 .map((c: string) => {
-                  return c.split(" ").flat();
+                  return c.split(' ').flat();
                 })
                 .flat();
         prevIgnoredCombosValues = values.alreadyCreatedClasses.filter(
@@ -31,13 +32,14 @@ export const manage_combos = {
           }
         );
       });
+      manage_cache.clearAllNoneEssential();
       if (prevIgnoredCombosValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredCombosValues);
       } else {
         cssCreate.cssCreate();
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   getCombos(): any {
@@ -56,24 +58,26 @@ export const manage_combos = {
         }
         if (classes2Delete.length > 0) {
           for (let class2Delete of classes2Delete) {
-            values.sheet.deleteRule(
+            values.sheet?.deleteRule(
               [...values.sheet.cssRules].findIndex((cssRule) => {
                 return cssRule.cssText.includes(class2Delete);
               })
             );
-            values.alreadyCreatedClasses = values.alreadyCreatedClasses.filter(
-              (aC: string) => {
-                return aC !== class2Delete;
+            for (let i = 0; i < values.alreadyCreatedClasses.length; i++) {
+              if (values.alreadyCreatedClasses[i] === class2Delete) {
+                values.alreadyCreatedClasses.splice(i, 1);
+                i--;
               }
-            );
+            }
           }
+          manage_cache.clearAllNoneEssential();
           cssCreate.cssCreate();
         }
       } else {
         throw new Error(`There is no combo named ${combo}.`);
       }
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
 };

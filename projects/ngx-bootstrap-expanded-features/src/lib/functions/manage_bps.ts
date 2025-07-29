@@ -1,10 +1,10 @@
 /* Singletons */
-import { ValuesSingleton } from "../singletons/valuesSingleton";
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Interfaces */
-import { IBPS } from "../interfaces";
+import { IBPS } from '../interfaces';
 /* Funtions */
-import { console_log } from "./console_log";
-import { cssCreate } from "./cssCreate";
+import { console_log } from './console_log';
+import { cssCreate } from './cssCreate';
 
 interface WithBefs {
   befs: string; // DEPRECATED
@@ -12,6 +12,7 @@ interface WithBefs {
 interface IBPSWithBefs extends IBPS, WithBefs {}
 /* Types */
 import { TLogPartsOptions } from '../types';
+import { manage_cache, TCacheOptions } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageBps', t, p);
@@ -23,20 +24,23 @@ export const manage_bps = {
   pushBPS(bps: IBPSWithBefs[]): void {
     try {
       for (let nb of bps) {
+        // get the bps that match the current breakpoint
         let bp = values.bps.find((b: any) => b.bp === nb.bp);
         if (bp) {
           bp.value = nb.value;
-          bp.class2Create = "";
+          bp.class2Create = '';
         } else {
           values.bps.push({
             bp: nb.bp,
             value: nb.value,
           });
+          values.breakPoints.add(nb.bp);
         }
       }
+      manage_cache.clearAllNoneEssential();
       cssCreate.cssCreate();
     } catch (err) {
-      console_log.consoleLog("error", { err: err });
+      console_log.consoleLog('error', { err: err });
     }
   },
   getBPS(): IBPS[] {

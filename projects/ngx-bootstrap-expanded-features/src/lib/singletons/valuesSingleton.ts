@@ -6,8 +6,6 @@ import { cssNamesParsed } from '../values/cssNamesParsed';
 import { defaultChosenSectionOptions } from '../values/parts_sections';
 /* Interfaces */
 import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
-/* Functions */
-import { css_camel } from '../functions/css-camel';
 /* Common Properties Values */
 import { commonPropertiesValuesAbreviations } from '../values/commonPropertiesValuesAbreviations';
 /* Types */
@@ -16,11 +14,20 @@ export class ValuesSingleton {
   private static instance: ValuesSingleton;
   public indicatorClass: string = 'bef';
   public colors: { [key: string]: string } = allColors;
+  public colorNames: string[] = Object.keys(this.colors);
+  public colorsRegex: RegExp | undefined;
+  public opacityRegex: RegExp = new RegExp(
+    /(?:([A-z0-9#]*)|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))\s?OPA\s?0\.[0-9]*/gi
+  );
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
+  public combosKeys: Set<string> = new Set(Object.keys(this.combos));
   public combosCreated: { [key: string]: string } = {};
-  public encryptCombo: boolean = false;
+  public combosCreatedKeys: Set<string> = new Set(
+    Object.keys(this.combosCreated)
+  );
+  public encryptCombo: boolean = true;
   public encryptComboCharacters: string = '■■■';
   public encryptComboCreatedCharacters: string = '🜔🜔🜔';
   public cssNamesParsed: { [key: string]: string | string[] } = cssNamesParsed;
@@ -54,6 +61,7 @@ export class ValuesSingleton {
       class2Create: '',
     },
   ];
+  public breakPoints: Set<string> = new Set(['sm', 'md', 'lg', 'xl', 'xxl']);
   public bpsSpecifyOptions: string[] = [
     '',
     'html',
@@ -136,7 +144,7 @@ export class ValuesSingleton {
     'VolumeLocked',
     'Where',
   ];
-  public pseudosHasSDED: string[] = [
+  public pseudosHasSDED: Set<string> = new Set([
     'Dir',
     'Not',
     'Lang',
@@ -150,7 +158,7 @@ export class ValuesSingleton {
     'Part',
     'Slotted',
     'Where',
-  ];
+  ]);
   public pseudoElements: string[] = [
     'After',
     'Backdrop',
@@ -175,32 +183,8 @@ export class ValuesSingleton {
     'ViewTransitionNew',
     'ViewTransitionOld',
   ];
-  public pseudos: IPseudo[] = this.pseudoClasses
-    .sort((e1: number | string, e2: number | string) => {
-      e1 = e1.toString().length;
-      e2 = e2.toString().length;
-      return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
-    })
-    .map((pse: string) => {
-      return {
-        mask: pse,
-        real: `${this.separator}:${css_camel.camelToCSSValid(pse)}`,
-      };
-    })
-    .concat(
-      this.pseudoElements
-        .sort((e1: number | string, e2: number | string) => {
-          e1 = e1.toString().length;
-          e2 = e2.toString().length;
-          return e1 > e2 ? 1 : e1 < e2 ? -1 : 0;
-        })
-        .map((pse: string) => {
-          return {
-            mask: pse,
-            real: `${this.separator}::${css_camel.camelToCSSValid(pse)}`,
-          };
-        })
-    );
+  public pseudos: IPseudo[] = [];
+  public pageSpecificSet: Set<string> = new Set(['Right', 'Left']);
   public importantActive: boolean = true;
   public abreviationTraductors: IAbreviationTraductor[] = [
     {
@@ -348,6 +332,16 @@ export class ValuesSingleton {
       traductionRegExp: /;/g,
     },
   ];
+  public translatorMaps: {
+    traduceMap: Map<string, { regex: RegExp; replacement: string }>;
+    convertMap: Map<string, { regex: RegExp; replacement: string | RegExp }>;
+  } = {
+    traduceMap: new Map<string, { regex: RegExp; replacement: string }>(),
+    convertMap: new Map<
+      string,
+      { regex: RegExp; replacement: string | RegExp }
+    >(),
+  };
   /* Time Management*/
   public useTimer: boolean = true;
   public lastTimeAsked2Create: number = new Date().getTime();
@@ -367,13 +361,64 @@ export class ValuesSingleton {
     this.commonPropertiesValuesAbreviations
   );
   /* Logging */
-  chosenSectionOptions: TChosenLogSectionOptions = defaultChosenSectionOptions;
+  public chosenSectionOptions: TChosenLogSectionOptions =
+    defaultChosenSectionOptions;
+  /* Cache */
+  public propertyJoinerCache: Map<string, string> = new Map();
+  public propertyJoinerCacheSize: number = 1000;
+  public regExpCache: Map<string, RegExp> = new Map();
+  public regExpCacheSize: number = 1000;
+  public buttonCssCache: Map<string, string> = new Map();
+  public buttonCssCacheSize: number = 1000;
+  public buttonShadeCache: Map<string, string> = new Map();
+  public buttonShadeCacheSize: number = 1000;
+  public buttonCorrectionCache: Map<string, string> = new Map();
+  public buttonCorrectionCacheSize: number = 1000;
+  public camelCache: Map<string, string> = new Map();
+  public camelCacheSize: number = 1000;
+  public cssValidCache: Map<string, boolean> = new Map();
+  public cssValidCacheSize: number = 1000;
+  public colorTransformCache: Map<string, string> = new Map();
+  public colorTransformCacheSize: number = 1000;
+  public comboDecryptCache: Map<string, string> = new Map();
+  public comboDecryptCacheSize: number = 1000;
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {
     if (!ValuesSingleton.instance) {
       ValuesSingleton.instance = new ValuesSingleton();
+      this.instance.init();
     }
     return ValuesSingleton.instance;
+  }
+
+  public init() {
+    this.translatorMaps = (() => {
+      const traduceMap = new Map<
+        string,
+        { regex: RegExp; replacement: string }
+      >();
+      const convertMap = new Map<
+        string,
+        { regex: RegExp; replacement: string | RegExp }
+      >();
+      for (const abr of this.abreviationTraductors) {
+        // Cache for "traduce" mode (abbreviation -> traduction)
+        traduceMap.set(abr.abreviation, {
+          regex: abr.abreviationRegExp,
+          replacement: abr.traduction,
+        });
+
+        // Cache for "convert" mode (traduction -> abbreviation)
+        convertMap.set(abr.traduction, {
+          regex: abr.traductionRegExp,
+          replacement: abr.abreviation,
+        });
+      }
+      return {
+        traduceMap,
+        convertMap,
+      };
+    })();
   }
 }

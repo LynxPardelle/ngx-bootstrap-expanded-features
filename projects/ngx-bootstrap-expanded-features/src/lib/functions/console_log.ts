@@ -1,7 +1,8 @@
+/* Singletons */
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Interfaces */
 import { TLogPartsOptions, TLogSectionOptions } from '../types';
 import { IConsoleParser } from '../interfaces';
-import { ValuesSingleton } from '../singletons/valuesSingleton';
 function getStackTrace(): string {
   let stack;
   try {

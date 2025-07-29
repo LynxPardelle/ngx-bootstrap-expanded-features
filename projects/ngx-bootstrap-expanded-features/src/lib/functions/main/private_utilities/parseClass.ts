@@ -26,24 +26,24 @@ interface IparseClassReturn {
 }
 /**
  * Parses a CSS class string and converts it into valid CSS rules with breakpoint support.
- * 
+ *
  * This function takes a class name with abbreviated CSS properties and values, processes it through
  * various transformations including abbreviation expansion, pseudo-class conversion, breakpoint handling,
  * and value translation to generate valid CSS rules.
- * 
+ *
  * @param class2Create - The CSS class name to parse and create (may contain abbreviations)
  * @param bpsStringed - Array of breakpoint objects containing breakpoint information
  * @param classes2CreateStringed - Accumulated string of CSS classes being created
  * @param isClean - Whether to check for already created classes to avoid duplicates (default: true)
- * 
+ *
  * @returns Promise resolving to an object containing:
  *   - class2Create: The processed class name
  *   - bpsStringed: Updated breakpoint array with new CSS rules
  *   - classes2CreateStringed: Updated accumulated CSS classes string
- * 
+ *
  * @example
  * ```typescript
- * await parseClass('bef-overflowX-hidden', [], '', true): 
+ * await parseClass('bef-overflowX-hidden', [], '', true):
  * {
  *   class2Create: 'lib-margin-10',
  *   bpsStringed: [
@@ -76,7 +76,7 @@ interface IparseClassReturn {
  *   classes2CreateStringed: '.bef-overflowX-hidden{overflow-x:hidden !important;}þµÞ'
  * }
  * ```
- * 
+ *
  * @remarks
  * - Handles abbreviation expansion (e.g., 'm' to 'margin')
  * - Processes pseudo-classes and combinators
@@ -97,6 +97,12 @@ export const parseClass = async (
     [classes2CreateStringed, 'classes2CreateStringed'],
     [isClean, 'isClean'],
   ]);
+  if (!values.sheet)
+    return {
+      class2Create: class2Create,
+      bpsStringed: bpsStringed,
+      classes2CreateStringed: classes2CreateStringed,
+    };
   // Check if already created CssClass and return if it is
   if (isClean) {
     if (
@@ -225,11 +231,9 @@ export const parseClass = async (
     [propertyValues, 'propertyValues'],
   ]);
   // Traducing the values to the css notation
-  propertyValues = await Promise.all(
-    propertyValues.map(async (pv: string) => {
-      return await valueTraductor(pv, property);
-    })
-  );
+  propertyValues = propertyValues.map((pv: string) => {
+    return valueTraductor(pv, property);
+  });
   log(propertyValues, 'propertyValues');
   if (!propertyValues[0]) {
     propertyValues[0] = 'default';
