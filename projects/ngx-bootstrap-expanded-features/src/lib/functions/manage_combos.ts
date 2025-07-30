@@ -5,7 +5,7 @@ import { console_log } from './console_log';
 import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
-import { manage_cache, TCacheOptions } from './manage_cache';
+import { manage_cache } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageCombos', t, p);
@@ -32,7 +32,9 @@ export const manage_combos = {
           }
         );
       });
-      manage_cache.clearAllNoneEssential();
+      if (values.cacheActive) {
+        manage_cache.clearAllNoneEssential();
+      }
       if (prevIgnoredCombosValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredCombosValues);
       } else {
@@ -70,7 +72,9 @@ export const manage_combos = {
               }
             }
           }
-          manage_cache.clearAllNoneEssential();
+          if (values.cacheActive) {
+            manage_cache.clearAllNoneEssential();
+          }
           cssCreate.cssCreate();
         }
       } else {

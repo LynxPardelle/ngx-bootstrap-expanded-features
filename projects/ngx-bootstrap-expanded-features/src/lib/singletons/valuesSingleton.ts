@@ -364,24 +364,17 @@ export class ValuesSingleton {
   public chosenSectionOptions: TChosenLogSectionOptions =
     defaultChosenSectionOptions;
   /* Cache */
+  public cacheActive: boolean = true;
+  public cacheSize: number = 1000;
   public propertyJoinerCache: Map<string, string> = new Map();
-  public propertyJoinerCacheSize: number = 1000;
   public regExpCache: Map<string, RegExp> = new Map();
-  public regExpCacheSize: number = 1000;
   public buttonCssCache: Map<string, string> = new Map();
-  public buttonCssCacheSize: number = 1000;
   public buttonShadeCache: Map<string, string> = new Map();
-  public buttonShadeCacheSize: number = 1000;
   public buttonCorrectionCache: Map<string, string> = new Map();
-  public buttonCorrectionCacheSize: number = 1000;
   public camelCache: Map<string, string> = new Map();
-  public camelCacheSize: number = 1000;
   public cssValidCache: Map<string, boolean> = new Map();
-  public cssValidCacheSize: number = 1000;
   public colorTransformCache: Map<string, string> = new Map();
-  public colorTransformCacheSize: number = 1000;
   public comboDecryptCache: Map<string, string> = new Map();
-  public comboDecryptCacheSize: number = 1000;
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {

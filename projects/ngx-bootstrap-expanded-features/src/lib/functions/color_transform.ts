@@ -59,12 +59,14 @@ export const color_transform = {
       const normalizedColor = color.toLowerCase().trim();
 
       // Check cache first
-      const cachedResult = manage_cache.getCached(
-        normalizedColor,
-        'colorTransform'
-      );
-      if (cachedResult) {
-        return JSON.parse(cachedResult) as number[];
+      if (values.cacheActive) {
+        const cachedResult = manage_cache.getCached(
+          normalizedColor,
+          'colorTransform'
+        );
+        if (cachedResult) {
+          return JSON.parse(cachedResult) as number[];
+        }
       }
 
       let rgb: number[] = [255, 0, 0]; // Default fallback color (red)
@@ -84,11 +86,13 @@ export const color_transform = {
       }
 
       // Cache the result for future use
-      manage_cache.addCached(
-        normalizedColor,
-        'colorTransform',
-        JSON.stringify(rgb)
-      );
+      if (values.cacheActive) {
+        manage_cache.addCached(
+          normalizedColor,
+          'colorTransform',
+          JSON.stringify(rgb)
+        );
+      }
       return rgb;
     } catch (error) {
       console_log.consoleLog('error', { colorToRGBError: error, color });
@@ -556,14 +560,18 @@ export const color_transform = {
   separateColor4Transform(value: string): RegExpMatchArray | null {
     log(value, 'value Pre SeparateColor4Transform');
     return value.match(
-      manage_cache.getCached<RegExp>(
-        `colorTransform_colorRegex`,
-        'regExp',
-        () =>
-          new RegExp(
+      values.cacheActive
+        ? (manage_cache.getCached<RegExp>(
+            `colorTransform_colorRegex`,
+            'regExp',
+            () =>
+              new RegExp(
+                /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
+              )
+          ) as RegExp)
+        : new RegExp(
             /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
           )
-      ) as RegExp
     );
   },
 };

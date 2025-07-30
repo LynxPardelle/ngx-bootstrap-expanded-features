@@ -86,10 +86,13 @@ export const decryptCombo = (
   }
 
   // Check result cache first for instant response
-  const cacheKey = createCacheKey(specify, class2Create, class2CreateStringed);
-  const cachedDecryption = manage_cache.getCached(cacheKey, 'comboDecrypt');
-  if (cachedDecryption) {
-    return JSON.parse(cachedDecryption) as string[];
+  let cacheKey: string | undefined;
+  if (values.cacheActive) {
+    cacheKey = createCacheKey(specify, class2Create, class2CreateStringed);
+    const cachedDecryption = manage_cache.getCached(cacheKey, 'comboDecrypt');
+    if (cachedDecryption) {
+      return JSON.parse(cachedDecryption) as string[];
+    }
   }
 
   multiLog([
@@ -117,15 +120,20 @@ export const decryptCombo = (
 
   if (alreadyABBRCombo) {
     // Get cached regex for efficient replacement
-    const regex = manage_cache.getCached<RegExp>(
-      `decryptCombo_${alreadyABBRCombo}`,
-      'regExp',
-      () =>
-        new RegExp(
+    const regex = values.cacheActive
+      ? (manage_cache.getCached<RegExp>(
+          `decryptCombo_${alreadyABBRCombo}`,
+          'regExp',
+          () =>
+            new RegExp(
+              alreadyABBRCombo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+              'gi'
+            )
+        ) as RegExp)
+      : new RegExp(
           alreadyABBRCombo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
           'gi'
-        )
-    ) as RegExp;
+        );
     const replacement = values.combosCreated[alreadyABBRCombo];
 
     // Direct synchronous replacement - no need for async operations
@@ -142,11 +150,13 @@ export const decryptCombo = (
   log(comboDecrypted, 'comboDecrypted');
 
   // Cache the result for future calls
-  manage_cache.addCached(
-    cacheKey,
-    'comboDecrypt',
-    JSON.stringify(comboDecrypted)
-  );
+  if (values.cacheActive && cacheKey) {
+    manage_cache.addCached(
+      cacheKey,
+      'comboDecrypt',
+      JSON.stringify(comboDecrypted)
+    );
+  }
 
   return comboDecrypted;
 };

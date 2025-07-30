@@ -3,7 +3,7 @@ import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
 import { console_log } from './console_log';
 import { cssCreate } from './cssCreate';
-import { manage_cache, TCacheOptions } from './manage_cache';
+import { manage_cache } from './manage_cache';
 /* Types */
 import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
@@ -19,7 +19,9 @@ export const manage_CSSNamesParsed = {
       Object.keys(cssNamesParsed).forEach((key) => {
         values.cssNamesParsed[key] = cssNamesParsed[key];
       });
-      manage_cache.clearAllNoneEssential();
+      if (values.cacheActive) {
+        manage_cache.clearAllNoneEssential();
+      }
       cssCreate.cssCreate();
     } catch (err) {
       console_log.consoleLog('error', { err: err });
@@ -39,7 +41,9 @@ export const manage_CSSNamesParsed = {
             classesToUpdate.push(createdClass);
           }
         }
-        manage_cache.clearAllNoneEssential();
+        if (values.cacheActive) {
+          manage_cache.clearAllNoneEssential();
+        }
         if (classesToUpdate.length > 0) {
           cssCreate.cssCreate(classesToUpdate);
         } else {

@@ -10,7 +10,7 @@ import { manage_cache } from '../../manage_cache';
 import { TNameVal } from '../private_types/types.private';
 import { TLogPartsOptions } from '../../../types';
 
-
+const values: ValuesSingleton = ValuesSingleton.getInstance();
 /**
  * Pre-defined shade number arrays to avoid repeated allocations
  */
@@ -40,12 +40,17 @@ const generateShadeArray = (value: string, secondValue: string): TNameVal[] => {
     for (const shadeNum of [-15, -20, -25, 3]) {
       shadesArray.push({
         name: `${baseVal.name},${shadeNum}`,
-        val: manage_cache.getCached<string>(
-          `${shadeNum}|${baseVal.val}`,
-          'buttonShade',
-          () =>
-            color_transform.getShadeTintColorOrGradient(shadeNum, baseVal.val)
-        ) as string,
+        val: values.cacheActive
+          ? (manage_cache.getCached<string>(
+              `${shadeNum}|${baseVal.val}`,
+              'buttonShade',
+              () =>
+                color_transform.getShadeTintColorOrGradient(
+                  shadeNum,
+                  baseVal.val
+                )
+            ) as string)
+          : color_transform.getShadeTintColorOrGradient(shadeNum, baseVal.val),
       });
     }
   }
@@ -116,19 +121,19 @@ export const btnCreator = async (
   secondValue: string = 'transparent',
   outline: boolean = false
 ): Promise<string> => {
-  // Smart cache validation - only invalidates when data actually changes
-  const values: ValuesSingleton = ValuesSingleton.getInstance();
-
   // Early validation
   if (!class2Create || !value) {
     return '';
   }
 
   // Check cache first for instant response
-  const cacheKey = `${class2Create}|${specify}|${value}|${secondValue}|${outline}`;
-  const cachedResult = manage_cache.getCached<string>(cacheKey, 'buttonCss');
-  if (cachedResult !== undefined) {
-    return cachedResult;
+  let cacheKey: string | undefined;
+  if (values.cacheActive) {
+    cacheKey = `${class2Create}|${specify}|${value}|${secondValue}|${outline}`;
+    const cachedResult = manage_cache.getCached<string>(cacheKey, 'buttonCss');
+    if (cachedResult !== undefined) {
+      return cachedResult;
+    }
   }
 
   multiLog([
@@ -173,10 +178,13 @@ export const btnCreator = async (
   for (const shade of shadesArray) {
     for (const prop of ['background-color', 'color', 'border-color']) {
       correctionTasks.push(
-        manage_cache.getCachedPromised<string>(
-          `${prop}|${shade.val}`,
-          'buttonCorrection',
-          async () => await propertyNValueCorrector(prop, shade.val)
+        (values.cacheActive
+          ? manage_cache.getCachedPromised<string>(
+              `${prop}|${shade.val}`,
+              'buttonCorrection',
+              async () => await propertyNValueCorrector(prop, shade.val)
+            )
+          : propertyNValueCorrector(prop, shade.val)
         ).then((correctedVal) => ({
           name: `${shade.name},${prop}`,
           val: correctedVal,
@@ -196,10 +204,14 @@ export const btnCreator = async (
 
   for (const shadowVal of shadowValues) {
     correctionTasks.push(
-      manage_cache.getCachedPromised<string>(
-        `${'box-shadow'}|${shadowVal.val}`,
-        'buttonCorrection',
-        async () => await propertyNValueCorrector('box-shadow', shadowVal.val)
+      (values.cacheActive
+        ? manage_cache.getCachedPromised<string>(
+            `${'box-shadow'}|${shadowVal.val}`,
+            'buttonCorrection',
+            async () =>
+              await propertyNValueCorrector('box-shadow', shadowVal.val)
+          )
+        : propertyNValueCorrector('box-shadow', shadowVal.val)
       ).then((correctedVal) => ({
         name: `${shadowVal.name}Corrected`,
         val: correctedVal,
@@ -230,11 +242,13 @@ export const btnCreator = async (
   ]);
 
   // Get cached regex for efficient replacements
-  const specifyRegex = manage_cache.getCached<RegExp>(
-    `${values.specify}|g`,
-    'regExp',
-    () => new RegExp(values.specify, 'g')
-  ) as RegExp;
+  const specifyRegex = values.cacheActive
+    ? (manage_cache.getCached<RegExp>(
+        `${values.specify}|g`,
+        'regExp',
+        () => new RegExp(values.specify, 'g')
+      ) as RegExp)
+    : new RegExp(values.specify, 'g');
   const newRuleArray: string[] = [];
 
   // Build CSS rules efficiently
@@ -302,7 +316,9 @@ export const btnCreator = async (
     .join(values.separator);
 
   // Cache the result for future calls
-  manage_cache.addCached<string>(cacheKey, 'buttonCss', result);
+  if (values.cacheActive && cacheKey) {
+    manage_cache.addCached<string>(cacheKey, 'buttonCss', result);
+  }
 
   return result;
 };

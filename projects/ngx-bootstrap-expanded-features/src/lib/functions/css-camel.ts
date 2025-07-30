@@ -1,5 +1,8 @@
+/* Singletons */
+import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Cache Management */
 import { manage_cache } from './manage_cache';
+const values: ValuesSingleton = ValuesSingleton.getInstance();
 /**
  * Pre-compiled regex patterns for optimal performance
  * Cached regex objects eliminate repeated pattern compilation overhead
@@ -71,10 +74,13 @@ export const css_camel = {
     }
 
     // Check cache first for instant response
-    const cacheKey = `css2camel:${st}`;
-    const cachedResult = manage_cache.getCached<string>(cacheKey, 'cssValid');
-    if (cachedResult !== undefined) {
-      return cachedResult;
+    let cacheKey: string | undefined;
+    if (values.cacheActive) {
+      cacheKey = `css2camel:${st}`;
+      const cachedResult = manage_cache.getCached<string>(cacheKey, 'cssValid');
+      if (cachedResult !== undefined) {
+        return cachedResult;
+      }
     }
 
     // Optimized conversion using pre-compiled regex
@@ -85,7 +91,9 @@ export const css_camel = {
     });
 
     // Cache the result for future calls
-    manage_cache.addCached<string>(cacheKey, 'cssValid', result);
+    if (values.cacheActive && cacheKey) {
+      manage_cache.addCached<string>(cacheKey, 'cssValid', result);
+    }
 
     return result;
   },
@@ -127,10 +135,13 @@ export const css_camel = {
     }
 
     // Check cache first for instant response
-    const cacheKey = `camel2css:${st}`;
-    const cachedResult = manage_cache.getCached<string>(cacheKey, 'camel');
-    if (cachedResult !== undefined) {
-      return cachedResult;
+    let cacheKey: string | undefined;
+    if (values.cacheActive) {
+      cacheKey = `camel2css:${st}`;
+      const cachedResult = manage_cache.getCached<string>(cacheKey, 'camel');
+      if (cachedResult !== undefined) {
+        return cachedResult;
+      }
     }
 
     // Optimized conversion using pre-compiled regex with single toLowerCase call
@@ -142,7 +153,9 @@ export const css_camel = {
       .toLowerCase();
 
     // Cache the result for future calls
-    manage_cache.addCached<string>(cacheKey, 'camel', result);
+    if (values.cacheActive && cacheKey) {
+      manage_cache.addCached<string>(cacheKey, 'camel', result);
+    }
 
     return result;
   },

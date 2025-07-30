@@ -5,7 +5,11 @@ import { console_log } from './console_log';
 import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
-import { manage_cache, TCacheOptions, TCacheOptionsPromised } from './manage_cache';
+import {
+  manage_cache,
+  TCacheOptions,
+  TCacheOptionsPromised,
+} from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageColors', t, p);
@@ -124,30 +128,33 @@ const afterManageColors = (
     );
   }
   values.colorsRegex = manage_colors.getColorsRegex();
-  const newColorsValues = !toDelete ? Object.values(managedColors) : [];
-  const revisionForCachedColor: string[] = [
-    ...newColorsNames,
-    ...newColorsValues,
-  ];
-  const cacheSettingsToUpdate: (TCacheOptions | TCacheOptionsPromised)[] = [
-    'propertyJoiner',
-    'buttonCss',
-    'buttonShade',
-    'buttonCorrection',
-    'colorTransform'
-  ];
-  for (let cacheSetting of cacheSettingsToUpdate) {
-    manage_cache.deleteCached<string>(cacheSetting, (args) => {
-      for (let i = 0; i < revisionForCachedColor.length; i++) {
-        if (
-          (args.element && args.element.includes(revisionForCachedColor[i])) ||
-          (args.key && args.key.includes(revisionForCachedColor[i]))
-        ) {
-          return { add2Remove: true };
+  if (values.cacheActive) {
+    const newColorsValues = !toDelete ? Object.values(managedColors) : [];
+    const revisionForCachedColor: string[] = [
+      ...newColorsNames,
+      ...newColorsValues,
+    ];
+    const cacheSettingsToUpdate: (TCacheOptions | TCacheOptionsPromised)[] = [
+      'propertyJoiner',
+      'buttonCss',
+      'buttonShade',
+      'buttonCorrection',
+      'colorTransform',
+    ];
+    for (let cacheSetting of cacheSettingsToUpdate) {
+      manage_cache.deleteCached<string>(cacheSetting, (args) => {
+        for (let i = 0; i < revisionForCachedColor.length; i++) {
+          if (
+            (args.element &&
+              args.element.includes(revisionForCachedColor[i])) ||
+            (args.key && args.key.includes(revisionForCachedColor[i]))
+          ) {
+            return { add2Remove: true };
+          }
         }
-      }
-      return;
-    });
+        return;
+      });
+    }
   }
 
   const classesToUpdate: string[] = [];

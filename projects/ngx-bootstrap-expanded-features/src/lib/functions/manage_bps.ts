@@ -12,7 +12,7 @@ interface WithBefs {
 interface IBPSWithBefs extends IBPS, WithBefs {}
 /* Types */
 import { TLogPartsOptions } from '../types';
-import { manage_cache, TCacheOptions } from './manage_cache';
+import { manage_cache } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageBps', t, p);
@@ -37,7 +37,9 @@ export const manage_bps = {
           values.breakPoints.add(nb.bp);
         }
       }
-      manage_cache.clearAllNoneEssential();
+      if (values.cacheActive) {
+        manage_cache.clearAllNoneEssential();
+      }
       cssCreate.cssCreate();
     } catch (err) {
       console_log.consoleLog('error', { err: err });

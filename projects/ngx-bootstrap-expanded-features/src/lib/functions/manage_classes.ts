@@ -5,7 +5,7 @@ import { console_log } from './console_log';
 import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
-import { manage_cache, TCacheOptions } from './manage_cache';
+import { manage_cache } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageClasses', t, p);
@@ -19,7 +19,9 @@ export const manage_classes = {
     return values.alreadyCreatedClasses;
   },
   updateClasses(classesToUpdate: string[]): void {
-    manage_cache.clearAllNoneEssential();
+    if (values.cacheActive) {
+      manage_cache.clearAllNoneEssential();
+    }
     cssCreate.cssCreate(classesToUpdate);
   },
 };

@@ -90,12 +90,15 @@ export const property2ValueJoiner = async (
   }
 
   // Check cache first for instant response
-  const cacheKey = `${property}|${class2CreateSplited.join(
-    '-'
-  )}|${class2Create}|${propertyValues.join(',')}|${specify}`;
-  const cachedResult = values.propertyJoinerCache.get(cacheKey);
-  if (cachedResult !== undefined) {
-    return cachedResult;
+  let cacheKey: string | undefined;
+  if (values.cacheActive) {
+    cacheKey = `${property}|${class2CreateSplited.join(
+      '-'
+    )}|${class2Create}|${propertyValues.join(',')}|${specify}`;
+    const cachedResult = values.propertyJoinerCache.get(cacheKey);
+    if (cachedResult !== undefined) {
+      return cachedResult;
+    }
   }
 
   let result: string;
@@ -146,7 +149,9 @@ export const property2ValueJoiner = async (
       result = CSS_TEMPLATES.single(specify, cssProperty, propertyValues[0]);
     }
   }
-  manage_cache.addCached<string>(cacheKey, 'propertyJoiner', result);
+  if (values.cacheActive && cacheKey) {
+    manage_cache.addCached<string>(cacheKey, 'propertyJoiner', result);
+  }
 
   return result;
 };

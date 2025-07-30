@@ -5,7 +5,7 @@ import { console_log } from './console_log';
 import { cssCreate } from './cssCreate';
 /* Types */
 import { TLogPartsOptions } from '../types';
-import { manage_cache, TCacheOptions } from './manage_cache';
+import { manage_cache } from './manage_cache';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageAbreviations', t, p);
@@ -25,7 +25,9 @@ export const manage_abreviations = {
           }
         );
       });
-      manage_cache.clearAllNoneEssential();
+      if (values.cacheActive) {
+        manage_cache.clearAllNoneEssential();
+      }
       if (prevIgnoredAbreviationsValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredAbreviationsValues);
       } else {
@@ -46,7 +48,9 @@ export const manage_abreviations = {
           }
         );
       });
-      manage_cache.clearAllNoneEssential();
+      if (values.cacheActive) {
+        manage_cache.clearAllNoneEssential();
+      }
       if (prevIgnoredAbreviationsValues.length > 0) {
         cssCreate.cssCreate(prevIgnoredAbreviationsValues);
       } else {
@@ -74,7 +78,9 @@ export const manage_abreviations = {
             classesToUpdate.push(createdClass);
           }
         }
-        manage_cache.clearAllNoneEssential();
+        if (values.cacheActive) {
+          manage_cache.clearAllNoneEssential();
+        }
         if (classesToUpdate.length > 0) {
           cssCreate.cssCreate(classesToUpdate);
         } else {
@@ -99,7 +105,9 @@ export const manage_abreviations = {
             classesToUpdate.push(createdClass);
           }
         }
-        manage_cache.clearAllNoneEssential();
+        if (values.cacheActive) {
+          manage_cache.clearAllNoneEssential();
+        }
         if (classesToUpdate.length > 0) {
           cssCreate.cssCreate(classesToUpdate);
         } else {

@@ -65,10 +65,9 @@ export const manage_cache = {
       string,
       T
     >;
-    const cacheSize = values[`${cache}CacheSize`];
-    if (cacheContainer.size >= cacheSize) {
+    if (cacheContainer.size >= values.cacheSize) {
       manage_cache.deleteCached(cache, (args) => {
-        if (args.index && args.index < Math.floor(cacheSize / 4)) {
+        if (args.index && args.index < Math.floor(values.cacheSize / 4)) {
           return { add2Remove: true, last: false };
         }
         return { add2Remove: false, last: true };

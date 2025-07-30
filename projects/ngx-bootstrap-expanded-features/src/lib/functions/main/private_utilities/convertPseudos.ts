@@ -72,26 +72,32 @@ export const convertPseudos = (
 
     if (values.pseudosHasSDED.has(pse.mask)) {
       regexKey = `${pse.mask}_SDED`;
-      regExp = manage_cache.getCached<RegExp>(
-        regexKey,
-        'regExp',
-        () => new RegExp(':*' + pse.mask + '\\(', 'gi')
-      );
+      regExp = values.cacheActive
+        ? manage_cache.getCached<RegExp>(
+            regexKey,
+            'regExp',
+            () => new RegExp(':*' + pse.mask + '\\(', 'gi')
+          )
+        : new RegExp(':*' + pse.mask + '\\(', 'gi');
       replacement = remove ? '' : pse.real + '(';
     } else if (values.pageSpecificSet.has(pse.mask)) {
       regexKey = `${pse.mask}_PAGE`;
-      regExp = manage_cache.getCached<RegExp>(
-        regexKey,
-        'regExp',
-        () => new RegExp('page' + pse.mask, 'gi')
-      );
+      regExp = values.cacheActive
+        ? manage_cache.getCached<RegExp>(
+            regexKey,
+            'regExp',
+            () => new RegExp('page' + pse.mask, 'gi')
+          )
+        : new RegExp('page' + pse.mask, 'gi');
       replacement = remove ? '' : 'page' + pse.real;
     } else {
-      regExp = manage_cache.getCached<RegExp>(
-        regexKey,
-        'regExp',
-        () => new RegExp(':*' + pse.mask, 'gi')
-      );
+      regExp = values.cacheActive
+        ? manage_cache.getCached<RegExp>(
+            regexKey,
+            'regExp',
+            () => new RegExp(':*' + pse.mask, 'gi')
+          )
+        : new RegExp(':*' + pse.mask, 'gi');
       replacement = remove ? '' : pse.real;
     }
 
