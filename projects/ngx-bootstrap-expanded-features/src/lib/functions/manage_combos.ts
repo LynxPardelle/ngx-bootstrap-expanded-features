@@ -26,7 +26,10 @@ export const manage_combos = {
                   return c.split(' ').flat();
                 })
                 .flat();
-        prevIgnoredCombosValues = values.alreadyCreatedClasses.filter(
+        if (!values.combosKeys.has(key)) {
+          values.combosKeys.add(key);
+        }
+        prevIgnoredCombosValues = Array.from(values.alreadyCreatedClasses).filter(
           (aC: any) => {
             return aC.includes(key);
           }
@@ -65,11 +68,8 @@ export const manage_combos = {
                 return cssRule.cssText.includes(class2Delete);
               })
             );
-            for (let i = 0; i < values.alreadyCreatedClasses.length; i++) {
-              if (values.alreadyCreatedClasses[i] === class2Delete) {
-                values.alreadyCreatedClasses.splice(i, 1);
-                i--;
-              }
+            if (values.alreadyCreatedClasses.has(class2Delete)) {
+              values.alreadyCreatedClasses.delete(class2Delete);
             }
           }
           if (values.cacheActive) {

@@ -16,7 +16,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 export const manage_classes = {
   getAlreadyCreatedClasses(): string[] {
     log(values.alreadyCreatedClasses, 'alreadyCreatedClasses');
-    return values.alreadyCreatedClasses;
+    return Array.from(values.alreadyCreatedClasses);
   },
   updateClasses(classesToUpdate: string[]): void {
     if (values.cacheActive) {

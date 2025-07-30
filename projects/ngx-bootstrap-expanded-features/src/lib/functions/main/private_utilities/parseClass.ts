@@ -10,6 +10,7 @@ import { look4BPNVals } from './look4BPNVals';
 import { valueTraductor } from './valueTraductor';
 import { decryptCombo } from './decryptCombo';
 import { property2ValueJoiner } from './property2ValueJoiner';
+import { manage_cache } from '../../manage_cache';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
@@ -91,25 +92,40 @@ export const parseClass = async (
   classes2CreateStringed: string,
   isClean: boolean = true
 ): Promise<IparseClassReturn> => {
+  // Early validation
+  if (!class2Create || !values.sheet) {
+    return {
+      class2Create,
+      bpsStringed: [],
+      classes2CreateStringed: '',
+    };
+  }
+  // Check cache first for instant response
+  if (values.cacheActive) {
+    const cachedResult = manage_cache.getCached<{
+      class2Create: string;
+      bpsStringed: IBPS[];
+      classes2CreateStringed: string;
+    }>(class2Create, 'parseClass');
+    if (cachedResult) {
+      return {
+        class2Create: cachedResult.class2Create,
+        bpsStringed: [...cachedResult.bpsStringed], // Deep copy arrays to prevent mutation
+        classes2CreateStringed: cachedResult.classes2CreateStringed,
+      };
+    }
+  }
   multiLog([
     [class2Create, 'class2Create'],
     [bpsStringed, 'bpsStringed'],
     [classes2CreateStringed, 'classes2CreateStringed'],
     [isClean, 'isClean'],
   ]);
-  if (!values.sheet)
-    return {
-      class2Create: class2Create,
-      bpsStringed: bpsStringed,
-      classes2CreateStringed: classes2CreateStringed,
-    };
   // Check if already created CssClass and return if it is
   if (isClean) {
     if (
-      values.alreadyCreatedClasses.find((aC: any) => {
-        return aC === class2Create;
-      }) ||
-      [...values.sheet.cssRules].find((i) =>
+      values.alreadyCreatedClasses.has(class2Create) ||
+      [...values.sheet.cssRules].find((i: CSSRule) =>
         i.cssText.split(' ').find((aC: string) => {
           return aC.replace('.', '') === class2Create;
         })
@@ -121,10 +137,10 @@ export const parseClass = async (
         classes2CreateStringed: classes2CreateStringed,
       };
     } else {
-      values.alreadyCreatedClasses.push(class2Create);
+      values.alreadyCreatedClasses.add(class2Create);
     }
   } else {
-    values.alreadyCreatedClasses.push(class2Create);
+    values.alreadyCreatedClasses.add(class2Create);
   }
   log(values.alreadyCreatedClasses, 'alreadyCreatedClasses');
   // Get the class for the final string from the original class2Create after the conversion of the abreviations
@@ -148,62 +164,77 @@ export const parseClass = async (
     [1] => css property
     [2] => bp or the first|unique value
    */
-  let class2CreateSplited = class2Create.split('-');
+  const class2CreateSplited = class2Create.split('-');
   log(class2CreateSplited, 'class2CreateSplited');
   // Convert the pseudos from camel case into valid pseudo and separate pseudos and combinators from the property
-  let comboCreatedKey: string | undefined = Object.keys(
-    values.combosCreated
-  ).find((cC) => {
-    return class2Create.includes(cC);
-  });
-  if (!!comboCreatedKey) {
+  let comboCreatedKey: string | undefined;
+  for (const cC of values.combosCreatedKeys) {
+    if (class2Create.includes(cC)) {
+      comboCreatedKey = cC;
+      break;
+    }
+  }
+  if (comboCreatedKey) {
     let comboKeyReg = new RegExp(comboCreatedKey, 'g');
     class2CreateSplited[1] = class2CreateSplited[1].replace(
       comboKeyReg,
       values.encryptComboCreatedCharacters
     );
   }
-  let classWithPseudosConvertedAndSELSplited = convertPseudos(
+
+  // Convert pseudos and process selectors
+  const classWithPseudosConvertedAndSELSplited = convertPseudos(
     class2CreateSplited[1]
   )
     .replace(/SEL/g, values.separator)
     .split(`${values.separator}`);
+
   log(
     classWithPseudosConvertedAndSELSplited,
     'classWithPseudosConvertedAndSELSplited'
   );
+
   // Declaring the property to create the combinations and use Pseudos
-  let property = classWithPseudosConvertedAndSELSplited[0];
+  const property = classWithPseudosConvertedAndSELSplited[0];
   log(property, 'property');
-  // Getting the specify to traduce the library abreviations to utilizable css notation
-  let specify = abreviation_traductors.abreviationTraductor(
-    classWithPseudosConvertedAndSELSplited
-      .map((bs: any, i: any) => {
-        if (i !== 0) {
-          return bs;
-        } else {
-          return '';
-        }
-      })
-      .join('')
+
+  // Optimized specify generation
+  const specifyParts = classWithPseudosConvertedAndSELSplited.slice(1);
+  let specify: string = abreviation_traductors.abreviationTraductor(
+    specifyParts.join('')
   );
-  if (!!comboCreatedKey) {
-    let comboKeyCypherReg = new RegExp(
-      values.encryptComboCreatedCharacters,
-      'g'
-    );
+
+  // Handle combo key restoration
+  if (comboCreatedKey) {
+    const comboKeyCypherReg = values.cacheActive
+      ? (manage_cache.getCached<RegExp>(
+          `comboKeyCypherReg|${class2Create}`,
+          'regExp',
+          () => new RegExp(values.encryptComboCreatedCharacters, 'g')
+        ) as RegExp)
+      : new RegExp(values.encryptComboCreatedCharacters, 'g');
     class2CreateSplited[1] = class2CreateSplited[1].replace(
       comboKeyCypherReg,
       comboCreatedKey
     );
+    multiLog([
+      [specify, 'specify PreComboKeyRestoration'],
+      [class2Create, 'class2Create PreComboKeyRestoration'],
+      [class2CreateStringed, 'class2CreateStringed PreComboKeyRestoration'],
+    ]);
     specify = specify.replace(comboKeyCypherReg, comboCreatedKey);
     class2Create = class2Create.replace(comboKeyCypherReg, comboCreatedKey);
     class2CreateStringed = class2CreateStringed.replace(
       comboKeyCypherReg,
       comboCreatedKey
     );
+    multiLog([
+      [specify, 'specify PostComboKeyRestoration'],
+      [class2Create, 'class2Create PostComboKeyRestoration'],
+      [class2CreateStringed, 'class2CreateStringed PostComboKeyRestoration'],
+    ]);
   }
-  log(specify, 'specify');
+
   // Decrypt the combo of the class if it has been encrypted with the encryptCombo flag
   if (!!specify && values.encryptCombo) {
     multiLog([
@@ -211,7 +242,7 @@ export const parseClass = async (
       [class2Create, 'class2Create PreDecryptCombo'],
       [class2CreateStringed, 'class2CreateStringed PreDecryptCombo'],
     ]);
-    [specify, class2Create, class2CreateStringed] = await decryptCombo(
+    [specify, class2Create, class2CreateStringed] = decryptCombo(
       specify,
       class2Create,
       class2CreateStringed
@@ -222,74 +253,110 @@ export const parseClass = async (
       [class2CreateStringed, 'class2CreateStringed PostDecryptCombo'],
     ]);
   }
+
   // Getting if the class has breakPoints, the value and the second value if it has
-  let [hasBP, propertyValues] = Object.values(
-    await look4BPNVals(class2CreateSplited)
+  const bpResult = look4BPNVals(class2CreateSplited);
+  const [hasBP, propertyValues]: [boolean, string[]] = Object.values(
+    bpResult
   ) as [boolean, string[]];
+
   multiLog([
     [hasBP, 'hasBP'],
     [propertyValues, 'propertyValues'],
   ]);
-  // Traducing the values to the css notation
-  propertyValues = propertyValues.map((pv: string) => {
-    return valueTraductor(pv, property);
-  });
-  log(propertyValues, 'propertyValues');
-  if (!propertyValues[0]) {
-    propertyValues[0] = 'default';
+
+  // Optimized value translation with parallel processing
+  const translatedValues = await Promise.all(
+    propertyValues.map(async (pv: string) => {
+      return await valueTraductor(pv, property);
+    })
+  );
+
+  log(translatedValues, 'translatedValues');
+  if (!translatedValues[0]) {
+    translatedValues[0] = 'default';
   }
   multiLog([
-    [propertyValues, 'propertyValues AfterValueTraductor'],
+    [translatedValues, 'translatedValues AfterValueTraductor'],
     [class2CreateSplited, 'class2CreateStringed BeforeProperty2ValueJoiner'],
   ]);
+
   // Joining the property and the values
   class2CreateStringed += await property2ValueJoiner(
     property,
     class2CreateSplited,
     class2Create,
-    propertyValues,
+    translatedValues,
     specify
   );
+
   log(class2CreateStringed, 'class2CreateStringed AfterProperty2ValueJoiner');
+
   // Put the important flag if it is active
   if (!!values.importantActive) {
+    const importantRegex = values.cacheActive
+      ? (manage_cache.getCached<RegExp>(
+          `importantRegex|${class2Create}`,
+          'regExp',
+          () => new RegExp('\\s?!important\\s?', 'g')
+        ) as RegExp)
+      : new RegExp('\\s?!important\\s?', 'g');
     for (let cssProperty of class2CreateStringed.split(';')) {
       if (!cssProperty.includes('!important') && cssProperty.length > 5) {
         class2CreateStringed = class2CreateStringed
           .replace(cssProperty, cssProperty + ' !important')
-          .replace(/(\s?\!important\s?)+/g, ' !important');
+          .replace(importantRegex, ' !important');
       }
     }
   }
+
   log(class2CreateStringed, 'class2CreateStringed AfterImportant');
+
   if (
     class2CreateStringed.includes('{') &&
     class2CreateStringed.includes('}')
   ) {
     if (hasBP === true) {
-      class2CreateStringed = class2CreateStringed.replace(
-        new RegExp(values.separator, 'g'),
-        ''
-      );
-      bpsStringed = bpsStringed.map((b) => {
-        if (class2CreateSplited[2] === b.bp) {
-          b.class2Create += class2CreateStringed;
+      const separatorRegex = values.cacheActive
+        ? (manage_cache.getCached<RegExp>(
+            `separatorRegex|${class2Create}`,
+            'regExp',
+            () => new RegExp(values.separator, 'g')
+          ) as RegExp)
+        : new RegExp(values.separator, 'g');
+      class2CreateStringed = class2CreateStringed.replace(separatorRegex, '');
+
+      // Optimized breakpoint assignment
+      const targetBp = class2CreateSplited[2];
+      for (let i = 0; i < bpsStringed.length; i++) {
+        if (bpsStringed[i].bp === targetBp) {
+          bpsStringed[i].class2Create += class2CreateStringed;
+          break;
         }
-        return b;
-      });
+      }
     } else {
       classes2CreateStringed += class2CreateStringed + values.separator;
     }
   }
+
+  // Final cleanup
   classes2CreateStringed = classes2CreateStringed.replace(/\s+/g, ' ');
+
   multiLog([
     [class2Create, 'class2Create AfterSeparators'],
     [bpsStringed, 'bpsStringed AfterSeparators'],
     [classes2CreateStringed, 'classes2CreateStringed AfterSeparators'],
   ]);
-  return {
+
+  const result = {
     class2Create: class2Create,
     bpsStringed: bpsStringed,
     classes2CreateStringed: classes2CreateStringed,
   };
+
+  if (values.cacheActive) {
+    manage_cache.addCached(class2Create, 'parseClass', result);
+  }
+
+  return result;
 };

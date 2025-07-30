@@ -40,7 +40,7 @@ export class NgxBootstrapExpandedFeaturesService {
   public encryptComboCreatedCharacters: string =
     this.values.encryptComboCreatedCharacters;
   public cssNamesParsed: any = this.values.cssNamesParsed;
-  public alreadyCreatedClasses: string[] = this.values.alreadyCreatedClasses;
+  public alreadyCreatedClasses: Set<string> = this.values.alreadyCreatedClasses;
   public sheet: any = this.values.sheet;
   public isDebug: boolean = this.values.isDebug;
   public bps: any = this.values.bps;

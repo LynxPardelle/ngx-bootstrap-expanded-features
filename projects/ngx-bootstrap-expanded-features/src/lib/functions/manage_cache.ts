@@ -13,7 +13,8 @@ export type TCacheOptions =
   | 'buttonCss'
   | 'cssValid'
   | 'colorTransform'
-  | 'comboDecrypt';
+  | 'comboDecrypt'
+  | 'parseClass';
 export type TCacheOptionsPromised = 'buttonCorrection';
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('manageColors', t, p);
@@ -121,6 +122,7 @@ export const manage_cache = {
       'colorTransform',
       'comboDecrypt',
       'buttonCorrection',
+      'parseClass',
     ];
     for (const key of noEssential) {
       manage_cache.clearCached(key);

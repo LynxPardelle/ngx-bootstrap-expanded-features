@@ -74,6 +74,10 @@ export const allPosibleParts: string[] = [
   /* decryptCombo */
   'cs',
   'comboDecrypted',
+  'combosCreatedKeys',
+  'comboCreatedKey',
+  'comboKeys',
+  'comboKey',
   /* send2CreateRules */
   'bp',
   /* abreviationTraductors */

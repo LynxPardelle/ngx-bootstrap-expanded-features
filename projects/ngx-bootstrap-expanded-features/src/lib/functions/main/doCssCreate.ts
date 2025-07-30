@@ -23,7 +23,7 @@ export const doCssCreate = async (
   try {
     log(updateClasses2Create, 'updateClasses2Create');
     const startTimeCSSCreate = performance.now();
-    const classes2Create =
+    const classes2Create: string[] =
       updateClasses2Create || (await getNewClasses2Create());
     log(classes2Create, 'classes2Create');
     let classes2CreateStringed = '';

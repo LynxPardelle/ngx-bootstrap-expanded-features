@@ -7,6 +7,7 @@ import { doCssCreate } from './main/doCssCreate';
 import { doUseTimer } from './private/doUseTimer';
 import { doUseRecurrentStrategy } from './private/doUseRecurrentStrategy';
 import { css_camel } from './css-camel';
+import { manage_colors } from './manage_colors';
 /* Types */
 import { TLogPartsOptions } from '../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
@@ -58,6 +59,9 @@ export const cssCreate = {
           );
         }
         log('Sheet exists', 'manage_sheets');
+      }
+      if (!values.colorsRegex) {
+        values.colorsRegex = manage_colors.getColorsRegex();
       }
       log('cssCreate');
       if (!!values.useTimer) {

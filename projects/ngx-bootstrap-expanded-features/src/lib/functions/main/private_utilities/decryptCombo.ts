@@ -11,22 +11,6 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 };
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
-
-/**
- * Creates a cache key from the input parameters for result caching
- * @param specify - Specification string
- * @param class2Create - Class creation string
- * @param class2CreateStringed - Stringified class creation string
- * @returns Cache key string
- */
-const createCacheKey = (
-  specify: string,
-  class2Create: string,
-  class2CreateStringed: string
-): string => {
-  return `${specify}|${class2Create}|${class2CreateStringed}`;
-};
-
 /**
  * Decrypts a combination by finding and replacing abbreviated combo strings with their full values.
  *
@@ -84,57 +68,53 @@ export const decryptCombo = (
   if (!specify && !class2Create && !class2CreateStringed) {
     return [specify, class2Create, class2CreateStringed];
   }
-
-  // Check result cache first for instant response
-  let cacheKey: string | undefined;
-  if (values.cacheActive) {
-    cacheKey = createCacheKey(specify, class2Create, class2CreateStringed);
-    const cachedDecryption = manage_cache.getCached(cacheKey, 'comboDecrypt');
-    if (cachedDecryption) {
-      return JSON.parse(cachedDecryption) as string[];
-    }
-  }
-
   multiLog([
     [specify, 'specify'],
     [class2Create, 'class2Create'],
     [class2CreateStringed, 'class2CreateStringed'],
   ]);
 
+  // Check result cache first for instant response
+  let cacheKey: string | undefined;
+  if (values.cacheActive) {
+    cacheKey = `${specify}|${class2Create}|${class2CreateStringed}`;
+    const cachedDecryption = manage_cache.getCached(cacheKey, 'comboDecrypt');
+    if (cachedDecryption) {
+      return JSON.parse(cachedDecryption) as string[];
+    }
+  }
+
   // Get cached combo keys for O(1) lookup instead of O(n) Object.keys().find()
-  const comboKeys = values.combosKeys;
+  const combosCreatedKeys = values.combosCreatedKeys;
+  if (!combosCreatedKeys || combosCreatedKeys.size === 0) {
+    return [specify, class2Create, class2CreateStringed];
+  }
+  log(combosCreatedKeys, 'combosCreatedKeys');
 
   // Find matching combo key using efficient Set-based lookup
-  let alreadyABBRCombo: string | undefined;
-  for (const comboKey of comboKeys) {
-    if (specify.includes(comboKey)) {
-      alreadyABBRCombo = comboKey;
-      log(comboKey, 'cs');
+  let comboCreatedKey: string | undefined;
+  for (const key of combosCreatedKeys) {
+    if (specify.includes(key)) {
+      comboCreatedKey = key;
+      log(comboCreatedKey, 'cs');
       break; // Early exit once found
     }
   }
 
-  log(alreadyABBRCombo, 'alreadyABBRCombo');
+  log(comboCreatedKey, 'comboCreatedKey');
 
   let comboDecrypted: string[];
 
-  if (alreadyABBRCombo) {
+  if (comboCreatedKey) {
     // Get cached regex for efficient replacement
     const regex = values.cacheActive
       ? (manage_cache.getCached<RegExp>(
-          `decryptCombo_${alreadyABBRCombo}`,
+          `decryptCombo_${comboCreatedKey}`,
           'regExp',
-          () =>
-            new RegExp(
-              alreadyABBRCombo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-              'gi'
-            )
+          () => new RegExp(comboCreatedKey, 'gi')
         ) as RegExp)
-      : new RegExp(
-          alreadyABBRCombo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-          'gi'
-        );
-    const replacement = values.combosCreated[alreadyABBRCombo];
+      : new RegExp(comboCreatedKey, 'gi');
+    const replacement = values.combosCreated[comboCreatedKey];
 
     // Direct synchronous replacement - no need for async operations
     comboDecrypted = [

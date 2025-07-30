@@ -19,7 +19,7 @@ export const manage_sheet = {
       if (nsheet.href?.includes(values.styleSheetToManage)) {
         if (values.sheet !== nsheet) {
           values.sheet = nsheet;
-          values.alreadyCreatedClasses = [];
+          values.alreadyCreatedClasses.clear();
           values.combosCreated = {};
           if (values.cacheActive) {
             manage_cache.clearAllNoneEssential();

@@ -49,26 +49,22 @@ export const valueTraductor = (value: string, property: string): string => {
   // Apply abbreviation translation
   const abbreviatedValue = values.abreviationsValues[value];
   if (abbreviatedValue) {
-    value = abreviation_traductors.abreviationTraductor(abbreviatedValue);
-  } else {
-    value = abreviation_traductors.abreviationTraductor(value);
+    value = abbreviatedValue;
   }
+  value = abreviation_traductors.abreviationTraductor(value);
 
   log(value, 'value After AbreviationTraductor');
 
   // Skip opacity and color processing for content properties
   if (property.includes('content')) {
-    log(value, 'value Before opacity and Colors');
     return value;
   }
-
+  
   // Process opacity syntax
+  log(value, 'value Before opacity and Colors');
   value = opacityParser(value);
+  log(value, 'value After opacity and Colors');
 
-  // Process color names only if we have a cached regex and the value might contain colors
-  if (!values.colorsRegex) {
-    values.colorsRegex = manage_colors.getColorsRegex();
-  }
   let itHasAColorToReplace: boolean = false;
   for (let i = 0; i < values.colorNames.length; i++) {
     if (value.includes(values.colorNames[i])) {

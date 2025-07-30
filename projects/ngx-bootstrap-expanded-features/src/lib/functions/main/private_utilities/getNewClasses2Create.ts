@@ -18,38 +18,39 @@ export const getNewClasses2Create = async (): Promise<string[]> => {
     [values.abreviationsClasses, 'abreviationsClasses'],
     [values.alreadyCreatedClasses, 'alreadyCreatedClasses'],
   ]);
-  const classes2Create: string[] = [];
+  const classes2Create: Set<string> = new Set();
+  const allElementsWithClassAtribute: NodeListOf<HTMLElement> =
+    document.querySelectorAll('[class]');
   // Get all HTMLElements in page
-  Array.from(document.querySelectorAll('*')).forEach((value: Element) => {
-    value.classList.forEach(async (item: string) => {
-      const comb = Object.keys(values.combos).find((cs: string) => {
-        return item.includes(cs);
-      });
+  for (let i = 0; i < allElementsWithClassAtribute.length; i++) {
+    for (const item of allElementsWithClassAtribute[i].classList) {
+      let comb: string | undefined;
+      for (const cs of values.combosKeys) {
+        if (item.startsWith(cs)) {
+          comb = cs;
+          break;
+        }
+      }
       if (!!comb && values.combos[comb]) {
         (
-          await comboParser(item, comb, value as HTMLElement)
+          await comboParser(item, comb, allElementsWithClassAtribute[i])
         ).forEach((c: string) => {
-          if (
-            !classes2Create.includes(c) &&
-            !values.alreadyCreatedClasses.includes(c)
-          ) {
-            classes2Create.push(c);
+          if (!classes2Create.has(c) && !values.alreadyCreatedClasses.has(c)) {
+            classes2Create.add(c);
           }
         });
       } else if (
         !comb &&
-        !classes2Create.includes(item) &&
-        !values.alreadyCreatedClasses.includes(item) &&
+        !classes2Create.has(item) &&
+        !values.alreadyCreatedClasses.has(item) &&
         item !== values.indicatorClass &&
-        (item.includes(values.indicatorClass) ||
-          Object.keys(values.abreviationsClasses).find((aC: string) =>
-            item.includes(aC)
-          ))
+        (item.startsWith(values.indicatorClass) ||
+          values.abreviationsClassesKeys.has(item.split('-')[0]))
       ) {
-        classes2Create.push(item);
+        classes2Create.add(item);
       }
-    });
-  });
+    }
+  }
   log(classes2Create, 'classes2Create');
-  return classes2Create;
+  return Array.from(classes2Create);
 };

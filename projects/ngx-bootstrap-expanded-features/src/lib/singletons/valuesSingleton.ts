@@ -20,6 +20,7 @@ export class ValuesSingleton {
     /(?:([A-z0-9#]*)|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))\s?OPA\s?0\.[0-9]*/gi
   );
   public abreviationsClasses: { [key: string]: string } = {};
+  public abreviationsClassesKeys: Set<string> = new Set(Object.keys(this.abreviationsClasses));
   public abreviationsValues: { [key: string]: string } = {};
   public combos: { [key: string]: string[] } = {};
   public combosKeys: Set<string> = new Set(Object.keys(this.combos));
@@ -31,8 +32,8 @@ export class ValuesSingleton {
   public encryptComboCharacters: string = '■■■';
   public encryptComboCreatedCharacters: string = '🜔🜔🜔';
   public cssNamesParsed: { [key: string]: string | string[] } = cssNamesParsed;
-  public alreadyCreatedClasses: string[] = [];
-  public sheet: any;
+  public alreadyCreatedClasses: Set<string> = new Set();
+  public sheet?: CSSStyleSheet;
   public isDebug: boolean = false;
   public bps: IBPS[] = [
     {
@@ -348,7 +349,6 @@ export class ValuesSingleton {
   public timesCSSCreated: number = 0;
   public timeBetweenReCreate: number = 1000;
   public lastTimeCssCreateEnded: number = Date.now();
-  // Create a public variable to hold the setTimeOut and type it well
   public creationPostponed: boolean = false;
   public setTimeOutID: ReturnType<typeof setTimeout> | null = null;
   /* Recurrent Strategy */
@@ -375,6 +375,11 @@ export class ValuesSingleton {
   public cssValidCache: Map<string, boolean> = new Map();
   public colorTransformCache: Map<string, string> = new Map();
   public comboDecryptCache: Map<string, string> = new Map();
+  public parseClassCache: Map<string, {
+    class2Create: string;
+    bpsStringed: IBPS[];
+    classes2CreateStringed: string;
+  }> = new Map();
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {

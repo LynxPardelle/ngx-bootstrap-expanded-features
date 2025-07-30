@@ -14,12 +14,12 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('manageAbreviations', toLog);
 };
 export const manage_abreviations = {
-  pushAbreviationsValues(abreviationsValues: any): void {
+  pushAbreviationsValues(abreviationsValues: { [key: string]: string }): void {
     try {
       let prevIgnoredAbreviationsValues: string[] = [];
       Object.keys(abreviationsValues).forEach((key) => {
         values.abreviationsValues[key] = abreviationsValues[key];
-        prevIgnoredAbreviationsValues = values.alreadyCreatedClasses.filter(
+        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter(
           (aC: any) => {
             return aC.includes(key);
           }
@@ -37,17 +37,18 @@ export const manage_abreviations = {
       console_log.consoleLog('error', { err: err });
     }
   },
-  pushAbreviationsClasses(abreviationsClasses: any): void {
+  pushAbreviationsClasses(abreviationsClasses: { [key: string]: string }): void {
     let prevIgnoredAbreviationsValues: string[] = [];
     try {
       Object.keys(abreviationsClasses).forEach((key) => {
         values.abreviationsClasses[key] = abreviationsClasses[key];
-        prevIgnoredAbreviationsValues = values.alreadyCreatedClasses.filter(
+        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter(
           (aC: any) => {
             return aC.includes(key);
           }
         );
       });
+      values.abreviationsClassesKeys = new Set(Object.keys(values.abreviationsClasses));
       if (values.cacheActive) {
         manage_cache.clearAllNoneEssential();
       }
@@ -70,7 +71,7 @@ export const manage_abreviations = {
   },
   updateAbreviationsClass(abreviationsClass: string, value: string): void {
     try {
-      if (values.abreviationsClasses[abreviationsClass.toString()]) {
+      if (values.abreviationsClasses[abreviationsClass]) {
         values.abreviationsClasses[abreviationsClass] = value;
         let classesToUpdate: string[] = [];
         for (let createdClass of values.alreadyCreatedClasses) {
