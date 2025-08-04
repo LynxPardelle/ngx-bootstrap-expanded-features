@@ -7,10 +7,10 @@ const log = (t: any, p?: TLogPartsOptions) => {
 const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('valueComboReplacer', toLog);
 };
-export const valueComboReplacer = async (
+export const valueComboReplacer = (
   c: string,
   vals: string[]
-): Promise<string> => {
+): string => {
   multiLog([
     [c, 'c'],
     [vals, 'vals'],

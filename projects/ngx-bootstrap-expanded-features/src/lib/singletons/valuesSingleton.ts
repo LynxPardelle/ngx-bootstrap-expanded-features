@@ -22,6 +22,7 @@ export class ValuesSingleton {
   public abreviationsClasses: { [key: string]: string } = {};
   public abreviationsClassesKeys: Set<string> = new Set(Object.keys(this.abreviationsClasses));
   public abreviationsValues: { [key: string]: string } = {};
+  public abreviationsValuesKeys: Set<string> = new Set(Object.keys(this.abreviationsValues));
   public combos: { [key: string]: string[] } = {};
   public combosKeys: Set<string> = new Set(Object.keys(this.combos));
   public combosCreated: { [key: string]: string } = {};
@@ -380,6 +381,9 @@ export class ValuesSingleton {
     bpsStringed: IBPS[];
     classes2CreateStringed: string;
   }> = new Map();
+  public getNewClasses2CreateCache: Map<string, string[]> = new Map();
+  public comboParserCache: Map<string, string[]> = new Map();
+  public values4ComboGetterCache: Map<string, string[]> = new Map();
   private constructor() {}
 
   public static getInstance(): ValuesSingleton {

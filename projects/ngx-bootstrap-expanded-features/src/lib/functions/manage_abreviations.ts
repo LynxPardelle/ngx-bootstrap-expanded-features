@@ -25,6 +25,7 @@ export const manage_abreviations = {
           }
         );
       });
+      values.abreviationsValuesKeys = new Set(Object.keys(values.abreviationsValues));
       if (values.cacheActive) {
         manage_cache.clearAllNoneEssential();
       }

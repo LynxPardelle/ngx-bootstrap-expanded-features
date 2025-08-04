@@ -24,7 +24,7 @@ export const doCssCreate = async (
     log(updateClasses2Create, 'updateClasses2Create');
     const startTimeCSSCreate = performance.now();
     const classes2Create: string[] =
-      updateClasses2Create || (await getNewClasses2Create());
+      updateClasses2Create || (getNewClasses2Create());
     log(classes2Create, 'classes2Create');
     let classes2CreateStringed = '';
     let bpsStringed: IBPS[] = values.bps.map((b: any) => b);
@@ -43,7 +43,7 @@ export const doCssCreate = async (
       [bpsStringed, 'bpsStringed'],
     ]);
     send2CreateRules(classes2CreateStringed, bpsStringed);
-    const endTimeCSSCreate = await performance.now();
+    const endTimeCSSCreate = performance.now();
     log(
       `Call to doCssCreate() took ${endTimeCSSCreate - startTimeCSSCreate} milliseconds`,
       'performance'

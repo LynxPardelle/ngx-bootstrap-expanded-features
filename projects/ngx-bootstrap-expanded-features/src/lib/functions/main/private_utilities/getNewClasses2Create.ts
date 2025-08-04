@@ -2,6 +2,7 @@ import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 /* Funtions */
 import { comboParser } from './comboParser';
 import { console_log } from '../../console_log';
+import { manage_cache } from '../../manage_cache';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
@@ -11,17 +12,40 @@ const log = (t: any, p?: TLogPartsOptions) => {
 const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('getNewClasses2Create', toLog);
 };
-export const getNewClasses2Create = async (): Promise<string[]> => {
+export const getNewClasses2Create = (): string[] => {
   multiLog([
     [values.combos, 'combos'],
     [values.indicatorClass, 'indicatorClass'],
     [values.abreviationsClasses, 'abreviationsClasses'],
     [values.alreadyCreatedClasses, 'alreadyCreatedClasses'],
   ]);
-  const classes2Create: Set<string> = new Set();
+
+  // Create a lightweight cache key based on the current state
   const allElementsWithClassAtribute: NodeListOf<HTMLElement> =
     document.querySelectorAll('[class]');
-  // Get all HTMLElements in page
+  let cacheKey: string | undefined;
+  if (values.cacheActive) {
+    cacheKey = `${values.indicatorClass}_${values.combosKeys.size}_${
+      values.abreviationsClassesKeys.size
+    }_${values.abreviationsValuesKeys.size}_${
+      values.alreadyCreatedClasses.size
+    }_${allElementsWithClassAtribute.length}_${Math.floor(Date.now() / 1000)}`;
+
+    // Try to get cached result first
+    const cachedResult = manage_cache.getCached<string[]>(
+      cacheKey,
+      'getNewClasses2Create'
+    );
+
+    if (cachedResult !== null && cachedResult !== undefined) {
+      log(cachedResult, 'cached classes2Create');
+      return cachedResult;
+    }
+  }
+
+  const classes2Create: Set<string> = new Set();
+
+  // Get all HTMLElements
   for (let i = 0; i < allElementsWithClassAtribute.length; i++) {
     for (const item of allElementsWithClassAtribute[i].classList) {
       let comb: string | undefined;
@@ -32,13 +56,16 @@ export const getNewClasses2Create = async (): Promise<string[]> => {
         }
       }
       if (!!comb && values.combos[comb]) {
-        (
-          await comboParser(item, comb, allElementsWithClassAtribute[i])
-        ).forEach((c: string) => {
-          if (!classes2Create.has(c) && !values.alreadyCreatedClasses.has(c)) {
-            classes2Create.add(c);
+        comboParser(item, comb, allElementsWithClassAtribute[i]).forEach(
+          (c: string) => {
+            if (
+              !classes2Create.has(c) &&
+              !values.alreadyCreatedClasses.has(c)
+            ) {
+              classes2Create.add(c);
+            }
           }
-        });
+        );
       } else if (
         !comb &&
         !classes2Create.has(item) &&
@@ -51,6 +78,13 @@ export const getNewClasses2Create = async (): Promise<string[]> => {
       }
     }
   }
-  log(classes2Create, 'classes2Create');
-  return Array.from(classes2Create);
+  const result = Array.from(classes2Create);
+  log(result, 'classes2Create');
+
+  // Cache the final result
+  if (values.cacheActive && cacheKey) {
+    manage_cache.addCached(cacheKey, 'getNewClasses2Create', result);
+  }
+
+  return result;
 };
