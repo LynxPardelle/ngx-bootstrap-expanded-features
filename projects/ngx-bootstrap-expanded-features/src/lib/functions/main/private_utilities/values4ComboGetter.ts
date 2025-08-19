@@ -251,13 +251,12 @@ export const values4ComboGetter = (class2Create: string): string[] => {
     [sortedValsToSort.map((v) => v.index), 'all indexes before filling'],
   ]);
 
-  for (let i = 1; i <= lastValIndex; i++) {
+  for (let i = 0; i < lastValIndex; i++) {
     if (!ocupedIndexes.has(i)) {
-      const emptyVal = {
+      emptyValsToFillValsSorted.push({
         index: i,
         val: '',
-      };
-      emptyValsToFillValsSorted.push(emptyVal);
+      });
       log(`filled empty position at index ${i}`, 'empty position fill');
     }
   }

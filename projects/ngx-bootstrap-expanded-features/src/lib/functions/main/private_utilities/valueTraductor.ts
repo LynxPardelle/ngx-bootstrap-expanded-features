@@ -1,10 +1,10 @@
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
+/* Functions */
 import { abreviation_traductors } from '../../abreviation_traductors';
 import { console_log } from '../../console_log';
 import { color_transform } from './../../color_transform';
 /* Types */
 import { TLogPartsOptions } from '../../../types';
-import { manage_colors } from '../../manage_colors';
 
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 

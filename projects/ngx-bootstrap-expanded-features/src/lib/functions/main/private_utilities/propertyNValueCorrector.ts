@@ -1,4 +1,5 @@
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
+/* Functions */
 import { console_log } from '../../console_log';
 import { shadowGradientCreator } from './shadowGradientCreator';
 /* Types */

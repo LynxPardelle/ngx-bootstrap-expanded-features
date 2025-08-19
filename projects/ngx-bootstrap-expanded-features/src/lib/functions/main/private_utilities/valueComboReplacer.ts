@@ -15,7 +15,7 @@ export const valueComboReplacer = (
     [c, 'c'],
     [vals, 'vals'],
   ]);
-  let reg = new RegExp(/VAL[0-9]+(DEF.*DEF)?/, "g");
+  let reg = new RegExp(/VAL[0-9]+(DEF[^D]*(?:D(?!EF)[^D]*)*DEF)?/, "g");
   if (reg.test(c)) {
     let matches = c.match(reg);
     log(matches, 'matches');
@@ -24,7 +24,7 @@ export const valueComboReplacer = (
         log(match, 'match');
         let val = parseInt(match.split("VAL")[1].split("DEF")[0]);
         log(val, 'val');
-        let valueToMatch = `VAL${val}(DEF.*DEF)?`;
+        let valueToMatch = `VAL${val}(DEF[^D]*(?:D(?!EF)[^D]*)*DEF)?`;
         let valueReg = new RegExp(valueToMatch, "g");
         log(valueToMatch, 'valueToMatch');
         let def = match.split("DEF")[1];

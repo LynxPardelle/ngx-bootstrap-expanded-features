@@ -339,10 +339,7 @@ export class ValuesSingleton {
     convertMap: Map<string, { regex: RegExp; replacement: string | RegExp }>;
   } = {
     traduceMap: new Map<string, { regex: RegExp; replacement: string }>(),
-    convertMap: new Map<
-      string,
-      { regex: RegExp; replacement: string | RegExp }
-    >(),
+    convertMap: new Map<string, { regex: RegExp; replacement: string | RegExp }>(),
   };
   /* Time Management*/
   public useTimer: boolean = true;

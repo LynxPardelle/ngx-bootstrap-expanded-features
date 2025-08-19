@@ -1,4 +1,5 @@
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
+/* Functions */
 import { console_log } from '../../../functions/console_log';
 import { manage_cache } from '../../manage_cache';
 /* Types */

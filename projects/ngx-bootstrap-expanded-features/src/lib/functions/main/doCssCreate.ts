@@ -44,21 +44,28 @@ export const doCssCreate = async (
     ]);
     send2CreateRules(classes2CreateStringed, bpsStringed);
     const endTimeCSSCreate = performance.now();
-    log(
-      `Call to doCssCreate() took ${endTimeCSSCreate - startTimeCSSCreate} milliseconds`,
-      'performance'
-    );
-    let class2CreateTimer = document.getElementById(
-      values.indicatorClass + 'Timer'
-    );
+    let timeToCreate: string | number = endTimeCSSCreate - startTimeCSSCreate;
+    timeToCreate = timeToCreate.toFixed(2) + 'ms';
+    console_log.consoleLog('info', `Call to cssCreate() took ${timeToCreate}.`);
+    let class2CreateTimer = document.getElementById(values.indicatorClass + 'Timer');
     if (class2CreateTimer) {
-      class2CreateTimer.innerHTML = `
-            <p>
-            Call to cssCreate() took ${
-              endTimeCSSCreate - startTimeCSSCreate
-            } milliseconds
-            </p>
-            `;
+      // create a first time created if there is no first time created element
+      if (!document.getElementById('firstTimeCreated')) {
+        const firstTimeCreated = document.createElement('p');
+        firstTimeCreated.id = 'firstTimeCreated';
+        firstTimeCreated.innerHTML = `The first time cssCreate() was called took ${timeToCreate}.`;
+        class2CreateTimer.appendChild(firstTimeCreated);
+      }
+      const message = `Call to cssCreate() took ${timeToCreate}.`;
+      let cssCreateMessage = document.getElementById('cssCreateMessage');
+      if (!cssCreateMessage) {
+        cssCreateMessage = document.createElement('p');
+        cssCreateMessage.id = 'cssCreateMessage';
+        cssCreateMessage.innerHTML = message;
+        class2CreateTimer.appendChild(cssCreateMessage);
+      } else {
+        cssCreateMessage.innerHTML = message;
+      }
     }
     return Date.now();
   } catch (err) {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 /* Interfaces */
-import { IAbreviationTraductor, IConsoleParser } from './interfaces';
-import { IPseudo } from './interfaces';
+import { IAbreviationTraductor, IConsoleParser, IPseudo } from './interfaces';
 /* Singleton */
 import { ValuesSingleton } from './singletons/valuesSingleton';
 /* Functions */
@@ -21,6 +20,7 @@ import { manage_CSSRules } from './functions/manage_CSSRules';
 import { manage_sheet } from './functions/manage_sheet';
 import { utility_configurations } from './functions/utility_configurations';
 import { managePartsSections } from './functions/managePartsNSectionsToSeeOnLog';
+/* Types */
 import { TLogPartsOptions, TLogSectionOptions } from './types';
 @Injectable({
   providedIn: 'root',
