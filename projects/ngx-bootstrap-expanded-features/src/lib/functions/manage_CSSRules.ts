@@ -2,8 +2,8 @@
 import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Funtions */
 import { console_log } from './console_log';
-import { createSimpleRule } from './private/createSimpleRule';
 import { createMediaRule } from './private/createMediaRule';
+import { createSimpleRule } from './private/createSimpleRule';
 /* Types */
 import { TLogPartsOptions } from '../types';
 
@@ -15,10 +15,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('manageCSSRules', toLog);
 };
 export const manage_CSSRules = {
-  createCSSRules(
-    rules: string | string[],
-    dontSplitted: boolean = false
-  ): void {
+  createCSSRules(rules: string | string[], dontSplitted: boolean = false): void {
     multiLog([
       [rules, 'rules'],
       [dontSplitted, 'dontSplitted'],
@@ -31,7 +28,7 @@ export const manage_CSSRules = {
           }
         }
       } else if (Array.isArray(rules)) {
-        rules.forEach((rule) => {
+        rules.forEach(rule => {
           manage_CSSRules.createCSSRule(rule);
         });
       } else {
@@ -44,10 +41,10 @@ export const manage_CSSRules = {
   createCSSRule(rule: string): void {
     log(rule, 'rule');
     try {
-      if (rule && !rule.split('{')[0].includes('@media')) {
-        createMediaRule(rule);
-      } else {
+      if (rule && !rule.startsWith('@media')) {
         createSimpleRule(rule);
+      } else {
+        createMediaRule(rule);
       }
       log(values.sheet, 'sheet');
     } catch (err: any) {

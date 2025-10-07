@@ -17,7 +17,7 @@ export const manage_combos = {
   pushCombos(combos: any): void {
     try {
       let prevIgnoredCombosValues: string[] = [];
-      Object.keys(combos).forEach((key) => {
+      Object.keys(combos).forEach(key => {
         values.combos[key] =
           typeof combos[key] === 'string'
             ? combos[key].split(' ')
@@ -29,11 +29,9 @@ export const manage_combos = {
         if (!values.combosKeys.has(key)) {
           values.combosKeys.add(key);
         }
-        prevIgnoredCombosValues = Array.from(values.alreadyCreatedClasses).filter(
-          (aC: any) => {
-            return aC.includes(key);
-          }
-        );
+        prevIgnoredCombosValues = Array.from(values.alreadyCreatedClasses).filter((aC: any) => {
+          return aC.includes(key);
+        });
       });
       if (values.cacheActive) {
         manage_cache.clearAllNoneEssential();
@@ -64,7 +62,7 @@ export const manage_combos = {
         if (classes2Delete.length > 0) {
           for (let class2Delete of classes2Delete) {
             values.sheet?.deleteRule(
-              [...values.sheet.cssRules].findIndex((cssRule) => {
+              [...values.sheet.cssRules].findIndex(cssRule => {
                 return cssRule.cssText.includes(class2Delete);
               })
             );

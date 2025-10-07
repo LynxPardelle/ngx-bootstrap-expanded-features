@@ -1,16 +1,16 @@
-import { allPosibleParts, allPosibleSections } from "./values/parts_sections";
+import { allPosibleParts, allPosibleSections } from './values/parts_sections';
 
 export type TLOG_TYPE = 'log' | 'info' | 'trace' | 'error';
 export type TBPS = {
   bp: string;
   value: string;
-  class2Create?: string;
+  class2Create: string;
 };
 export type TConsoleParser = {
   type?: TLOG_TYPE;
   thing: any;
   style?: string;
-  line?: string;
+  line?: string | null;
   stoper?: boolean;
   showObjectAsString?: boolean;
 };
@@ -31,3 +31,20 @@ export type TChosenLogSectionOptions = {
   sections: TLogSectionOptions[];
   parts: TLogPartsOptions[];
 };
+export type TReturnFromChanges = { success: boolean; message: string; data?: unknown; errors?: string[] };
+
+export type TCacheOptions =
+  | 'propertyJoiner'
+  | 'regExp'
+  | 'buttonShade'
+  | 'camel'
+  | 'buttonCss'
+  | 'cssValid'
+  | 'colorTransform'
+  | 'comboDecrypt'
+  | 'parseClass'
+  | 'getNewClasses2Create'
+  | 'comboParser'
+  | 'values4ComboGetter'
+  | 'buttonCorrection';
+export type TCacheOptionsPromised = 'buttonCorrection';

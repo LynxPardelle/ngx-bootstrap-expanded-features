@@ -1,5 +1,5 @@
-import { console_log } from '../../console_log'; /* Types */
 import { TLogPartsOptions } from '../../../types';
+import { console_log } from '../../console_log'; /* Types */
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('shadowGradientCreator', t, p);
 };
@@ -7,10 +7,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('shadowGradientCreator', toLog);
 };
 
-export const shadowGradientCreator = async (
-  shadow: string,
-  onlyGradient: boolean = false
-): Promise<string> => {
+export const shadowGradientCreator = (shadow: string, onlyGradient: boolean = false): string => {
   multiLog([
     [shadow, 'shadow'],
     [onlyGradient, 'onlyGradient'],

@@ -16,7 +16,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 export const manage_CSSNamesParsed = {
   pushCssNamesParsed(cssNamesParsed: any): void {
     try {
-      Object.keys(cssNamesParsed).forEach((key) => {
+      Object.keys(cssNamesParsed).forEach(key => {
         values.cssNamesParsed[key] = cssNamesParsed[key];
       });
       if (values.cacheActive) {

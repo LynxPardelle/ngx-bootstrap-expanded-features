@@ -84,7 +84,7 @@ export const css_camel = {
     }
 
     // Optimized conversion using pre-compiled regex
-    const result = st.replace(cachedRegexPatterns.cssToKebab, (match) => {
+    const result = st.replace(cachedRegexPatterns.cssToKebab, match => {
       // Direct character manipulation for optimal performance
       const char = match.charAt(1);
       return char.toUpperCase();
@@ -146,7 +146,7 @@ export const css_camel = {
 
     // Optimized conversion using pre-compiled regex with single toLowerCase call
     const result = st
-      .replace(cachedRegexPatterns.camelToKebab, (match) => {
+      .replace(cachedRegexPatterns.camelToKebab, match => {
         // Direct character access for optimal performance
         return match[0] + '-' + match[1];
       })

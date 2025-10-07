@@ -2,18 +2,16 @@
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 /* Functions */
 import { css_camel } from '../../css-camel';
-import { btnCreator } from './btnCreator';
 import { manage_cache } from '../../manage_cache';
+import { btnCreator } from './btnCreator';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 
 /**
  * Pre-defined CSS rule templates for common patterns
  */
 const CSS_TEMPLATES = {
-  single: (specify: string, property: string, value: string) =>
-    `${specify}{${property}:${value};}`,
-  multiple: (specify: string, properties: string[]) =>
-    `${specify}{${properties.join('')}}`,
+  single: (specify: string, property: string, value: string) => `${specify}{${property}:${value};}`,
+  multiple: (specify: string, properties: string[]) => `${specify}{${properties.join('')}}`,
   link: (specify: string, value: string) => ` a${specify}{color:${value};}`,
 } as const;
 
@@ -30,16 +28,16 @@ const CSS_TEMPLATES = {
  * @param propertyValues - Array of property values to apply (default: [''])
  * @param specify - The CSS selector specification (including pseudo-classes/combinators)
  *
- * @returns Promise resolving to a CSS rule string
+ * @returns String resolving to a CSS rule string
  *
  * @example
  * ```typescript
  * // Regular property
- * await property2ValueJoiner('margin', ['bef', 'margin', '10px'], 'bef-margin-10px', ['10px'], '');
+ * property2ValueJoiner('margin', ['bef', 'margin', '10px'], 'bef-margin-10px', ['10px'], '');
  * // Button generation
- * await property2ValueJoiner('btn', ['bef', 'btn', 'primary'], 'bef-btn-primary', ['#007bff'], ':hover');
+ * property2ValueJoiner('btn', ['bef', 'btn', 'primary'], 'bef-btn-primary', ['#007bff'], ':hover');
  * // Link styling
- * await property2ValueJoiner('link', ['bef', 'link', 'blue'], 'bef-link-blue', ['blue'], '');
+ * property2ValueJoiner('link', ['bef', 'link', 'blue'], 'bef-link-blue', ['blue'], '');
  * ```
  *
  * @remarks
@@ -77,13 +75,13 @@ const CSS_TEMPLATES = {
  * - All existing CSS generation patterns continue to work correctly
  * - Full support for all button variants and special cases
  */
-export const property2ValueJoiner = async (
+export const property2ValueJoiner = (
   property: string,
   class2CreateSplited: string[],
   class2Create: string,
   propertyValues: string[] = [''],
   specify: string = ''
-): Promise<string> => {
+): string => {
   // Early validation
   if (!property && !class2CreateSplited[1]) {
     return '';
@@ -92,9 +90,7 @@ export const property2ValueJoiner = async (
   // Check cache first for instant response
   let cacheKey: string | undefined;
   if (values.cacheActive) {
-    cacheKey = `${property}|${class2CreateSplited.join(
-      '-'
-    )}|${class2Create}|${propertyValues.join(',')}|${specify}`;
+    cacheKey = `${property}|${class2CreateSplited.join('-')}|${class2Create}|${propertyValues.join(',')}|${specify}`;
     const cachedResult = values.propertyJoinerCache.get(cacheKey);
     if (cachedResult !== undefined) {
       return cachedResult;
@@ -134,15 +130,9 @@ export const property2ValueJoiner = async (
     if (propertyType === 'link') {
       result = CSS_TEMPLATES.link(specify, propertyValues[0]);
     } else if (propertyType === 'btnOutline') {
-      result = await btnCreator(
-        class2Create,
-        specify,
-        propertyValues[0],
-        propertyValues[1] || '',
-        true
-      );
+      result = btnCreator(class2Create, specify, propertyValues[0], propertyValues[1] || '', true);
     } else if (propertyType === 'btn') {
-      result = await btnCreator(class2Create, specify, propertyValues[0]);
+      result = btnCreator(class2Create, specify, propertyValues[0]);
     } else {
       // Default case: standard CSS property-value pair
       const cssProperty = css_camel.camelToCSSValid(property);

@@ -24,10 +24,7 @@ export const look4BPNVals = (
 } => {
   // Early bounds check to avoid accessing undefined array elements
   // Use cached Set for O(1) breakpoint lookup instead of O(n) find operation
-  if (
-    class2CreateSplited.length < 3 ||
-    !values.breakPoints.has(class2CreateSplited[2])
-  ) {
+  if (class2CreateSplited.length < 3 || !values.breakPoints.has(class2CreateSplited[2])) {
     return {
       hasBP: false,
       values: class2CreateSplited.slice(2),

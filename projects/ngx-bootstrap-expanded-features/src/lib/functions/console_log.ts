@@ -1,8 +1,9 @@
 /* Singletons */
 import { ValuesSingleton } from '../singletons/valuesSingleton';
 /* Interfaces */
-import { TLogPartsOptions, TLogSectionOptions } from '../types';
 import { IConsoleParser } from '../interfaces';
+/* Types */
+import { TLogPartsOptions, TLogSectionOptions } from '../types';
 function getStackTrace(): string {
   let stack;
   try {
@@ -26,19 +27,12 @@ export const console_log = {
   ): void {
     if (
       values.chosenSectionOptions.sections.includes(section) &&
-      (!part ||
-        values.chosenSectionOptions.parts.includes(
-          part.split(' ')[0] as TLogPartsOptions
-        ))
+      (!part || values.chosenSectionOptions.parts.includes(part.split(' ')[0] as TLogPartsOptions))
     ) {
       this.consoleParser({
         type: 'info',
         thing: thing,
-        line: part
-          ? `${section}.${part}`
-          : typeof thing === 'string'
-          ? `${section}.${thing}`
-          : undefined,
+        line: part ? `${section}.${part}` : typeof thing === 'string' ? `${section}.${thing}` : undefined,
         showObjectAsString: false,
         style: style ? style : values.styleConsole,
         stoper: stoper !== undefined ? stoper : !values.isDebug,
@@ -59,7 +53,7 @@ export const console_log = {
     type: 'log' | 'info' | 'trace' | 'error' = 'log',
     thing: any,
     style: string = values.styleConsole,
-    line: string | undefined = undefined,
+    line: string | null = null,
     stoper: boolean = !values.isDebug
   ): void {
     this.consoleParser({
@@ -71,24 +65,18 @@ export const console_log = {
     });
   },
   consoleParser(config: IConsoleParser): void {
-    config.stoper =
-      config.stoper !== undefined ? config.stoper : !values.isDebug;
+    config.stoper = config.stoper !== undefined ? config.stoper : !values.isDebug;
     if (config.stoper === false || config.type === 'error') {
       config.type = config.type ? config.type : 'log';
       config.style = config.style ? config.style : values.styleConsole;
-      config.showObjectAsString =
-        config.showObjectAsString !== undefined
-          ? config.showObjectAsString
-          : true;
+      config.showObjectAsString = config.showObjectAsString !== undefined ? config.showObjectAsString : true;
       const typeofThing = typeof config.thing;
       const isObject = typeofThing === 'object';
       if (config.line) {
         let lineResult = config.line;
         if (
           ['number', 'boolean'].includes(typeofThing) ||
-          (typeofThing === 'string' &&
-            config.thing.length > 0 &&
-            config.thing.length < 15)
+          (typeofThing === 'string' && config.thing.length > 0 && config.thing.length < 15)
         ) {
           lineResult = config.line + ' = ' + config.thing;
         }
@@ -98,14 +86,8 @@ export const console_log = {
           console.info('%cline: ' + lineResult + ' = ', config.style);
         }
       }
-      if (
-        (!isObject || config.showObjectAsString) &&
-        ['log', 'info', 'error'].includes(config.type)
-      ) {
-        console[config.type](
-          '%c' + (isObject ? JSON.stringify(config.thing) : config.thing),
-          config.style
-        );
+      if ((!isObject || config.showObjectAsString) && ['log', 'info', 'error'].includes(config.type)) {
+        console[config.type]('%c' + (isObject ? JSON.stringify(config.thing) : config.thing), config.style);
       }
       if (isObject) {
         console.dir(config.thing);

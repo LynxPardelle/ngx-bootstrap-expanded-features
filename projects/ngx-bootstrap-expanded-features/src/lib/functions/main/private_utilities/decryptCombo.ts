@@ -60,11 +60,7 @@ const values: ValuesSingleton = ValuesSingleton.getInstance();
  * - Returns identical results to the original implementation
  * - All existing code continues to work without modifications
  */
-export const decryptCombo = (
-  specify: string,
-  class2Create: string,
-  class2CreateStringed: string
-): string[] => {
+export const decryptCombo = (specify: string, class2Create: string, class2CreateStringed: string): string[] => {
   // Early validation - return immediately for empty inputs
   if (!specify && !class2Create && !class2CreateStringed) {
     return [specify, class2Create, class2CreateStringed];
@@ -132,11 +128,7 @@ export const decryptCombo = (
 
   // Cache the result for future calls
   if (values.cacheActive && cacheKey) {
-    manage_cache.addCached(
-      cacheKey,
-      'comboDecrypt',
-      JSON.stringify(comboDecrypted)
-    );
+    manage_cache.addCached(cacheKey, 'comboDecrypt', JSON.stringify(comboDecrypted));
   }
 
   return comboDecrypted;

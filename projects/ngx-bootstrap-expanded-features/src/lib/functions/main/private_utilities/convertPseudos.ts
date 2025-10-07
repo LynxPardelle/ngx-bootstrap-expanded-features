@@ -36,10 +36,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
  * const cleaned = convertPseudos("bgHover", true): "bg"
  * ```
  */
-export const convertPseudos = (
-  thing: string,
-  remove: boolean = false
-): string => {
+export const convertPseudos = (thing: string, remove: boolean = false): string => {
   multiLog([
     [thing, 'thing'],
     [remove, 'remove'],
@@ -73,30 +70,18 @@ export const convertPseudos = (
     if (values.pseudosHasSDED.has(pse.mask)) {
       regexKey = `${pse.mask}_SDED`;
       regExp = values.cacheActive
-        ? manage_cache.getCached<RegExp>(
-            regexKey,
-            'regExp',
-            () => new RegExp(':*' + pse.mask + '\\(', 'gi')
-          )
+        ? manage_cache.getCached<RegExp>(regexKey, 'regExp', () => new RegExp(':*' + pse.mask + '\\(', 'gi'))
         : new RegExp(':*' + pse.mask + '\\(', 'gi');
       replacement = remove ? '' : pse.real + '(';
     } else if (values.pageSpecificSet.has(pse.mask)) {
       regexKey = `${pse.mask}_PAGE`;
       regExp = values.cacheActive
-        ? manage_cache.getCached<RegExp>(
-            regexKey,
-            'regExp',
-            () => new RegExp('page' + pse.mask, 'gi')
-          )
+        ? manage_cache.getCached<RegExp>(regexKey, 'regExp', () => new RegExp('page' + pse.mask, 'gi'))
         : new RegExp('page' + pse.mask, 'gi');
       replacement = remove ? '' : 'page' + pse.real;
     } else {
       regExp = values.cacheActive
-        ? manage_cache.getCached<RegExp>(
-            regexKey,
-            'regExp',
-            () => new RegExp(':*' + pse.mask, 'gi')
-          )
+        ? manage_cache.getCached<RegExp>(regexKey, 'regExp', () => new RegExp(':*' + pse.mask, 'gi'))
         : new RegExp(':*' + pse.mask, 'gi');
       replacement = remove ? '' : pse.real;
     }

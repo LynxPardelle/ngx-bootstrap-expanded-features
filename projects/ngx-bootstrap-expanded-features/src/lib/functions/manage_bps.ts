@@ -21,7 +21,11 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('manageBps', toLog);
 };
 export const manage_bps = {
-  pushBPS(bps: IBPSWithBefs[]): void {
+  pushBPS(
+    bps: (Omit<IBPSWithBefs, 'class2Create'> & {
+      class2Create?: string;
+    })[]
+  ): void {
     try {
       for (let nb of bps) {
         // get the bps that match the current breakpoint
@@ -33,6 +37,7 @@ export const manage_bps = {
           values.bps.push({
             bp: nb.bp,
             value: nb.value,
+            class2Create: '',
           });
           values.breakPoints.add(nb.bp);
         }

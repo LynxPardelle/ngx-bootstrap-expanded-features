@@ -27,6 +27,17 @@ export const allColors = {
   blood: '#8A0707',
   beast: '#F5785D',
   abyss: '#000',
+  /* Angora Colors */
+  ankcent: '#D01033', // Primary
+  secora: '#2D2824', // Secondary
+  succank: '#5D4339', // Success
+  bangrank: '#161B17', // Info
+  secbank: '#F0B566', // Warning
+  dank: '#000000', // Danger When combined to ankcent, it will be dark red
+  dankcent: 'linear-gradient(220deg, #D01033 35%,#000000 55%)',
+  revdankcent: 'linear-gradient(220deg, #000 35%,#D01033 55%)',
+  ligthora: '#F4EBEC', // Light
+  dagora: '#100809', // Dark
   /* basicColorsCSS */ /* (\s)(#[0-9A-Fa-f]+)\s([0-9]*,?)*\n*\s*\n*\s* */ /* :$1'$2', */
   black: '#000000',
   silver: '#C0C0C0',

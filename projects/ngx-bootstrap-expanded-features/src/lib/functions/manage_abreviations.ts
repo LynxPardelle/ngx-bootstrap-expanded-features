@@ -17,13 +17,11 @@ export const manage_abreviations = {
   pushAbreviationsValues(abreviationsValues: { [key: string]: string }): void {
     try {
       let prevIgnoredAbreviationsValues: string[] = [];
-      Object.keys(abreviationsValues).forEach((key) => {
+      Object.keys(abreviationsValues).forEach(key => {
         values.abreviationsValues[key] = abreviationsValues[key];
-        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter(
-          (aC: any) => {
-            return aC.includes(key);
-          }
-        );
+        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter((aC: any) => {
+          return aC.includes(key);
+        });
       });
       values.abreviationsValuesKeys = new Set(Object.keys(values.abreviationsValues));
       if (values.cacheActive) {
@@ -41,13 +39,11 @@ export const manage_abreviations = {
   pushAbreviationsClasses(abreviationsClasses: { [key: string]: string }): void {
     let prevIgnoredAbreviationsValues: string[] = [];
     try {
-      Object.keys(abreviationsClasses).forEach((key) => {
+      Object.keys(abreviationsClasses).forEach(key => {
         values.abreviationsClasses[key] = abreviationsClasses[key];
-        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter(
-          (aC: any) => {
-            return aC.includes(key);
-          }
-        );
+        prevIgnoredAbreviationsValues = Array.from(values.alreadyCreatedClasses).filter((aC: any) => {
+          return aC.includes(key);
+        });
       });
       values.abreviationsClassesKeys = new Set(Object.keys(values.abreviationsClasses));
       if (values.cacheActive) {
@@ -89,9 +85,7 @@ export const manage_abreviations = {
           cssCreate.cssCreate();
         }
       } else {
-        throw new Error(
-          `There is no abreviationsClass named ${abreviationsClass}.`
-        );
+        throw new Error(`There is no abreviationsClass named ${abreviationsClass}.`);
       }
     } catch (err) {
       console_log.consoleLog('error', { err: err });
@@ -116,9 +110,7 @@ export const manage_abreviations = {
           cssCreate.cssCreate();
         }
       } else {
-        throw new Error(
-          `There is no abreviationsValue named ${abreviationsValue}.`
-        );
+        throw new Error(`There is no abreviationsValue named ${abreviationsValue}.`);
       }
     } catch (err) {
       console_log.consoleLog('error', { err: err });

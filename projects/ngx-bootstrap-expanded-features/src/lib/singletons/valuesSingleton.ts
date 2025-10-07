@@ -6,13 +6,14 @@ import { cssNamesParsed } from '../values/cssNamesParsed';
 import { defaultChosenSectionOptions } from '../values/parts_sections';
 /* Interfaces */
 import { IAbreviationTraductor, IBPS, IPseudo } from '../interfaces';
+/* Functions */
 /* Common Properties Values */
 import { commonPropertiesValuesAbreviations } from '../values/commonPropertiesValuesAbreviations';
 /* Types */
 import { TChosenLogSectionOptions } from '../types';
 export class ValuesSingleton {
   private static instance: ValuesSingleton;
-  public indicatorClass: string = 'bef';
+  public indicatorClass: string = 'ank';
   public colors: { [key: string]: string } = allColors;
   public colorNames: string[] = Object.keys(this.colors);
   public colorsRegex: RegExp | undefined;
@@ -26,15 +27,14 @@ export class ValuesSingleton {
   public combos: { [key: string]: string[] } = {};
   public combosKeys: Set<string> = new Set(Object.keys(this.combos));
   public combosCreated: { [key: string]: string } = {};
-  public combosCreatedKeys: Set<string> = new Set(
-    Object.keys(this.combosCreated)
-  );
+  public combosCreatedKeys: Set<string> = new Set(Object.keys(this.combosCreated));
   public encryptCombo: boolean = true;
   public encryptComboCharacters: string = '■■■';
   public encryptComboCreatedCharacters: string = '🜔🜔🜔';
   public cssNamesParsed: { [key: string]: string | string[] } = cssNamesParsed;
   public alreadyCreatedClasses: Set<string> = new Set();
   public sheet?: CSSStyleSheet;
+  public responsiveSheet?: CSSStyleSheet;
   public isDebug: boolean = false;
   public bps: IBPS[] = [
     {
@@ -72,11 +72,12 @@ export class ValuesSingleton {
     '#' + this.indicatorClass + '-bp',
   ];
   public limitBPS: boolean = false;
-  public styleSheetToManage: string = 'bef-styles';
+  public styleSheetToManage: string = 'angora-styles.css';
+  public responsiveStyleSheetToManage: string = 'angora-styles-responsive.css';
   public separator: string = 'þµÞ';
   public specify: string = '🜏🜏🜏';
   /* Console */
-  public styleConsole: string = `padding: 1rem; background-color: ${this.colors['mystic']}; color: ${this.colors['lavenderLP']};`;
+  public styleConsole: string = `padding: 1rem; background-color: ${ this.colors['abyss'] }; color: ${ this.colors['lavenderLP'] };`;
   /* Pseudos */
   public pseudoClasses: string[] = [
     'Active',
@@ -187,7 +188,7 @@ export class ValuesSingleton {
   ];
   public pseudos: IPseudo[] = [];
   public pageSpecificSet: Set<string> = new Set(['Right', 'Left']);
-  public importantActive: boolean = true;
+  public importantActive: boolean = false;
   public abreviationTraductors: IAbreviationTraductor[] = [
     {
       abreviation: 'per',
@@ -338,14 +339,14 @@ export class ValuesSingleton {
     traduceMap: Map<string, { regex: RegExp; replacement: string }>;
     convertMap: Map<string, { regex: RegExp; replacement: string | RegExp }>;
   } = {
-    traduceMap: new Map<string, { regex: RegExp; replacement: string }>(),
-    convertMap: new Map<string, { regex: RegExp; replacement: string | RegExp }>(),
-  };
+      traduceMap: new Map<string, { regex: RegExp; replacement: string }>(),
+      convertMap: new Map<string, { regex: RegExp; replacement: string | RegExp }>(),
+    };
   /* Time Management*/
-  public useTimer: boolean = true;
+  public useTimer: boolean = false;
   public lastTimeAsked2Create: number = new Date().getTime();
   public timesCSSCreated: number = 0;
-  public timeBetweenReCreate: number = 1000;
+  public timeBetweenReCreate: number = 300;
   public lastTimeCssCreateEnded: number = Date.now();
   public creationPostponed: boolean = false;
   public setTimeOutID: ReturnType<typeof setTimeout> | null = null;
@@ -353,14 +354,10 @@ export class ValuesSingleton {
   public useRecurrentStrategy: boolean = true;
   public cssCreateIsActive: boolean = false;
   /* Common Properties Values Abreviations */
-  public commonPropertiesValuesAbreviations: { [key: string]: string } =
-    commonPropertiesValuesAbreviations;
-  public commonPropertiesValuesAbreviationsValues: string[] = Object.values(
-    this.commonPropertiesValuesAbreviations
-  );
+  public commonPropertiesValuesAbreviations: { [key: string]: string } = commonPropertiesValuesAbreviations;
+  public commonPropertiesValuesAbreviationsValues: string[] = Object.values(this.commonPropertiesValuesAbreviations);
   /* Logging */
-  public chosenSectionOptions: TChosenLogSectionOptions =
-    defaultChosenSectionOptions;
+  public chosenSectionOptions: TChosenLogSectionOptions = defaultChosenSectionOptions;
   /* Cache */
   public cacheActive: boolean = true;
   public cacheSize: number = 1000;
@@ -373,16 +370,18 @@ export class ValuesSingleton {
   public cssValidCache: Map<string, boolean> = new Map();
   public colorTransformCache: Map<string, string> = new Map();
   public comboDecryptCache: Map<string, string> = new Map();
-  public parseClassCache: Map<string, {
-    class2Create: string;
-    bpsStringed: IBPS[];
-    classes2CreateStringed: string;
-  }> = new Map();
+  public parseClassCache: Map<
+    string,
+    {
+      class2Create: string;
+      bpsStringed: IBPS[];
+      classes2CreateStringed: string;
+    }
+  > = new Map();
   public getNewClasses2CreateCache: Map<string, string[]> = new Map();
   public comboParserCache: Map<string, string[]> = new Map();
   public values4ComboGetterCache: Map<string, string[]> = new Map();
-  private constructor() {}
-
+  private constructor() { }
   public static getInstance(): ValuesSingleton {
     if (!ValuesSingleton.instance) {
       ValuesSingleton.instance = new ValuesSingleton();
@@ -390,17 +389,10 @@ export class ValuesSingleton {
     }
     return ValuesSingleton.instance;
   }
-
   public init() {
     this.translatorMaps = (() => {
-      const traduceMap = new Map<
-        string,
-        { regex: RegExp; replacement: string }
-      >();
-      const convertMap = new Map<
-        string,
-        { regex: RegExp; replacement: string | RegExp }
-      >();
+      const traduceMap = new Map<string, { regex: RegExp; replacement: string }>();
+      const convertMap = new Map<string, { regex: RegExp; replacement: string | RegExp }>();
       for (const abr of this.abreviationTraductors) {
         // Cache for "traduce" mode (abbreviation -> traduction)
         traduceMap.set(abr.abreviation, {

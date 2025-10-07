@@ -25,7 +25,7 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
  *
  * @param value - The string value to be translated and processed
  * @param property - The property name that determines processing behavior
- * @returns A promise that resolves to the translated and processed string value
+ * @returns A String that resolves to the translated and processed string value
  *
  * @example
  * ```typescript
@@ -59,7 +59,7 @@ export const valueTraductor = (value: string, property: string): string => {
   if (property.includes('content')) {
     return value;
   }
-  
+
   // Process opacity syntax
   log(value, 'value Before opacity and Colors');
   value = opacityParser(value);
@@ -92,9 +92,7 @@ export const valueTraductor = (value: string, property: string): string => {
           if (realColor.startsWith('rgb') && !realColor.includes('rgba')) {
             realColorValue = `rgba(${realColor}, 1)`;
           } else if (realColor.startsWith('#')) {
-            realColorValue = `rgba(${color_transform.colorToRGB(
-              realColor
-            )}, 1)`;
+            realColorValue = `rgba(${color_transform.colorToRGB(realColor)}, 1)`;
           } else {
             realColorValue = realColor;
           }

@@ -12,13 +12,8 @@ const log = (t: any, p?: TLogPartsOptions) => {
 const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('doUseTimer', toLog);
 };
-export const doUseTimer = async (
-  primordial: boolean = false,
-  isFirstCall: boolean = true,
-  updateClasses2Create?: string[]
-): Promise<void> => {
+export const doUseTimer = (primordial: boolean = false, isFirstCall: boolean = true): number | void => {
   multiLog([
-    [updateClasses2Create, 'updateClasses2Create'],
     [primordial, 'primordial'],
     [isFirstCall, 'isFirstCall'],
   ]);
@@ -40,28 +35,20 @@ export const doUseTimer = async (
     values.timesCSSCreated === 0
   ) {
     values.timesCSSCreated++;
-    values.lastTimeCssCreateEnded = await doCssCreate(updateClasses2Create);
+    values.lastTimeCssCreateEnded = doCssCreate(values.timesCSSCreated);
     multiLog([
       [values.timesCSSCreated, 'timesCSSCreated after doCssCreate'],
-      [
-        values.lastTimeCssCreateEnded,
-        'lastTimeCssCreateEnded after doCssCreate',
-      ],
-      [
-        new Date(values.lastTimeCssCreateEnded),
-        'lastTimeCssCreateEnded as Date after doCssCreate',
-      ],
+      [values.lastTimeCssCreateEnded, 'lastTimeCssCreateEnded after doCssCreate'],
+      [new Date(values.lastTimeCssCreateEnded), 'lastTimeCssCreateEnded as Date after doCssCreate'],
     ]);
-  } else if (
-    Date.now() - values.timeBetweenReCreate <
-    values.lastTimeAsked2Create
-  ) {
+    return values.lastTimeCssCreateEnded;
+  } else if (Date.now() - values.timeBetweenReCreate < values.lastTimeAsked2Create) {
     // Delete the previous setTimeout if it exists
     if (values.setTimeOutID) {
       clearTimeout(values.setTimeOutID);
     }
     values.setTimeOutID = setTimeout(() => {
-      doUseTimer(primordial, false, updateClasses2Create);
+      return doUseTimer(primordial, false);
     }, values.timeBetweenReCreate);
   }
 };

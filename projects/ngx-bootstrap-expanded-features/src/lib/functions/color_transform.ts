@@ -60,10 +60,7 @@ export const color_transform = {
 
       // Check cache first
       if (values.cacheActive) {
-        const cachedResult = manage_cache.getCached(
-          normalizedColor,
-          'colorTransform'
-        );
+        const cachedResult = manage_cache.getCached(normalizedColor, 'colorTransform');
         if (cachedResult) {
           return JSON.parse(cachedResult) as number[];
         }
@@ -87,11 +84,7 @@ export const color_transform = {
 
       // Cache the result for future use
       if (values.cacheActive) {
-        manage_cache.addCached(
-          normalizedColor,
-          'colorTransform',
-          JSON.stringify(rgb)
-        );
+        manage_cache.addCached(normalizedColor, 'colorTransform', JSON.stringify(rgb));
       }
       return rgb;
     } catch (error) {
@@ -116,7 +109,6 @@ export const color_transform = {
   RGBToRGBA(rgb: number[], alpha: number): string {
     return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
   },
-
   /**
    * Optimized RGB/RGBA string parser with improved performance.
    *
@@ -137,14 +129,20 @@ export const color_transform = {
   parseRGB(rgba: string): number[] {
     // Extract values between parentheses more efficiently
     const match = rgba.match(/\(([^)]+)\)/);
-    if (!match) return [255, 0, 0];
-
-    const values = match[1].split(',').map((v) => parseFloat(v.trim()));
-
-    // Return appropriate array based on number of values
-    return values.length >= 4
-      ? [values[0], values[1], values[2], values[3]]
-      : [values[0], values[1], values[2]];
+    if (!match) {
+      console_log.consoleLog('error', { parseRGBError: 'Invalid RGB format', rgba });
+      return [255, 0, 0]; // Fallback to red
+    }
+    const parts = match[1].split(',');
+    const values: number[] = [];
+    for (let i = 0; i < parts.length && i < 3; i++) {
+      let number = parseFloat(parts[i].trim());
+      if (i === 3) {
+        number = number < 1 ? number : 1;
+      }
+      values.push(number);
+    }
+    return values;
   },
   /**
    * Optimized hexadecimal color conversion with improved performance.
@@ -195,9 +193,7 @@ export const color_transform = {
 
     // Return appropriate format based on alpha channel presence
     const hasAlpha = length === 4 || length === 8;
-    return hasAlpha
-      ? `rgba(${rgb.slice(0, 3).join(',')},${rgb[3]})`
-      : `rgb(${rgb.join(',')})`;
+    return hasAlpha ? `rgba(${rgb.slice(0, 3).join(',')},${rgb[3]})` : `rgb(${rgb.join(',')})`;
   },
   /**
    * Converts HSL/HSLA color to RGB format with optimized algorithm.
@@ -227,7 +223,7 @@ export const color_transform = {
     const match = hsl.match(/\(([^)]+)\)/);
     if (!match) return 'rgb(255,0,0)';
 
-    const values = match[1].split(',').map((v) => v.trim());
+    const values = match[1].split(',').map(v => v.trim());
     if (values.length < 3) return 'rgb(255,0,0)';
 
     // Parse HSL values with proper normalization
@@ -239,9 +235,7 @@ export const color_transform = {
     // Handle grayscale case (saturation = 0)
     if (s === 0) {
       const gray = Math.round(l * 255);
-      return alpha !== undefined
-        ? `rgba(${gray},${gray},${gray},${alpha})`
-        : `rgb(${gray},${gray},${gray})`;
+      return alpha !== undefined ? `rgba(${gray},${gray},${gray},${alpha})` : `rgb(${gray},${gray},${gray})`;
     }
 
     // HSL to RGB conversion algorithm
@@ -252,9 +246,7 @@ export const color_transform = {
     const g = Math.round(this.HueToRGB(p, q, h) * 255);
     const b = Math.round(this.HueToRGB(p, q, h - 1 / 3) * 255);
 
-    return alpha !== undefined
-      ? `rgba(${r},${g},${b},${alpha})`
-      : `rgb(${r},${g},${b})`;
+    return alpha !== undefined ? `rgba(${r},${g},${b},${alpha})` : `rgb(${r},${g},${b})`;
   },
 
   /**
@@ -301,7 +293,7 @@ export const color_transform = {
     const match = hwb.match(/\(([^)]+)\)/);
     if (!match) return 'rgb(255,0,0)';
 
-    const values = match[1].split(',').map((v) => v.trim());
+    const values = match[1].split(',').map(v => v.trim());
     if (values.length < 3) return 'rgb(255,0,0)';
 
     // Parse HWB values
@@ -370,9 +362,7 @@ export const color_transform = {
     const green = Math.round(g * 255);
     const blue = Math.round(bl * 255);
 
-    return alpha !== undefined
-      ? `rgba(${red},${green},${blue},${alpha})`
-      : `rgb(${red},${green},${blue})`;
+    return alpha !== undefined ? `rgba(${red},${green},${blue},${alpha})` : `rgb(${red},${green},${blue})`;
   },
   /**
    * Creates shade or tint variations of a color by adjusting brightness.
@@ -410,17 +400,12 @@ export const color_transform = {
     };
 
     const [r, g, b, a] = rgb;
-    const adjustedRGB = [
-      adjustColorValue(r, percent),
-      adjustColorValue(g, percent),
-      adjustColorValue(b, percent),
-    ];
+    const adjustedRGB = [adjustColorValue(r, percent), adjustColorValue(g, percent), adjustColorValue(b, percent)];
 
     // Preserve alpha channel if present
     if (a !== undefined) {
       // Convert alpha to hex if it was originally in hex format
-      const alphaValue =
-        typeof a === 'number' && a > 1 ? a : Math.round(a * 255);
+      const alphaValue = typeof a === 'number' && a > 1 ? a : Math.round(a * 255);
       adjustedRGB.push(alphaValue);
     }
 
@@ -458,10 +443,7 @@ export const color_transform = {
         for (let i = colorMatches.length - 1; i >= 0; i--) {
           const colorMatch = colorMatches[i];
           log(result, 'value Pre SeparateColor4TransformPreCB');
-          result = result.replace(
-            colorMatch,
-            this.opacityCreator(colorMatch, opacity)
-          );
+          result = result.replace(colorMatch, this.opacityCreator(colorMatch, opacity));
           log(result, 'value Post SeparateColor4TransformPostCB');
         }
         log(result, 'value Post SeparateColor4Transform');
@@ -518,10 +500,7 @@ export const color_transform = {
         for (let i = colorMatches.length - 1; i >= 0; i--) {
           const colorMatch = colorMatches[i];
           log(result, 'value Pre SeparateColor4TransformPreCB');
-          result = result.replace(
-            colorMatch,
-            this.getShadeTintColorOrGradient(tintValue, colorMatch)
-          );
+          result = result.replace(colorMatch, this.getShadeTintColorOrGradient(tintValue, colorMatch));
           log(result, 'value Post SeparateColor4TransformPostCB');
         }
         log(result, 'value Post SeparateColor4Transform');
@@ -564,14 +543,9 @@ export const color_transform = {
         ? (manage_cache.getCached<RegExp>(
             `colorTransform_colorRegex`,
             'regExp',
-            () =>
-              new RegExp(
-                /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
-              )
+            () => new RegExp(/(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi)
           ) as RegExp)
-        : new RegExp(
-            /(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi
-          )
+        : new RegExp(/(?:(#[A-Fa-f0-9]{3,8})|(?:(rgb)|(hsl)|(hwb))a?\([0-9\.\,\s%]*\))/gi)
     );
   },
 };

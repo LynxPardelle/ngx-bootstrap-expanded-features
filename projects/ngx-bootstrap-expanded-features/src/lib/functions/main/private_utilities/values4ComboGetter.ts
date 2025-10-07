@@ -26,10 +26,7 @@ export const values4ComboGetter = (class2Create: string): string[] => {
   let cacheKey: string | undefined;
   if (values.cacheActive) {
     cacheKey = `${class2Create}`;
-    const cachedResult = manage_cache.getCached<string[]>(
-      cacheKey,
-      'values4ComboGetter'
-    );
+    const cachedResult = manage_cache.getCached<string[]>(cacheKey, 'values4ComboGetter');
     if (cachedResult) {
       const cacheTime = performance.now() - startTime;
       multiLog([
@@ -113,53 +110,44 @@ export const values4ComboGetter = (class2Create: string): string[] => {
 
   // Stage 7: Process matched values and build sorted structure
   const valsToSortExtras: TVals2Sort[] = [];
-  let valsToSort: TVals2Sort[] = valsToSortSource.map(
-    (v: string, mapIndex: number) => {
-      log(
-        `processing match ${mapIndex + 1}/${valsToSortSource.length}: ${v}`,
-        'match processing'
-      );
+  let valsToSort: TVals2Sort[] = valsToSortSource.map((v: string, mapIndex: number) => {
+    log(`processing match ${mapIndex + 1}/${valsToSortSource.length}: ${v}`, 'match processing');
 
-      const index: string = v.split('VAL')[1].split('N')[0];
-      const valReplace: RegExp = values.cacheActive
-        ? (manage_cache.getCached<RegExp>(
-            index,
-            'regExp',
-            () => new RegExp(`VAL${index}N`, 'g')
-          ) as RegExp)
-        : new RegExp(`VAL${index}N`, 'g');
-      let firstIndex: number = parseInt(index);
+    const index: string = v.split('VAL')[1].split('N')[0];
+    const valReplace: RegExp = values.cacheActive
+      ? (manage_cache.getCached<RegExp>(index, 'regExp', () => new RegExp(`VAL${index}N`, 'g')) as RegExp)
+      : new RegExp(`VAL${index}N`, 'g');
+    let firstIndex: number = parseInt(index);
 
-      multiLog([
-        [index, 'extracted index string'],
-        [firstIndex, 'parsed first index'],
-        [index.includes('_'), 'has multiple indexes'],
-      ]);
+    multiLog([
+      [index, 'extracted index string'],
+      [firstIndex, 'parsed first index'],
+      [index.includes('_'), 'has multiple indexes'],
+    ]);
 
-      if (index.includes('_')) {
-        const indexes: string[] = index.split('_');
-        log(indexes, 'indexes splitted from index');
+    if (index.includes('_')) {
+      const indexes: string[] = index.split('_');
+      log(indexes, 'indexes splitted from index');
 
-        indexes.forEach((i: string, it: number) => {
-          if (it > 0) {
-            const extraVal = {
-              index: parseInt(i),
-              val: v.replace(valReplace, ''),
-            };
-            valsToSortExtras.push(extraVal);
-          }
-        });
-      }
-
-      const processedValue = {
-        index: firstIndex,
-        val: v.replace(valReplace, ''),
-      };
-
-      log(processedValue, `processedValue ${mapIndex + 1}`);
-      return processedValue;
+      indexes.forEach((i: string, it: number) => {
+        if (it > 0) {
+          const extraVal = {
+            index: parseInt(i),
+            val: v.replace(valReplace, ''),
+          };
+          valsToSortExtras.push(extraVal);
+        }
+      });
     }
-  );
+
+    const processedValue = {
+      index: firstIndex,
+      val: v.replace(valReplace, ''),
+    };
+
+    log(processedValue, `processedValue ${mapIndex + 1}`);
+    return processedValue;
+  });
 
   multiLog([
     [valsToSort.length, 'primary values count'],
@@ -190,7 +178,7 @@ export const values4ComboGetter = (class2Create: string): string[] => {
   ]);
 
   // Stage 10: Calculate occupied indexes - using Set for O(1) lookup performance
-  const ocupedIndexes: Set<number> = new Set(valsToSort.map((v) => v.index));
+  const ocupedIndexes: Set<number> = new Set(valsToSort.map(v => v.index));
   multiLog([
     [ocupedIndexes, 'ocupedIndexes for fast lookup'],
     [ocupedIndexes.size, 'ocupedIndexes count'],
@@ -200,26 +188,21 @@ export const values4ComboGetter = (class2Create: string): string[] => {
   if (!noValsNotSorted) {
     log('processing unsorted values', 'unsorted processing stage');
 
-    const valsNotSortedSorted: TVals2Sort[] = valsNotSorted.map(
-      (v, mapIndex) => {
-        let index = 1;
-        while (ocupedIndexes.has(index)) {
-          index++;
-        }
-        ocupedIndexes.add(index);
-
-        const sortedVal = {
-          index: index,
-          val: v,
-        };
-
-        log(
-          `assigned index ${index} to unsorted value ${mapIndex + 1}: "${v}"`,
-          'unsorted assignment'
-        );
-        return sortedVal;
+    const valsNotSortedSorted: TVals2Sort[] = valsNotSorted.map((v, mapIndex) => {
+      let index = 1;
+      while (ocupedIndexes.has(index)) {
+        index++;
       }
-    );
+      ocupedIndexes.add(index);
+
+      const sortedVal = {
+        index: index,
+        val: v,
+      };
+
+      log(`assigned index ${index} to unsorted value ${mapIndex + 1}: "${v}"`, 'unsorted assignment');
+      return sortedVal;
+    });
 
     multiLog([
       [valsNotSortedSorted, 'processed unsorted values'],
@@ -241,14 +224,12 @@ export const values4ComboGetter = (class2Create: string): string[] => {
 
   // Stage 13: Fill empty positions
   const emptyValsToFillValsSorted: TVals2Sort[] = [];
-  const sortedValsToSort = [...valsToSort].sort(
-    (v1, v2) => v1.index - v2.index
-  );
+  const sortedValsToSort = [...valsToSort].sort((v1, v2) => v1.index - v2.index);
   const lastValIndex = sortedValsToSort[sortedValsToSort.length - 1].index;
 
   multiLog([
     [lastValIndex, 'last index found'],
-    [sortedValsToSort.map((v) => v.index), 'all indexes before filling'],
+    [sortedValsToSort.map(v => v.index), 'all indexes before filling'],
   ]);
 
   for (let i = 0; i < lastValIndex; i++) {
@@ -267,17 +248,15 @@ export const values4ComboGetter = (class2Create: string): string[] => {
   ]);
 
   // Stage 14: Final sorting and result generation
-  const valsSorted: TVals2Sort[] = valsToSort
-    .concat(emptyValsToFillValsSorted)
-    .sort((v1, v2) => v1.index - v2.index);
+  const valsSorted: TVals2Sort[] = valsToSort.concat(emptyValsToFillValsSorted).sort((v1, v2) => v1.index - v2.index);
 
   multiLog([
     [valsSorted, 'final sorted values'],
     [valsSorted.length, 'final sorted count'],
-    [valsSorted.map((v) => `${v.index}:${v.val}`), 'index:value pairs'],
+    [valsSorted.map(v => `${v.index}:${v.val}`), 'index:value pairs'],
   ]);
 
-  result = valsSorted.map((v) => v.val);
+  result = valsSorted.map(v => v.val);
 
   // Stage 15: Cache the result and return
   if (values.cacheActive && cacheKey) {

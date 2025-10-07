@@ -1,18 +1,17 @@
 /* Singletons */
 import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 /* Interfaces */
-import { IBPS } from '../../../interfaces';
 /* Functions */
-import { abreviation_traductors } from '../../abreviation_traductors';
 import { console_log } from '../../../functions/console_log';
-import { convertPseudos } from './convertPseudos';
-import { look4BPNVals } from './look4BPNVals';
-import { valueTraductor } from './valueTraductor';
-import { decryptCombo } from './decryptCombo';
-import { property2ValueJoiner } from './property2ValueJoiner';
+import { abreviation_traductors } from '../../abreviation_traductors';
 import { manage_cache } from '../../manage_cache';
+import { convertPseudos } from './convertPseudos';
+import { decryptCombo } from './decryptCombo';
+import { look4BPNVals } from './look4BPNVals';
+import { property2ValueJoiner } from './property2ValueJoiner';
+import { valueTraductor } from './valueTraductor';
 /* Types */
-import { TLogPartsOptions } from '../../../types';
+import { TBPS, TLogPartsOptions } from '../../../types';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 const log = (t: any, p?: TLogPartsOptions) => {
   console_log.betterLogV1('parseClass', t, p);
@@ -21,9 +20,8 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('parseClass', toLog);
 };
 interface IparseClassReturn {
-  class2Create: string;
-  bpsStringed: IBPS[];
   classes2CreateStringed: string;
+  bps?: TBPS;
 }
 /**
  * Parses a CSS class string and converts it into valid CSS rules with breakpoint support.
@@ -33,47 +31,16 @@ interface IparseClassReturn {
  * and value translation to generate valid CSS rules.
  *
  * @param class2Create - The CSS class name to parse and create (may contain abbreviations)
- * @param bpsStringed - Array of breakpoint objects containing breakpoint information
  * @param classes2CreateStringed - Accumulated string of CSS classes being created
  * @param isClean - Whether to check for already created classes to avoid duplicates (default: true)
  *
- * @returns Promise resolving to an object containing:
- *   - class2Create: The processed class name
- *   - bpsStringed: Updated breakpoint array with new CSS rules
+ * @returns Object containing:
  *   - classes2CreateStringed: Updated accumulated CSS classes string
  *
  * @example
  * ```typescript
- * await parseClass('bef-overflowX-hidden', [], '', true):
+ * parseClass('bef-overflowX-hidden', [], '', true):
  * {
- *   class2Create: 'lib-margin-10',
- *   bpsStringed: [
- *      {
- *        "bp": "sm",
- *        "value": "576px",
- *        "class2Create": ""
- *      },
- *      {
- *        "bp": "md",
- *        "value": "768px",
- *        "class2Create": ""
- *      },
- *      {
- *        "bp": "lg",
- *        "value": "992px",
- *        "class2Create": ""
- *      },
- *      {
- *        "bp": "xl",
- *        "value": "1200px",
- *        "class2Create": ""
- *      },
- *      {
- *        "bp": "xxl",
- *        "value": "1400px",
- *        "class2Create": ""
- *      }
- *   ],
  *   classes2CreateStringed: '.bef-overflowX-hidden{overflow-x:hidden !important;}þµÞ'
  * }
  * ```
@@ -86,43 +53,29 @@ interface IparseClassReturn {
  * - Maintains cache of already created classes to prevent duplicates
  * - Supports encrypted combo classes when encryption is enabled
  */
-export const parseClass = async (
-  class2Create: string,
-  bpsStringed: IBPS[],
-  classes2CreateStringed: string,
-  isClean: boolean = true
-): Promise<IparseClassReturn> => {
+export const parseClass = (class2Create: string, isClean: boolean = true): IparseClassReturn => {
   // Early validation
   if (!class2Create || !values.sheet) {
     return {
-      class2Create,
-      bpsStringed: [],
       classes2CreateStringed: '',
     };
   }
-  // Check cache first for instant response
-  if (values.cacheActive) {
-    const cachedResult = manage_cache.getCached<{
-      class2Create: string;
-      bpsStringed: IBPS[];
-      classes2CreateStringed: string;
-    }>(class2Create, 'parseClass');
-    if (cachedResult) {
-      return {
-        class2Create: cachedResult.class2Create,
-        bpsStringed: [...cachedResult.bpsStringed], // Deep copy arrays to prevent mutation
-        classes2CreateStringed: cachedResult.classes2CreateStringed,
-      };
-    }
-  }
-  multiLog([
-    [class2Create, 'class2Create'],
-    [bpsStringed, 'bpsStringed'],
-    [classes2CreateStringed, 'classes2CreateStringed'],
-    [isClean, 'isClean'],
-  ]);
+  multiLog([[isClean, 'isClean']]);
   // Check if already created CssClass and return if it is
   if (isClean) {
+    // Check cache first for instant response
+    if (values.cacheActive) {
+      const cachedResult = manage_cache.getCached<{
+        classes2CreateStringed: string;
+        bps?: TBPS;
+      }>(class2Create, 'parseClass');
+      if (cachedResult) {
+        return {
+          classes2CreateStringed: cachedResult.classes2CreateStringed,
+          bps: cachedResult.bps,
+        };
+      }
+    }
     if (
       values.alreadyCreatedClasses.has(class2Create) ||
       [...values.sheet.cssRules].find((i: CSSRule) =>
@@ -132,9 +85,7 @@ export const parseClass = async (
       )
     ) {
       return {
-        class2Create: class2Create,
-        bpsStringed: bpsStringed,
-        classes2CreateStringed: classes2CreateStringed,
+        classes2CreateStringed: '',
       };
     } else {
       values.alreadyCreatedClasses.add(class2Create);
@@ -148,14 +99,9 @@ export const parseClass = async (
   log(class2CreateStringed, 'class2CreateStringed');
   // De-abreviate the class if it has abreviations
   if (!class2Create.includes(values.indicatorClass)) {
-    let abbrClss = Object.keys(values.abreviationsClasses).find((aC) =>
-      class2Create.includes(aC)
-    );
+    let abbrClss = Object.keys(values.abreviationsClasses).find(aC => class2Create.includes(aC));
     if (!!abbrClss) {
-      class2Create = class2Create.replace(
-        abbrClss,
-        values.abreviationsClasses[abbrClss]
-      );
+      class2Create = class2Create.replace(abbrClss, values.abreviationsClasses[abbrClss]);
     }
   }
   // Split to decompose and interpret the class to create
@@ -176,23 +122,15 @@ export const parseClass = async (
   }
   if (comboCreatedKey) {
     let comboKeyReg = new RegExp(comboCreatedKey, 'g');
-    class2CreateSplited[1] = class2CreateSplited[1].replace(
-      comboKeyReg,
-      values.encryptComboCreatedCharacters
-    );
+    class2CreateSplited[1] = class2CreateSplited[1].replace(comboKeyReg, values.encryptComboCreatedCharacters);
   }
 
   // Convert pseudos and process selectors
-  const classWithPseudosConvertedAndSELSplited = convertPseudos(
-    class2CreateSplited[1]
-  )
+  const classWithPseudosConvertedAndSELSplited = convertPseudos(class2CreateSplited[1])
     .replace(/SEL/g, values.separator)
     .split(`${values.separator}`);
 
-  log(
-    classWithPseudosConvertedAndSELSplited,
-    'classWithPseudosConvertedAndSELSplited'
-  );
+  log(classWithPseudosConvertedAndSELSplited, 'classWithPseudosConvertedAndSELSplited');
 
   // Declaring the property to create the combinations and use Pseudos
   const property = classWithPseudosConvertedAndSELSplited[0];
@@ -200,9 +138,7 @@ export const parseClass = async (
 
   // Optimized specify generation
   const specifyParts = classWithPseudosConvertedAndSELSplited.slice(1);
-  let specify: string = abreviation_traductors.abreviationTraductor(
-    specifyParts.join('')
-  );
+  let specify: string = abreviation_traductors.abreviationTraductor(specifyParts.join(''));
 
   // Handle combo key restoration
   if (comboCreatedKey) {
@@ -213,10 +149,7 @@ export const parseClass = async (
           () => new RegExp(values.encryptComboCreatedCharacters, 'g')
         ) as RegExp)
       : new RegExp(values.encryptComboCreatedCharacters, 'g');
-    class2CreateSplited[1] = class2CreateSplited[1].replace(
-      comboKeyCypherReg,
-      comboCreatedKey
-    );
+    class2CreateSplited[1] = class2CreateSplited[1].replace(comboKeyCypherReg, comboCreatedKey);
     multiLog([
       [specify, 'specify PreComboKeyRestoration'],
       [class2Create, 'class2Create PreComboKeyRestoration'],
@@ -224,10 +157,7 @@ export const parseClass = async (
     ]);
     specify = specify.replace(comboKeyCypherReg, comboCreatedKey);
     class2Create = class2Create.replace(comboKeyCypherReg, comboCreatedKey);
-    class2CreateStringed = class2CreateStringed.replace(
-      comboKeyCypherReg,
-      comboCreatedKey
-    );
+    class2CreateStringed = class2CreateStringed.replace(comboKeyCypherReg, comboCreatedKey);
     multiLog([
       [specify, 'specify PostComboKeyRestoration'],
       [class2Create, 'class2Create PostComboKeyRestoration'],
@@ -242,11 +172,7 @@ export const parseClass = async (
       [class2Create, 'class2Create PreDecryptCombo'],
       [class2CreateStringed, 'class2CreateStringed PreDecryptCombo'],
     ]);
-    [specify, class2Create, class2CreateStringed] = decryptCombo(
-      specify,
-      class2Create,
-      class2CreateStringed
-    );
+    [specify, class2Create, class2CreateStringed] = decryptCombo(specify, class2Create, class2CreateStringed);
     multiLog([
       [specify, 'specify PostDecryptCombo'],
       [class2Create, 'class2Create PostDecryptCombo'],
@@ -256,9 +182,7 @@ export const parseClass = async (
 
   // Getting if the class has breakPoints, the value and the second value if it has
   const bpResult = look4BPNVals(class2CreateSplited);
-  const [hasBP, propertyValues]: [boolean, string[]] = Object.values(
-    bpResult
-  ) as [boolean, string[]];
+  const [hasBP, propertyValues]: [boolean, string[]] = Object.values(bpResult) as [boolean, string[]];
 
   multiLog([
     [hasBP, 'hasBP'],
@@ -266,11 +190,9 @@ export const parseClass = async (
   ]);
 
   // Optimized value translation with parallel processing
-  const translatedValues = await Promise.all(
-    propertyValues.map(async (pv: string) => {
-      return await valueTraductor(pv, property);
-    })
-  );
+  const translatedValues = propertyValues.map((pv: string) => {
+    return valueTraductor(pv, property);
+  });
 
   log(translatedValues, 'translatedValues');
   if (!translatedValues[0]) {
@@ -282,13 +204,7 @@ export const parseClass = async (
   ]);
 
   // Joining the property and the values
-  class2CreateStringed += await property2ValueJoiner(
-    property,
-    class2CreateSplited,
-    class2Create,
-    translatedValues,
-    specify
-  );
+  class2CreateStringed += property2ValueJoiner(property, class2CreateSplited, class2Create, translatedValues, specify);
 
   log(class2CreateStringed, 'class2CreateStringed AfterProperty2ValueJoiner');
 
@@ -311,11 +227,9 @@ export const parseClass = async (
   }
 
   log(class2CreateStringed, 'class2CreateStringed AfterImportant');
-
-  if (
-    class2CreateStringed.includes('{') &&
-    class2CreateStringed.includes('}')
-  ) {
+  let classes2CreateStringed = '';
+  let bps: TBPS | undefined;
+  if (class2CreateStringed.includes('{') && class2CreateStringed.includes('}')) {
     if (hasBP === true) {
       const separatorRegex = values.cacheActive
         ? (manage_cache.getCached<RegExp>(
@@ -328,9 +242,13 @@ export const parseClass = async (
 
       // Optimized breakpoint assignment
       const targetBp = class2CreateSplited[2];
-      for (let i = 0; i < bpsStringed.length; i++) {
-        if (bpsStringed[i].bp === targetBp) {
-          bpsStringed[i].class2Create += class2CreateStringed;
+      for (let i = 0; i < values.bps.length; i++) {
+        if (values.bps[i].bp === targetBp) {
+          bps = {
+            bp: targetBp,
+            value: values.bps[i].value,
+            class2Create: class2CreateStringed,
+          };
           break;
         }
       }
@@ -342,16 +260,11 @@ export const parseClass = async (
   // Final cleanup
   classes2CreateStringed = classes2CreateStringed.replace(/\s+/g, ' ');
 
-  multiLog([
-    [class2Create, 'class2Create AfterSeparators'],
-    [bpsStringed, 'bpsStringed AfterSeparators'],
-    [classes2CreateStringed, 'classes2CreateStringed AfterSeparators'],
-  ]);
+  multiLog([[classes2CreateStringed, 'classes2CreateStringed AfterSeparators']]);
 
   const result = {
-    class2Create: class2Create,
-    bpsStringed: bpsStringed,
     classes2CreateStringed: classes2CreateStringed,
+    bps: bps,
   };
 
   if (values.cacheActive) {

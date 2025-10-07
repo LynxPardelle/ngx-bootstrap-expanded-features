@@ -14,33 +14,24 @@ const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
 export const createMediaRule = (rule: string): void => {
   log(rule, 'rule');
   let index: number | undefined;
-  if (!values.sheet) return;
-  let originalRule: any = [...values.sheet.cssRules].some(
-    (cssRule: any, i: number) => {
-      if (
-        cssRule.cssText.includes(
-          rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
-        )
-      ) {
-        index = i;
-        return true;
-      } else {
-        return false;
-      }
+  if (!values.responsiveSheet) return;
+  let originalRule: any = [...values.responsiveSheet.cssRules].some((cssRule: any, i: number) => {
+    if (cssRule.cssText.includes(rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' '))) {
+      index = i;
+      return true;
+    } else {
+      return false;
     }
-  )
-    ? [...values.sheet.cssRules].find(
-        (i) =>
+  })
+    ? [...values.responsiveSheet.cssRules].find(
+        i =>
           i.cssText
             /* .includes(
                     rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
                   ) */
             .split(' ')
             .find((aC: string) => {
-              return (
-                aC.replace('.', '') ===
-                rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ')
-              );
+              return aC.replace('.', '') === rule.split('{')[0].replace('\n', '').replace(/\s+/g, ' ');
             })
         /*
             i.cssText.split(' ').find((aC: string) => {
@@ -50,8 +41,8 @@ export const createMediaRule = (rule: string): void => {
       )
     : undefined;
   if (originalRule && index !== undefined) {
-    values.sheet.deleteRule(index);
+    values.responsiveSheet.deleteRule(index);
   }
   log(rule, 'rule');
-  values.sheet.insertRule(rule, values.sheet.cssRules.length);
+  values.responsiveSheet.insertRule(rule, values.responsiveSheet.cssRules.length);
 };

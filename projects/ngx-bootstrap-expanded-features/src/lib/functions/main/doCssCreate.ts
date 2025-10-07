@@ -17,32 +17,35 @@ const log = (t: any, p?: TLogPartsOptions) => {
 const multiLog = (toLog: [any, TLogPartsOptions?][]) => {
   console_log.multiBetterLogV1('doCssCreate', toLog);
 };
-export const doCssCreate = async (
-  updateClasses2Create?: string[]
-): Promise<number> => {
+export const doCssCreate = (id: number, updateClasses2Create?: string[]): number => {
   try {
-    log(updateClasses2Create, 'updateClasses2Create');
+    log(updateClasses2Create, `updateClasses2Create [id:${id}]`);
     const startTimeCSSCreate = performance.now();
-    const classes2Create: string[] =
-      updateClasses2Create || (getNewClasses2Create());
-    log(classes2Create, 'classes2Create');
-    let classes2CreateStringed = '';
-    let bpsStringed: IBPS[] = values.bps.map((b: any) => b);
+    const classes2Create: string[] = updateClasses2Create || getNewClasses2Create();
+    log(classes2Create, `classes2Create [id:${id}]`);
+    const classes2CreateStringed: string[] = [];
+    const bpsStringed: IBPS[] = values.bps.map((b: any) => b);
     for (let class2Create of classes2Create) {
-      [class2Create, bpsStringed, classes2CreateStringed] = Object.values(
-        await parseClass(
-          class2Create,
-          bpsStringed,
-          classes2CreateStringed,
-          !updateClasses2Create
-        )
+      let returnedClasses2CreateStringed: string;
+      let returnedBpsStringed: IBPS | undefined;
+      [returnedClasses2CreateStringed, returnedBpsStringed] = Object.values(
+        parseClass(class2Create, !updateClasses2Create)
       );
+      classes2CreateStringed.push(returnedClasses2CreateStringed);
+      if (returnedBpsStringed) {
+        for (let bps of bpsStringed) {
+          if (bps.bp === returnedBpsStringed.bp) {
+            bps.class2Create += returnedBpsStringed.class2Create;
+            break;
+          }
+        }
+      }
     }
     multiLog([
-      [classes2CreateStringed, 'classes2CreateStringed'],
-      [bpsStringed, 'bpsStringed'],
+      [classes2CreateStringed, `classes2CreateStringed [id:${id}]`],
+      [bpsStringed, `bpsStringed [id:${id}]`],
     ]);
-    send2CreateRules(classes2CreateStringed, bpsStringed);
+    send2CreateRules(classes2CreateStringed.join(''), bpsStringed);
     const endTimeCSSCreate = performance.now();
     let timeToCreate: string | number = endTimeCSSCreate - startTimeCSSCreate;
     timeToCreate = timeToCreate.toFixed(2) + 'ms';

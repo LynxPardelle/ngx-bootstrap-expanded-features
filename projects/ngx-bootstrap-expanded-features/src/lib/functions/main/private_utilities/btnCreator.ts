@@ -3,13 +3,12 @@ import { ValuesSingleton } from '../../../singletons/valuesSingleton';
 /* Functions */
 import { color_transform } from '../../color_transform';
 import { console_log } from '../../console_log';
+import { manage_cache } from '../../manage_cache';
 import { combinators } from '../../utilities/combinators';
 import { propertyNValueCorrector } from './propertyNValueCorrector';
-import { manage_cache } from '../../manage_cache';
 /* Types */
-import { TNameVal } from '../private_types/types.private';
 import { TLogPartsOptions } from '../../../types';
-
+import { TNameVal } from '../private_types/types.private';
 const values: ValuesSingleton = ValuesSingleton.getInstance();
 /**
  * Pre-defined shade number arrays to avoid repeated allocations
@@ -41,14 +40,8 @@ const generateShadeArray = (value: string, secondValue: string): TNameVal[] => {
       shadesArray.push({
         name: `${baseVal.name},${shadeNum}`,
         val: values.cacheActive
-          ? (manage_cache.getCached<string>(
-              `${shadeNum}|${baseVal.val}`,
-              'buttonShade',
-              () =>
-                color_transform.getShadeTintColorOrGradient(
-                  shadeNum,
-                  baseVal.val
-                )
+          ? (manage_cache.getCached<string>(`${shadeNum}|${baseVal.val}`, 'buttonShade', () =>
+              color_transform.getShadeTintColorOrGradient(shadeNum, baseVal.val)
             ) as string)
           : color_transform.getShadeTintColorOrGradient(shadeNum, baseVal.val),
       });
@@ -70,14 +63,14 @@ const generateShadeArray = (value: string, secondValue: string): TNameVal[] => {
  * @param secondValue - Secondary color value (default: 'transparent', used for outline buttons)
  * @param outline - Whether to create an outline button variant (default: false)
  *
- * @returns Promise resolving to a CSS string containing all button state rules
+ * @returns String resolving to a CSS string containing all button state rules
  *
  * @example
  * ```typescript
  * // Regular button
- * await btnCreator('btn-primary', '', '#007bff', 'transparent', false);
+ * btnCreator('btn-primary', '', '#007bff', 'transparent', false);
  * // Outline button
- * await btnCreator('btn-outline-success', ':hover', '#28a745', 'white', true);
+ * btnCreator('btn-outline-success', ':hover', '#28a745', 'white', true);
  * ```
  *
  * @remarks
@@ -114,13 +107,13 @@ const generateShadeArray = (value: string, secondValue: string): TNameVal[] => {
  * - Same function signature and return type
  * - All existing button styles continue to work correctly
  */
-export const btnCreator = async (
+export const btnCreator = (
   class2Create: string,
   specify: string,
   value: string,
   secondValue: string = 'transparent',
   outline: boolean = false
-): Promise<string> => {
+): string => {
   // Early validation
   if (!class2Create || !value) {
     return '';
@@ -149,8 +142,7 @@ export const btnCreator = async (
   log(shadesArray, 'shadesArray');
 
   // Convert to object for efficient lookups
-  const shades: { [key: string]: string } =
-    combinators.combineIntoObject(shadesArray);
+  const shades: { [key: string]: string } = combinators.combineIntoObject(shadesArray);
 
   multiLog([
     [shades, 'shades'],
@@ -159,37 +151,27 @@ export const btnCreator = async (
   ]);
 
   // Cached shadow color calculations
-  const shadowColorValue = color_transform.opacityCreator(
-    shades['value,3'],
-    0.5
-  );
-  const shadowColorSecondValue = color_transform.opacityCreator(
-    shades['secondValue,3'],
-    0.5
-  );
+  const shadowColorValue = color_transform.opacityCreator(shades['value,3'], 0.5);
+  const shadowColorSecondValue = color_transform.opacityCreator(shades['secondValue,3'], 0.5);
   log(shadowColorValue, 'shadowColorValue');
 
   const shadowNumericalValues: string = '0 0 0 0.25rem ';
 
   // Generate correction arrays efficiently with batched processing
-  const correctionTasks: Array<Promise<TNameVal>> = [];
+  const correctionTasks: Array<TNameVal> = [];
 
   // Process base values and shades for CSS properties
   for (const shade of shadesArray) {
     for (const prop of ['background-color', 'color', 'border-color']) {
-      correctionTasks.push(
-        (values.cacheActive
-          ? manage_cache.getCachedPromised<string>(
-              `${prop}|${shade.val}`,
-              'buttonCorrection',
-              async () => await propertyNValueCorrector(prop, shade.val)
-            )
-          : propertyNValueCorrector(prop, shade.val)
-        ).then((correctedVal) => ({
-          name: `${shade.name},${prop}`,
-          val: correctedVal,
-        }))
-      );
+      const correctedVal: string = values.cacheActive
+        ? (manage_cache.getCached<string>(`${prop}|${shade.val}`, 'buttonCorrection', () =>
+            propertyNValueCorrector(prop, shade.val)
+          ) as string)
+        : propertyNValueCorrector(prop, shade.val);
+      correctionTasks.push({
+        name: `${shade.name},${prop}`,
+        val: correctedVal,
+      });
     }
   }
 
@@ -203,38 +185,28 @@ export const btnCreator = async (
   ];
 
   for (const shadowVal of shadowValues) {
-    correctionTasks.push(
-      (values.cacheActive
-        ? manage_cache.getCachedPromised<string>(
-            `${'box-shadow'}|${shadowVal.val}`,
-            'buttonCorrection',
-            async () =>
-              await propertyNValueCorrector('box-shadow', shadowVal.val)
-          )
-        : propertyNValueCorrector('box-shadow', shadowVal.val)
-      ).then((correctedVal) => ({
-        name: `${shadowVal.name}Corrected`,
-        val: correctedVal,
-      }))
-    );
+    const correctedVal = values.cacheActive
+      ? (manage_cache.getCached<string>(`${'box-shadow'}|${shadowVal.val}`, 'buttonCorrection', () =>
+          propertyNValueCorrector('box-shadow', shadowVal.val)
+        ) as string)
+      : propertyNValueCorrector('box-shadow', shadowVal.val);
+    correctionTasks.push({
+      name: `${shadowVal.name}Corrected`,
+      val: correctedVal,
+    });
   }
 
   // Execute all corrections in parallel
-  const allCorrections = await Promise.all(correctionTasks);
+  const allCorrections = correctionTasks;
 
   // Combine results into efficient lookup objects
   const correctVals: { [key: string]: string } = combinators.combineIntoObject(
-    allCorrections.filter(
-      (correction) => !correction.name.includes('Corrected')
-    )
+    allCorrections.filter(correction => !correction.name.includes('Corrected'))
   );
 
-  const correctValsShadows: { [key: string]: string } =
-    combinators.combineIntoObject(
-      allCorrections.filter((correction) =>
-        correction.name.includes('Corrected')
-      )
-    );
+  const correctValsShadows: { [key: string]: string } = combinators.combineIntoObject(
+    allCorrections.filter(correction => correction.name.includes('Corrected'))
+  );
 
   multiLog([
     [correctVals, 'correctVals'],
@@ -243,11 +215,7 @@ export const btnCreator = async (
 
   // Get cached regex for efficient replacements
   const specifyRegex = values.cacheActive
-    ? (manage_cache.getCached<RegExp>(
-        `${values.specify}|g`,
-        'regExp',
-        () => new RegExp(values.specify, 'g')
-      ) as RegExp)
+    ? (manage_cache.getCached<RegExp>(`${values.specify}|g`, 'regExp', () => new RegExp(values.specify, 'g')) as RegExp)
     : new RegExp(values.specify, 'g');
   const newRuleArray: string[] = [];
 
@@ -258,9 +226,7 @@ export const btnCreator = async (
 
   /* Basic Button */
   const basicStyles = outline
-    ? correctVals['value,color'] +
-      correctVals['secondValue,background-color'] +
-      correctVals['value,border-color']
+    ? correctVals['value,color'] + correctVals['secondValue,background-color'] + correctVals['value,border-color']
     : correctVals['value,background-color'] + correctVals['value,border-color'];
   newRuleArray.push(buildRule(specify, basicStyles));
 
@@ -269,51 +235,32 @@ export const btnCreator = async (
     ? correctVals['secondValue,color'] +
       correctVals['value,-15,background-color'] +
       correctVals['secondValue,border-color']
-    : correctVals['value,-20,border-color'] +
-      correctVals['value,background-color'];
+    : correctVals['value,-20,border-color'] + correctVals['value,background-color'];
   newRuleArray.push(buildRule(`.${class2Create}${specify}:hover`, hoverStyles));
 
   /* Focus Button (only for outline) */
   if (outline) {
-    const focusStyles =
-      correctVals['secondValue,-15,background-color'] +
-      correctVals['secondValue,-15,border-color'];
+    const focusStyles = correctVals['secondValue,-15,background-color'] + correctVals['secondValue,-15,border-color'];
     newRuleArray.push(
-      buildRule(
-        `.btn-check:focus + .${class2Create}${specify}, .${class2Create}${specify}:focus`,
-        focusStyles
-      )
+      buildRule(`.btn-check:focus + .${class2Create}${specify}, .${class2Create}${specify}:focus`, focusStyles)
     );
   }
 
   /* Checked/Active Button */
   const checkedStyles = outline
     ? correctVals['value,-25,border-color']
-    : correctVals['value,-20,background-color'] +
-      correctVals['value,-25,border-color'];
+    : correctVals['value,-20,background-color'] + correctVals['value,-25,border-color'];
   const checkedSelector = `.btn-check:checked + .${class2Create}${specify}, .btn-check:active + .${class2Create}${specify}, .${class2Create}${specify}.active, .show > .${class2Create}${specify} .dropdown-toggle, .${class2Create}${specify}:active`;
-  newRuleArray.push(
-    buildRule(
-      checkedSelector,
-      checkedStyles + correctValsShadows['shadowColorValueCorrected']
-    )
-  );
+  newRuleArray.push(buildRule(checkedSelector, checkedStyles + correctValsShadows['shadowColorValueCorrected']));
 
   /* Focus within active state */
   const focusActiveSelector = `.show > .${class2Create}${specify} .dropdown-toggle:focus, .btn-check:checked + .btn-check:focus, .btn-check:active + .${class2Create}${specify}:focus, .${class2Create}${specify}.active:focus, .${class2Create}${specify}:active:focus`;
-  newRuleArray.push(
-    buildRule(
-      focusActiveSelector,
-      correctValsShadows['shadowColorValueCorrected']
-    )
-  );
+  newRuleArray.push(buildRule(focusActiveSelector, correctValsShadows['shadowColorValueCorrected']));
 
   log(newRuleArray, 'newRuleArray');
 
   // Generate final result
-  const result = newRuleArray
-    .filter((rule) => rule !== '')
-    .join(values.separator);
+  const result = newRuleArray.filter(rule => rule !== '').join(values.separator);
 
   // Cache the result for future calls
   if (values.cacheActive && cacheKey) {
